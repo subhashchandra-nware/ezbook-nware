@@ -15,11 +15,13 @@ class SiteSettingApiController extends Controller
     public function firstTimeSiteSettingsDetails($id){
        $userData = User::find($id);
        $facProviderData = FacProvider::find($id);
+       $createdDate = $facProviderData->created_at->format('d-m-Y');
        $response = "";
        if($userData){
         $response = [
             'facProviderData' => $facProviderData,
-            'status' => 'success'
+            'status' => 'success',
+            'created_date' => $createdDate
         ];
       }else{
         $response = [
@@ -127,7 +129,11 @@ class SiteSettingApiController extends Controller
         if($validator->fails()){
             return response()->json($validator->messages(),400);
         }
-        $siteResult = FacProvider::select('Name')->where('ContactEmail',$request->email)->get();
+
+        $getAllUserId = User::where('EmailAddress',$request->email)->select('id')->get()->toArray();
+        $userProvidingMappingResult = UserProviderMapping::whereIn('id',$getAllUserId)->select('ProviderId')->get()->toArray();
+        $siteResult = FacProvider::whereIn('id',$userProvidingMappingResult)->select('Name')->get();
+
         $siteName = $siteResult->implode('Name', ', ');
         return response()->json([
             'status' => 'success',

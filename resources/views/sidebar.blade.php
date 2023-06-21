@@ -14,7 +14,7 @@
         <!--begin::Header-->
         <div class="d-flex align-items-center mt-5">
           <div class="d-flex flex-column">
-            <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ session('siteUserName') }}</a>
+            <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ session('loginUserName') }}</a>
             <a href="#" class="navi-item">
                 <span class="navi-link p-0 pb-2">
                   <span class="navi-icon mr-1">
@@ -30,7 +30,7 @@
                       <!--end::Svg Icon-->
                     </span>
                   </span>
-                  <span class="navi-text text-muted text-hover-primary">{{ session('siteEmailAddress') }}</span>
+                  <span class="navi-text text-muted text-hover-primary">{{ session('loginEmailAddress') }}</span>
                 </span>
               </a>
             <div class="text-muted mt-1">Site: {{ session('siteName') }}</div>

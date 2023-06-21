@@ -36,6 +36,9 @@ class UserController extends Controller
     }
 
     public function getAllUser(){
+        if(!session()->has('loginUserId')){
+            return redirect('/sign-in');
+        }
         $siteId = session()->get('siteId');
         $myRequest = new Request();
         $myRequest->setMethod('POST');
@@ -49,4 +52,32 @@ class UserController extends Controller
             return view('user',compact('users'));
         }
     }
+
+    public function editUser($id){
+        $user  = User::find($id);
+        if($user !=null){
+        $result = (new UsersApiController)->getAllUserType();
+        $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
+        $finalResult = $array['original'];
+        $allUserType = $finalResult['userType'];
+            return view('edit-user',compact('user','allUserType'));
+        }else{
+            return redirect('/user');
+        }
+    }
+
+    public function editUserPost(Request $request){
+     $result = (new UsersApiController)->editUserPost($request);
+     $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
+     $finalResult = $array['original'];
+     if($finalResult['status'] == 'success'){
+        return redirect('/user');
+     }else{
+        return back();
+     }
+    }
+
+    // public function deleteUser($id){
+    //     dd("deleted");
+    // }
 }

@@ -13,11 +13,11 @@ class SiteSettingController extends Controller
         $result = (new SiteSettingApiController)->firstTimeSiteSettingsDetails($siteId);
         $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
         $finalResult = $array['original'];
+        $registrationDate = $finalResult['created_date'];
         $data = $finalResult['facProviderData'];
-       // dd($data['created_at']);
-        session()->put('siteUserName',FacProvider::currentSite()->ContactName);
-        session()->put('siteEmailAddress',FacProvider::currentSite()->ContactEmail);
-        return view('site-setting',compact('data'));
+        // session()->put('siteUserName',FacProvider::currentSite()->ContactName);
+        // session()->put('siteEmailAddress',FacProvider::currentSite()->ContactEmail);
+        return view('site-setting',compact('data','registrationDate'));
     }
 
     public function siteSettingsPost(Request $request){

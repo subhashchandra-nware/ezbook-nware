@@ -1,4 +1,4 @@
-@include('header')
+@include('header');
 <!--end::Head-->
 <!--begin::Body-->
 <body id="kt_body" class="header-fixed header-mobile-fixed header-bottom-enabled page-loading">
@@ -43,140 +43,265 @@
           <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
             <div class="container">
-              <!--begin::Dashboard-->
+              <!--begin::Card-->
               <div class="card card-custom gutter-b">
-                <!--begin::Header-->
-                <div class="card-header border-0 py-5">
-                  <h3 class="card-title align-items-start flex-column">
-                  </h3>
-                  <div class="card-toolbar">
-                    <a href="{{ url('/user-groups')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">User Groups</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Users</a>
-                  </div>
-                </div>
-                <!--end::Header-->
               </div>
-              <div class="card card-custom gutter-b">
-                <!--begin::Header-->
-                <div class="card-header border-0 py-5">
-                  <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label font-weight-bolder text-dark mb-4">User</span>
-                    <form class="form-inline">
-                      <span class="mr-4">Show</span>
-                      <div class="form-group">
-                        <select class="form-control " id="show">
-                          <option>Select</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                      <span class="mr-4 ml-4">Entries</span>
-                      <div class="form-group">
-                        <select class="form-control mr-2 " id="exampleSelectl">
-                          <option>Booking</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <select class="form-control mr-2" id="exampleSelectl">
-                          <option>Booking1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                    </form>
-                  </h3>
-                  <div class="card-toolbar">
-                    <a href="{{ url('/add-user')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a>
-                  </div>
-                </div>
-                <!--end::Header-->
-                <!--begin::Body-->
-                <div class="card-body pt-0 pb-3">
-                  <div class="tab-content">
-                    <!--begin::Table-->
-                    <div class="table-responsive">
-                      <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
-                        <thead>
-                          <tr class="text-left text-uppercase">
-                            <th style="min-width: 30px">S.No.</th>
-                            <th style="min-width: 200px">Name</th>
-                            <th style="min-width: 100px">EmailAddress</th>
-                            <th style="min-width: 100px">PhoneNumbers</th>
-                            <th style="min-width: 150px">AdminLevel</th>
-                            <th style="min-width: 80px"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $user)
-                          <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td class="pl-0 py-8">
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['Name'] }}</span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['EmailAddress'] }}</span></span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['PhoneNumbers'] }}</span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['userType'] }}</span>
-                            </td>
-                            <td class="pr-0 text-right">
-                              <a href="{{ url('/edit-user')}}/{{ $user['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
-                              <a href="#" onclick="deleteUser({{ $user['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
-                            </td>
-                          </tr>
-                          @endforeach
-                        </tbody>
-                      </table>
+              <div class="card card-custom">
+                <div class="card-body p-0">
+                  <!--begin::Wizard Body-->
+                  <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
+                    <div class="col-xl-12">
+                      <!--begin::Form Wizard-->
+                      <form class="form" id="" method="post" action="{{ url('/edit-user')}}">
+                        @csrf
+                        <!--begin::Step 1-->
+                        <div class="pb-5">
+                          <h3 class="font-weight-bold text-dark pb-5">User</h3>
+                          <div class="mb-10 ">
+                            <ul class="nav nav-pills" id="myTab1" role="tablist">
+                              <li class="nav-item">
+                                <a class="nav-link active" href="#general">
+                                <span class="nav-text">General Details</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#permissions" >
+                                <span class="nav-text">Permissions</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#group-member" >
+                                <span class="nav-text">Group Membership</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="row" id="general">
+                            <div class="col-xl-12">
+                              <div class="bg-light p-4 w-100 mb-5">
+                                <h6 class="mb-0"><strong>General Details</strong></h6>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">User Name</label>
+                                <div class="col-lg-9 col-xl-9">
+                                <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="userId" hidden value="{{ $user->id }}" />
+                                  <input class="form-control form-control-lg form-control-solid" name="Name" type="text" value="{{ $user->Name }}" />
+                                  <span class="form-text text-muted">Enter the full name of user here.</span>
+                                  <span class="text-danger">@error('Name') {{ $message }} @enderror</span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Logon Name</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonName" type="text" value="{{ $user->LoginName }}" />
+                                  <span class="form-text text-muted">This Logon Name uniquely identifies users when they log on to your system.( Up to 20 Characters)</span>
+                                  <span class="text-danger">@error('LogonName') {{ $message }} @enderror</span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Logon Password</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonPassword" type="password" value="" />
+                                  <span class="form-text text-muted">
+                                  <span style="color:red">
+                                  (optional, 20 character limit)
+                                  </span>
+                                  if entered here the user will be required to supply this password to gain access when logging on to system, Passwords are restricted to 10 alphabetic characters and/or  numerals and are case-senstive.</span>
+                                  <span class="text-danger">@error('LogonPassword') {{ $message }} @enderror</span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">e-Mail Address</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input class="form-control form-control-lg form-control-solid" name="EmailAddress" type="text" value="{{ $user->EmailAddress }}" />
+                                  <span class="form-text text-muted">
+                                  <span style="color:red">
+                                  (optional)
+                                  </span>
+                                  Supply user's email address here if they are to be able to receive system or user messages.</span>
+                                  <span class="text-danger">@error('EmailAddress') {{ $message }} @enderror</span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Phone Number(s)</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input class="form-control form-control-lg form-control-solid" name="PhoneNumbers" type="tel" value="{{ $user->PhoneNumbers }}" />
+                                  <span class="form-text text-muted">
+                                  <span style="color:red">
+                                  (optional)
+                                  </span>
+                                  Enter contact phone or extension numbers here. </span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Supplementary Info</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <textarea class="form-control form-control-lg form-control-solid" name="Description" value="{{ $user->Description }}"></textarea>
+                                  <span class="form-text text-muted pl-5"><span style="color:red">
+                                  (optional)
+                                  </span> Enter any user notes here.</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" id="permissions">
+                            <div class="col-xl-12">
+                              <div class="bg-light p-4 w-100 mt-5 mb-5">
+                                <h6 class="mb-0"><strong>Permissions</h6>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Admin Level</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <select class="form-control " id="show" name="AdminLevel">
+                                    @foreach($allUserType as $singleRecord)
+                                    <option value="{{ $singleRecord['id'] }}" {{ $user->AdminLevel == $singleRecord['id'] ? 'selected' : '' }}>{{ $singleRecord['userType'] }}</option>
+                                    @endforeach
+                                  </select>
+                                  <span class="form-text text-muted">You may choose to grant the user any management rights that you have been granted, A "Administrator" has all of the rights mentioned below. Assign rights individually to " General Users"</span>
+                                </div>
+                              </div>
+                              <h6>This User May:</h6>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Manage Users</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input type="checkbox" name="ManageUsers" {{  ($user->ManageUsers == 1 ? ' checked' : '') }}>
+                                  <span class="form-text text-muted dis d-inline ml-5">
+                                    This option allows the user to:
+                                    <ul>
+                                      <li>Create new user accounts</li>
+                                      <li>Delete existing users</li>
+                                      <li>Change user details</li>
+                                    </ul>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Manage Facilities</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input type="checkbox" name="ManageFacilities" {{  ($user->ManageFacilities == 1 ? ' checked' : '') }}>
+                                  <span class="form-text text-muted dis d-inline ml-5">
+                                    This option allows the user to:
+                                    <ul>
+                                      <li>Create new facilties to be booked</li>
+                                      <li>Delete existing facilties </li>
+                                      <li>Update configuration and other details for existing facilties </li>
+                                    </ul>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Manage Sysytem Setting</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input type="checkbox" name="ManageSysSettings" {{  ($user->ManageSysSettings == 1 ? ' checked' : '') }}>
+                                  <span class="form-text text-muted dis d-inline ml-5">	This option allows the user to update the system preference and settings. </span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Cancel Bookings</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input type="checkbox" name="CancelBookings" {{  ($user->CancelBookings == 1 ? ' checked' : '') }}>
+                                  <span class="form-text text-muted dis d-inline ml-5">	This option allows the user to cancel booking made by others. </span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-form-label">Make all Collective Bookings</label>
+                                <div class="col-lg-9 col-xl-9">
+                                  <input type="checkbox" name="CollectiveBookings" {{  ($user->CollectiveBookings == 1 ? ' checked' : '') }}>
+                                  <span class="form-text text-muted dis d-inline ml-5">This option allows the user to book ALL the sub-resources of a COLLECTIVE resource type simultaneously.
+                                  <span style="color:red">
+                                  Please Note: Bookings made using this feature will automatically delete any booking made for the indiviual sub-resource at the same time.
+                                  </span> </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" id="group-member" >
+                            <div class="col-xl-12">
+                              <div class="bg-light p-4 w-100 mt-5 mb-5">
+                                <h6 class="mb-0"><strong>Group Membership  (optional) </strong> </h6>
+                              </div>
+                              <div class="form-group row">
+                                <p class="form-text text-muted">A user can belong to one or more User Groups. This section below enables yout to assign users to their groups.</p>
+                                <p class="form-text text-muted">From the "Available" list, select the user Group(s) to which the user shuold belong. Move each selected group across to the "Member of" list using the right arrow button or by double-clicking.</p>
+                              </div>
+                              <div class="form-group row justify-content-center">
+                                <div class="col-lg-5 col-md-5 col-sm-12">
+                                  <label class="col-form-label text-right ">Additional Group</label>
+                                  <select class="form-control" id="kt_multipleselectsplitter_1">
+                                    <optgroup label="Category 1">
+                                      <option value="1">Choice 1</option>
+                                      <option value="2">Choice 2</option>
+                                      <option value="3">Choice 3</option>
+                                      <option value="4">Choice 4</option>
+                                    </optgroup>
+                                    <optgroup label="Category 2">
+                                      <option value="5">Choice 5</option>
+                                      <option value="6" selected="selected">Choice 6</option>
+                                      <option value="7">Choice 7</option>
+                                      <option value="8">Choice 8</option>
+                                    </optgroup>
+                                    <optgroup label="Category 3">
+                                      <option value="5">Choice 9</option>
+                                      <option value="6">Choice 10</option>
+                                      <option value="7">Choice 11</option>
+                                      <option value="8">Choice 12</option>
+                                    </optgroup>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
-                    <!--end::Table-->
+                    <!--end::Step 1-->
+                    <!--begin::Actions-->
+                    <div class="d-flex justify-content-end border-top mt-5 pt-10">
+                    <div>
+                    <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
+                    <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
+                    </div>
+                    </div>
+                    <!--end::Actions-->
+                    </form>
+                    <!--end::Form Wizard-->
                   </div>
                 </div>
-                <!--end::Body-->
+                <!--end::Wizard Body-->
               </div>
-              <!--end::Dashboard-->
             </div>
-            <!--end::Container-->
           </div>
-          <!--end::Entry-->
+          <!--end::Card-->
         </div>
-        <!--end::Content-->
-        <!--begin::Footer-->
-        <div class="footer bg-white py-4 d-flex flex-lg-column" id="kt_footer">
-          <!--begin::Container-->
-          <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
-            <!--begin::Copyright-->
-            <div class="text-dark order-2 order-md-1">
-              <span class="text-muted font-weight-bold mr-2">2023©</span>
-              <a href="#" target="_blank" class="text-dark-75 text-hover-primary">EZ-Book</a>
-            </div>
-            <!--end::Copyright-->
-            <!--begin::Nav-->
-            <div class="nav nav-dark order-1 order-md-2">
-              <a href="#" target="_blank" class="nav-link pr-3 pl-0">Legal</a>
-              <a href="#" target="_blank" class="nav-link px-3">Privacy</a>
-              <a href="#" target="_blank" class="nav-link pl-3 pr-0">Terms</a>
-            </div>
-            <!--end::Nav-->
-          </div>
-          <!--end::Container-->
-        </div>
-        <!--end::Footer-->
+        <!--end::Container-->
       </div>
-      <!--end::Wrapper-->
+      <!--end::Entry-->
     </div>
-    <!--end::Page-->
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <div class="footer bg-white py-4 d-flex flex-lg-column" id="kt_footer">
+      <!--begin::Container-->
+      <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+        <!--begin::Copyright-->
+        <div class="text-dark order-2 order-md-1">
+          <span class=" font-weight-bold mr-2">©</span>
+          <a href="#" target="_blank" class="text-dark-75 text-hover-primary">Rucir Canada Ltd.</a>
+        </div>
+        <!--end::Copyright-->
+        <!--begin::Nav-->
+        <div class="nav nav-dark order-1 order-md-2">
+          <a href="#" target="_blank" class="nav-link pr-3 pl-0">Legal</a>
+          <a href="#" target="_blank" class="nav-link px-3">Privacy</a>
+          <a href="#" target="_blank" class="nav-link pl-3 pr-0">Terms</a>
+        </div>
+        <!--end::Nav-->
+      </div>
+      <!--end::Container-->
+    </div>
+    <!--end::Footer-->
+  </div>
+  <!--end::Wrapper-->
+  </div>
+  <!--end::Page-->
   </div>
   <!--end::Main-->
   <!-- begin::User Panel-->
@@ -504,84 +629,8 @@
     </div>
     <!--end::Content-->
   </div>
-  <div class="modal fade" id="upcomingbooking" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Listing</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form class="form">
-            <div class="form-group">
-              <label>Booked For</label>
-              <input type="text" class="form-control form-control-lg" placeholder="" />
-            </div>
-            <div class="form-group">
-              <label>Booked By</label>
-              <input type="text" class="form-control form-control-lg" placeholder="" />
-            </div>
-            <div class="form-group">
-              <label>Date and Gime</label>
-              <input type="datetime-local" class="form-control form-control-lg" placeholder="" />
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal">Update</button>
-          <button type="button" class="btn btn-dark" data-dismiss="modal">Delete</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--end::Demo Panel-->
   @include('footer')
-  <!--end::Page Scripts-->
-  <script>
-  function deleteUser(id){
-    // var data = { "id" : id}
-    // $.ajax({
-    //   url : "{{ url('/api/delete-user') }}",
-    //   data : data,
-    //   type:'post',
-    //   success:function(result){
-    //       console.log(result);
-    //       var status = result['status'];
-    //       if(status == 'success'){
-    //          Swal.fire({
-    //           position: 'center',
-    //           icon: 'success',
-    //           title: 'User Deleted Successfully',
-    //           showConfirmButton: false,
-    //           timer: 1500
-    //         });
-    //       }
-    //   }
-    // });
-
-    Swal.fire({
-  title: 'Do you want to delete the user?',
-  showCancelButton: true,
-  denyButtonText: `Delete`,
-}).then((result) => {
-  if (result.isConfirmed) {
-   var data = { "id" : id}
-    $.ajax({
-      url : "{{ url('/api/delete-user') }}",
-      data : data,
-      type:'post',
-      success:function(result){
-          console.log(result);
-          var status = result['status'];
-          if(status == 'success'){
-            window.location.href="/user";
-          }
-      }
-    });
-  } 
-})
-  }
-</script>
 </body>
 <!--end::Body-->
 </html>

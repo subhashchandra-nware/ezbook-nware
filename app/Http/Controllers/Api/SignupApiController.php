@@ -200,7 +200,11 @@ class SignupApiController extends Controller
             return response()->json($validator->messages(),400);
         }
 
-        $user = User::where('EmailAddress', '=', $request->EmailAddress)->first();
+        $user = User::where([
+            ['EmailAddress', '=',  $request->EmailAddress],
+            ['deleted_at', '=', NULL]
+        ])->first();
+
         if($user != null){
             $res = Hash::check($request->Password, $user->Password);
             if($res){

@@ -11,6 +11,7 @@ use App\Models\UserType;
 use App\Models\FacProvider;
 use App\Models\UserProviderMapping;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class UsersApiController extends Controller
 {
@@ -105,6 +106,71 @@ class UsersApiController extends Controller
            }
     }
 
+    public function editUserPost(Request $request){
+        $validator = Validator::make($request->all(),[
+            'userId' => 'required',
+            'Name' => ['required'],
+            'LogonName' => ['required'],
+            'EmailAddress' => ['required'],
+            'AdminLevel' => 'required'
+           ]);
+           if($validator->fails()){
+            return response()->json($validator->messages(),400);
+           }else{
+            $siteId = $request->siteId;
+            $ManageUsers = 0;
+            $ManageFacilities = 0; 
+            $ManageSysSettings = 0;
+            $CollectiveBookings = 0;
+            $CancelBookings = 0;
+            $LogonPassword = $request->LogonPassword;
+            if($request->has('ManageUsers')){
+                $ManageUsers = 1;
+            }
+            if($request->has('ManageFacilities')){
+                $ManageFacilities = 1;
+            }
+            if($request->has('ManageSysSettings')){
+                $ManageSysSettings = 1;
+            }
+            if($request->has('CollectiveBookings')){
+                $CollectiveBookings = 1;
+            }
+            if($request->has('CancelBookings')){
+                $CancelBookings = 1;
+            }
+
+            $user = User::find($request->userId);
+            $user->Name = $request->Name;
+            $user->LoginName = $request->LogonName;
+            $user->EmailAddress = $request->EmailAddress;
+            $user->PhoneNumbers = $request->PhoneNumbers;
+            $user->Description = $request->Description;
+            $user->AdminLevel = $request->AdminLevel;
+            $user->ManageUsers = $ManageUsers;
+            $user->ManageFacilities = $ManageFacilities;
+            $user->ManageSysSettings = $ManageSysSettings;
+            $user->CollectiveBookings = $CollectiveBookings;
+            $user->CancelBookings = $CancelBookings;
+            if($LogonPassword != null){
+                $user->Password = Hash::make($request->LogonPassword);
+            }
+
+            if($user->save()){
+            return response()->json([
+                'message' => 'User update Successfully',
+                'status' => 'success',
+                'User' => $user
+            ],200);
+            }else{
+            return response()->json([
+                'message' => 'User not updated',
+                'status' => 'failed'
+            ],500);
+            }
+           }
+    }
+
 
     public function siteDetailSaved(Request $request){
         $validator = Validator::make($request->all(),[
@@ -170,7 +236,7 @@ class UsersApiController extends Controller
         if($validator->fails()){
             return response()->json($validator->messages(),400);
         }else{
-            $results = DB::select("SELECT Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on userType.id = users.AdminLevel where user_provider_mapping.ProviderId =".$request->siteId);
+            $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =".$request->siteId);
             if($results !=null){
                 return response()->json([
                     'message' => 'User Found',
@@ -200,6 +266,36 @@ class UsersApiController extends Controller
                 'status' => 'failed'
             ],200);
         }
+    }
 
+    public function deleteUser(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages(),400);
+        }else{
+            $user = User::find($request->id);
+            if($user !=null){
+                $user->deleted_at = Carbon::now();
+                if($user->save()){
+                 return response()->json([
+                     'message' => 'User deleted Successfuly',
+                     'status' => 'success',
+                 ],200);
+                }else{
+                 return response()->json([
+                     'message' => 'User not deleted Successfully',
+                     'status' => 'failed'
+                 ],200);
+                }
+            }else{
+                return response()->json([
+                    'message' => 'User not found',
+                    'status' => 'failed'
+                ],200);
+            }
+        }
     }
 }

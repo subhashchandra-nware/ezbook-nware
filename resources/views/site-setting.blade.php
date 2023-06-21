@@ -197,7 +197,7 @@
                                     <label class="col-xl-3 col-lg-3 col-form-label">Registration Date </label>
                                     <div class="col-lg-9 col-xl-9">
                                       <div class="input-group input-group-lg input-group-solid">
-                                        <input type="date" class="form-control form-control-lg form-control-solid" name="registrationDate" value="{{ $data['created_at'] }}" placeholder="" />
+                                        <input type="text" class="form-control form-control-lg form-control-solid" readonly name="registrationDate" value="{{ $registrationDate }}" placeholder="" />
                                         <span class="text-danger">@error('registrationDate') {{ $message }} @enderror</span>
                                       </div>
                                     </div>

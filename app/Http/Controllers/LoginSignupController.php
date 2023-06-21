@@ -37,6 +37,8 @@ class LoginSignupController extends Controller
             $userId = $finalResult['user']['id'];
             session()->put('loginUserId',$userId);
             session()->put('userSession',$finalResult);
+            session()->put('loginUserName',$finalResult['user']['Name']);
+            session()->put('loginEmailAddress',$finalResult['user']['EmailAddress']);
 
             $checkUserHasMultipleSite = new Request();
             $checkUserHasMultipleSite->setMethod('POST');
@@ -186,7 +188,6 @@ class LoginSignupController extends Controller
             $result = (new SiteSettingApiController)->accountStatusActivated($myRequest);
             $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
             $finalResult = $array['original'];
-
             if($finalResult['status'] == "success"){
                 return view('welcome');
             }

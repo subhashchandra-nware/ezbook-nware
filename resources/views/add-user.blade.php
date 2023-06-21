@@ -85,7 +85,7 @@
                                 <label class="col-xl-3 col-lg-3 col-form-label">User Name</label>
                                 <div class="col-lg-9 col-xl-9">
                                 <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="siteId" hidden value="{{ session('siteId') }}" />
-                                  <input class="form-control form-control-lg form-control-solid" name="Name" type="text" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="Name" type="text" value="{{ old('Name') }}" />
                                   <span class="form-text text-muted">Enter the full name of user here.</span>
                                   <span class="text-danger">@error('Name') {{ $message }} @enderror</span>
                                 </div>
@@ -93,7 +93,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Logon Name</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="LogonName" type="text" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonName" type="text" value="{{ old('LogonName') }}"/>
                                   <span class="form-text text-muted">This Logon Name uniquely identifies users when they log on to your system.( Up to 20 Characters)</span>
                                   <span class="text-danger">@error('LogonName') {{ $message }} @enderror</span>
                                 </div>
@@ -101,7 +101,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Logon Password</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="LogonPassword" type="password" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonPassword" type="password" value="{{ old('LogonPassword') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional, 20 character limit)
@@ -113,7 +113,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">e-Mail Address</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="EmailAddress" type="text" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="EmailAddress" type="text" value="{{ old('EmailAddress') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional)
@@ -125,7 +125,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Phone Number(s)</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="PhoneNumbers" type="tel" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="PhoneNumbers" type="tel" value="{{ old('PhoneNumbers') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional)

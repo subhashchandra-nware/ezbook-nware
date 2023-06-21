@@ -43,6 +43,7 @@ Route::post('user-has-multiple-sites',[SiteSettingApiController::class,'userHasM
 Route::post('add-user',[UsersApiController::class,'addUser']);
 Route::post('all-user',[UsersApiController::class,'getAllUser']);
 Route::get('all-userType',[UsersApiController::class,'getAllUserType']);
+Route::post('delete-user',[UsersApiController::class,'deleteUser']);
 
 Route::post('email-send',[EmailApiController::class,'sendPasswordEmail']);
 
