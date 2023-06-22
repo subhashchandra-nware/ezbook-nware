@@ -181,6 +181,8 @@ class SignupApiController extends Controller
             $user->Password = Hash::make($request->password);
             $user->save();
 
+            //User::where('EmailAddress',$passwordReset->email)->update( array('Password'=> Hash::make($request->password)) );
+
             FacProvider::where('ContactEmail', $passwordReset->email)->update( array('IsVerified'=>1) );
 
             PasswordReset::where('token',$token)->delete();

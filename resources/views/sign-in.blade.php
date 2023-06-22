@@ -29,7 +29,7 @@
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Aside header-->
 						<a href="#" class="login-logo text-center mb-4 mt-4">
-							<img src="assets/media/logos/logo.png" class="max-h-50px" alt="" />
+							<img src="{{ asset('media/logos/Logo.png') }}" class="max-h-50px" alt="" />
 						</a>
 			<!--begin::Login-->
 			<div class="login login-3 wizard d-flex flex-column flex-lg-row flex-column-fluid">
@@ -119,7 +119,7 @@
 							<!--end::Nav-->
 <div class="text-dark text-center font-16 ">
 								<span class=" font-weight-bold ml-4">©</span>
-								<a href="#" target="_blank" class="text-dark-75 text-hover-primary">Rucir Canada Ltd.</a>
+								<a href="https://ezbook.com/" target="_blank" class="text-dark-75 text-hover-primary">ezbook</a>
 							</div>
 						</div>
 						

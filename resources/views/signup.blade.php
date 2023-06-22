@@ -34,7 +34,7 @@
       </div>
       <!--begin::Aside header-->
       <a href="#" class="login-logo text-center mb-4 mt-4">
-      <img src="{{ asset('media/logos/logo.png') }}" class="max-h-50px" alt="" />
+      <img src="{{ asset('media/logos/Logo.png') }}" class="max-h-50px" alt="" />
       </a>
       <div class="pb-5 pb-lg-15 text-center">
         <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Create Account</h3>
@@ -129,7 +129,7 @@
           <!--end::Nav-->
           <div class="text-dark text-center font-16 ">
             <span class=" font-weight-bold ml-4">©</span>
-            <a href="#" target="_blank" class="text-dark-75 text-hover-primary">Rucir Canada Ltd.</a>
+            <a href="https://ezbook.com/" target="_blank" class="text-dark-75 text-hover-primary">ezbook</a>
           </div>
         </div>
         <!--end::Container-->

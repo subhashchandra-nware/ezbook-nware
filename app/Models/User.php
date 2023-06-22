@@ -10,18 +10,14 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\UserType;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    // public $timestamps= false;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    //public $timestamps= false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'Name',
         'LoginName',
@@ -34,7 +30,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'ManageFacilities',
         'ManageSysSettings',
         'CollectiveBookings',
-        'CancelBookings'
+        'CancelBookings',
+        'deleted_at'
     ];
 
     /**
