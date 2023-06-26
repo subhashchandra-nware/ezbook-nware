@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\UsersApiController;
 use App\Models\UserType;
 use App\Models\User;
+use App\Models\UserGroup;
 
 class UserController extends Controller
 {
     public function addUser(){
+        $siteId = session()->get('siteId');
+        $userGroup = UserGroup::where('ProviderID',$siteId)->select('id','Name')->get();
         $result = (new UsersApiController)->getAllUserType();
         $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
         $finalResult = $array['original'];
         $allUserType = $finalResult['userType'];
-        return view('add-user',compact('allUserType'));
+        return view('add-user',compact('allUserType','userGroup'));
     }
 
     public function addUserPost(Request $request){

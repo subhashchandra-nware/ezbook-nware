@@ -47,10 +47,11 @@ Route::get('/add-user',[UserController::class,'addUser']);
 Route::post('/add-user',[UserController::class,'addUserPost']);
 Route::get('/edit-user/{id}',[UserController::class,'editUser']);
 Route::post('/edit-user',[UserController::class,'editUserPost']);
-//Route::get('/delete-user/{id}',[UserController::class,'deleteUser']);
 
 Route::get('/user-groups',[UserGroupController::class,'userGroup']);
 Route::get('/add-user-group',[UserGroupController::class,'addUserGroup']);
 Route::post('/add-user-group',[UserGroupController::class,'addUserGroupPost']);
+Route::get('/edit-user-group/{id}',[UserGroupController::class,'editUserGroup']);
+Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost']);
 
 Route::get('/emailSend',[EmailController::class,'sendEmail']);

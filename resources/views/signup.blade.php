@@ -58,8 +58,8 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class="font-size-h6 font-weight-bolder text-dark">Organization Name</label>
-                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="organizationName" autocomplete="off" required value="{{ old('organizationName') }}"/>
-                      <span class="text-danger">@error('organizationName') {{ $message }} @enderror</span>
+                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="Name" autocomplete="off" required value="{{ old('Name') }}"/>
+                      <span class="text-danger">@error('Name') {{ $message }} @enderror</span>
                     </div>
                   </div>
                   <div class="col-md-6">

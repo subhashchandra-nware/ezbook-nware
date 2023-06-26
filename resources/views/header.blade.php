@@ -21,4 +21,8 @@
 		<!--begin::Layout Themes(used by all pages)-->
 		<!--end::Layout Themes-->
 		<link rel="shortcut icon" href="{{ asset('media/logos/favicon.ico') }}" />
+        <link href="{{ asset('css/chosen.min.css') }}" rel="stylesheet"/>
+		<!-- <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="{{ asset('js/chosen.jquery.min.js') }}"></script>
 	</head>

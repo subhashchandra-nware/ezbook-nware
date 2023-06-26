@@ -227,25 +227,11 @@
                               <div class="form-group row justify-content-center">
                                 <div class="col-lg-5 col-md-5 col-sm-12">
                                   <label class="col-form-label text-right ">Additional Group</label>
-                                  <select class="form-control" id="kt_multipleselectsplitter_1">
-                                    <optgroup label="Category 1">
-                                      <option value="1">Choice 1</option>
-                                      <option value="2">Choice 2</option>
-                                      <option value="3">Choice 3</option>
-                                      <option value="4">Choice 4</option>
-                                    </optgroup>
-                                    <optgroup label="Category 2">
-                                      <option value="5">Choice 5</option>
-                                      <option value="6" selected="selected">Choice 6</option>
-                                      <option value="7">Choice 7</option>
-                                      <option value="8">Choice 8</option>
-                                    </optgroup>
-                                    <optgroup label="Category 3">
-                                      <option value="5">Choice 9</option>
-                                      <option value="6">Choice 10</option>
-                                      <option value="7">Choice 11</option>
-                                      <option value="8">Choice 12</option>
-                                    </optgroup>
+                                  <!-- <select class="form-control chosen-select" id="" multiple> -->
+                                  <select data-placeholder="Begin typing a name to filter..." multiple class="form-control chosen-select" name="test">
+                                  @foreach($userGroup as $group)
+                                  <option value="{{ $group->id }}">{{ $group->Name }}</option>
+                                  @endforeach
                                   </select>
                                 </div>
                               </div>
@@ -631,6 +617,14 @@
   </div>
   <!--end::Demo Panel-->
   @include('footer')
+  <script>
+  $.noConflict();
+  $(document).ready(function(){
+  $(".chosen-select").chosen({
+   no_results_text: "Oops, nothing found!"
+  });
+});
+    </script>
 </body>
 <!--end::Body-->
 </html>

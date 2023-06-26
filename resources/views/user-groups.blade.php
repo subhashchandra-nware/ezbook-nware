@@ -50,8 +50,8 @@
                   <h3 class="card-title align-items-start flex-column">
                   </h3>
                   <div class="card-toolbar">
-                    <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">User Groups</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Users</a>
+                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm mr-3">User Groups</a>
+                    <a href="{{ url('/user') }}" class="btn btn-primary font-weight-bolder font-size-sm">Users</a>
                   </div>
                 </div>
                 <!--end::Header-->
@@ -124,8 +124,8 @@
                               <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $group['Description'] }}</span></span>
                             </td>
                             <td class="pr-0 text-right">
-                              <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
-                              <a href="#" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
+                              <a href="{{ url('/edit-user-group')}}/{{ $group['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
+                              <a href="#" onclick="deleteUserGroup({{ $group['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
                             </td>
                           </tr>
                           @endforeach
@@ -529,6 +529,31 @@
   </div>
   <!--end::Demo Panel-->
   @include('footer')
+  <script>
+  function deleteUserGroup(id){
+  Swal.fire({
+  title: 'Do you want to delete the user group?',
+  showCancelButton: true,
+  denyButtonText: `Delete`,
+  }).then((result) => {
+    if (result.isConfirmed) {
+    var data = { "id" : id}
+      $.ajax({
+        url : "{{ url('/api/delete-user-group') }}",
+        data : data,
+        type:'post',
+        success:function(result){
+            console.log(result);
+            var status = result['status'];
+            if(status == 'success'){
+              window.location.href="{{ url('/user-groups') }}";
+            }
+        }
+      });
+    } 
+   })
+  }
+</script>
 </body>
 <!--end::Body-->
 </html>

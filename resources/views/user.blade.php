@@ -133,7 +133,9 @@
                             </td>
                             <td class="pr-0 text-right">
                               <a href="{{ url('/edit-user')}}/{{ $user['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
+                              @if($user['id'] != session('loginUserId'))
                               <a href="#" onclick="deleteUser({{ $user['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
+                              @endif
                             </td>
                           </tr>
                           @endforeach
@@ -539,47 +541,27 @@
   <!--end::Page Scripts-->
   <script>
   function deleteUser(id){
-    // var data = { "id" : id}
-    // $.ajax({
-    //   url : "{{ url('/api/delete-user') }}",
-    //   data : data,
-    //   type:'post',
-    //   success:function(result){
-    //       console.log(result);
-    //       var status = result['status'];
-    //       if(status == 'success'){
-    //          Swal.fire({
-    //           position: 'center',
-    //           icon: 'success',
-    //           title: 'User Deleted Successfully',
-    //           showConfirmButton: false,
-    //           timer: 1500
-    //         });
-    //       }
-    //   }
-    // });
-
-    Swal.fire({
+  Swal.fire({
   title: 'Do you want to delete the user?',
   showCancelButton: true,
   denyButtonText: `Delete`,
-}).then((result) => {
-  if (result.isConfirmed) {
-   var data = { "id" : id}
-    $.ajax({
-      url : "{{ url('/api/delete-user') }}",
-      data : data,
-      type:'post',
-      success:function(result){
-          console.log(result);
-          var status = result['status'];
-          if(status == 'success'){
-            window.location.href="/user";
-          }
-      }
-    });
-  } 
-})
+  }).then((result) => {
+    if (result.isConfirmed) {
+    var data = { "id" : id}
+      $.ajax({
+        url : "{{ url('/api/delete-user') }}",
+        data : data,
+        type:'post',
+        success:function(result){
+            console.log(result);
+            var status = result['status'];
+            if(status == 'success'){
+              window.location.href="{{ url('/user') }}";
+            }
+        }
+      });
+    } 
+   })
   }
 </script>
 </body>

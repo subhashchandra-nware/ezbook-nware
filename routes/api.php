@@ -49,6 +49,8 @@ Route::post('email-send',[EmailApiController::class,'sendPasswordEmail']);
 
 Route::post('add-user-group',[UserGroupApiController::class,'addUserGroup']);
 Route::post('show-all-user-group',[UserGroupApiController::class,'getAllUserGroup']);
+Route::post('delete-user-group',[UserGroupApiController::class,'deleteUserGroup']);
+Route::post('update-user-group',[UserGroupApiController::class,'updateUserGroup']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

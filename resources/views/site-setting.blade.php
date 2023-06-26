@@ -209,7 +209,7 @@
                             <!--begin::Actions-->
                             <div class="d-flex justify-content-end border-top mt-5 pt-10">
                               <div>
-                                <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4">Exit</button>
+                                <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4">Cancel</button>
                                 <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
                               </div>
                             </div>

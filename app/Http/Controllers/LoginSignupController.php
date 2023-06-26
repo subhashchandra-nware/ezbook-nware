@@ -79,7 +79,7 @@ class LoginSignupController extends Controller
 
     public function signupDetailSaved(Request $request){
         $request->validate([
-            'organizationName' => ['required'],
+            'Name' => ['required','unique:facproviders'],
             'firstName' => ['required'],
             'emailAddress' => ['required','email'],
         ]);

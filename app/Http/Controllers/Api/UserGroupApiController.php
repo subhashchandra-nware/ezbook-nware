@@ -73,4 +73,67 @@ class UserGroupApiController extends Controller
             }
            }
     }
+
+    public function deleteUserGroup(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->messages(),400);
+        }else{
+           $userGroup = UserGroup::find($request->id);
+           if($userGroup == null){
+            return response()->json([
+                'message' => 'User group not found',
+                'status' => 'failed',
+            ],200);
+           }else{ 
+             if($userGroup->delete()){
+                return response()->json([
+                    'message' => 'User group deleted Successfuly',
+                    'status' => 'success',
+                ],200);
+             }else{
+                return response()->json([
+                    'message' => 'Server Error',
+                    'status' => '500',
+                ],200);
+             }
+           }
+        }
+    }
+
+    public function updateUserGroup(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required',
+            'Name' => ['required'],
+            'Description' => ['required'],
+           ]);
+           if($validator->fails()){
+            return response()->json($validator->messages(),400);
+           }else{
+            $updateUserGroup = UserGroup::find($request->id);
+            if($updateUserGroup != null){
+                $updateUserGroup->Name = $request->Name;
+                $updateUserGroup->Description = $request->Description;
+                if($updateUserGroup->save()){
+                    return response()->json([
+                    'message' => 'User group update Successfully',
+                    'status' => 'success',
+                    ],200);
+                }else{
+                    return response()->json([
+                        'message' => 'User group not updated',
+                        'status' => 'failed',
+                    ],200);
+                }
+            }else{
+                return response()->json([
+                        'message' => 'User group not found',
+                        'status' => 'failed'
+                    ],500);
+            }
+        }
+    }
 }

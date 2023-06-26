@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\UserGroupApiController;
+use App\Models\UserGroup;
 
 class UserGroupController extends Controller
 {
@@ -42,5 +43,25 @@ class UserGroupController extends Controller
         }else{
             return back();
         }
+    }
+
+    public function editUserGroup($id){
+        $userGroup = UserGroup::find($id);
+        if($userGroup == null){
+            return redirect('/user-groups');
+        }else{
+            return view('edit-user-group',compact('userGroup'));
+        }
+    }
+
+    public function editUserGroupPost(Request $request){
+     $result = (new UserGroupApiController)->updateUserGroup($request);
+     $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
+     $finalResult = $array['original'];
+     if($finalResult['status'] == 'success'){
+        return redirect('/user-groups');
+     }else{
+        return back();
+     }
     }
 }

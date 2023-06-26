@@ -45,7 +45,7 @@ class SignupApiController extends Controller
     public function store(Request $request)
     {
        $validator = Validator::make($request->all(),[
-        'organizationName' => ['required'],
+        'Name' => ['required','unique:facproviders'],
         'firstName' => ['required'],
         'emailAddress' => ['required','email'],
        ]);
@@ -94,7 +94,7 @@ class SignupApiController extends Controller
         }
 
         $facprovidersData = [
-            'Name' => trim($request->organizationName),
+            'Name' => trim($request->Name),
             'LoginName' => '',
             'ContactName' => $fullName,
             'ContactEmail' => $request->emailAddress,
@@ -138,7 +138,8 @@ class SignupApiController extends Controller
             'status' => 1,
             'user_id' => $user->id,
             'name' => $user->Name,
-            'emailAddress' => $user->EmailAddress
+            'emailAddress' => $user->EmailAddress,
+            'user' => $user
         ],200);
        }else{
         return response()->json([
