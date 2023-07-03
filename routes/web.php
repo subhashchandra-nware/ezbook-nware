@@ -7,6 +7,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\ResourceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +26,8 @@ Route::get('/sign-in', [LoginSignupController::class,'signIn']);
 Route::post('/sign-in',[LoginSignupController::class,'signInPost']);
 Route::get('/signup',[LoginSignupController::class,'signupView']);
 Route::post('/signup',[LoginSignupController::class,'signupDetailSaved']);
+
+
 Route::get('/verify-email',[LoginSignupController::class,'emailVerificationSend']);
 Route::get('/set-password/{token}',[LoginSignupController::class,'passwordPageView']);
 Route::post('/set-password',[LoginSignupController::class,'setPasswordFirstTime']);
@@ -53,5 +56,17 @@ Route::get('/add-user-group',[UserGroupController::class,'addUserGroup']);
 Route::post('/add-user-group',[UserGroupController::class,'addUserGroupPost']);
 Route::get('/edit-user-group/{id}',[UserGroupController::class,'editUserGroup']);
 Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost']);
+
+// Route::get('/resources',[ResourceController::class,'getAllResources']);
+
+
+Route::controller(ResourceController::class)->group(function(){
+    Route::get('resource', 'getAllResource');
+    Route::get('resource-location', 'getAllResourceLocation');
+    Route::get('add-new-resource-location', 'addNewResourceLocation');
+    Route::post('add-new-resource-location', 'addNewResourceLocationPost');
+    Route::get('edit-resource-location/{id}', 'editResourceLocation');
+    Route::post('update-resource-location','updateResourceLocation');
+});
 
 Route::get('/emailSend',[EmailController::class,'sendEmail']);

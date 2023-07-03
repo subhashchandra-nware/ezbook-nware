@@ -12,6 +12,7 @@ use App\Models\FacProvider;
 use App\Models\UserProviderMapping;
 use App\Models\PasswordReset;
 use Mail;
+use Illuminate\Support\Facades\Http;
 
 class LoginSignupController extends Controller
 {
@@ -27,12 +28,14 @@ class LoginSignupController extends Controller
             'EmailAddress' => ['required'],
             'Password' => ['required'],
         ]);
+
         $result = (new SignupApiController)->passwordCheck($request);
         $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
         $finalResult = $array['original'];
         $userId = "";
         $Loginstatus = $finalResult['status'];
         $message = $finalResult['message'];
+
         if($Loginstatus == 'success'){
             $userId = $finalResult['user']['id'];
             session()->put('loginUserId',$userId);

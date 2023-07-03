@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\SiteSettingApiController;
 use App\Http\Controllers\Api\UsersApiController;
 use App\Http\Controllers\Api\EmailApiController;
 use App\Http\Controllers\Api\UserGroupApiController;
+use App\Http\Controllers\Api\Resource\ResourceApiController;
+use App\Http\Controllers\Api\Countries\CountriesApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +54,21 @@ Route::post('show-all-user-group',[UserGroupApiController::class,'getAllUserGrou
 Route::post('delete-user-group',[UserGroupApiController::class,'deleteUserGroup']);
 Route::post('update-user-group',[UserGroupApiController::class,'updateUserGroup']);
 
+Route::controller(ResourceApiController::class)->group(function(){
+    Route::get('all-resources','getAllResources');
+    Route::get('all-resource-location','getAllResourcesLocation');
+    Route::post('add-new-resource-location','addNewResourceLocationPost');
+    Route::post('find-resource-location','findResourceLocation');
+    Route::post('update-resource-location','updateResourceLocation');
+    Route::post('delete-resource-location','deleteResourceLocation');
+});
+
+// Route::get('all-resources',[ResourceApiController::class,'getAllResources']);
+// Route::get('all-resource-location',[ResourceApiController::class,'getAllResourcesLocation']);
+// Route::post('add-new-resource-location',[ResourceApiController::class,'addNewResourceLocationPost']);
+// Route::post('delete-resource-location',[ResourceApiController::class,'deleteResourceLocation']);
+
+Route::get('all-countries',[CountriesApiController::class,'getAllCountryName']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

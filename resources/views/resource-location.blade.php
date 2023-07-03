@@ -43,15 +43,21 @@
           <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
             <div class="container">
+              @if ($message = Session::get('success'))
+                    <div class="alert alert-success alert-block">
+                      <button type="button" class="close" data-dismiss="alert">×</button>	
+                      <strong>{{ $message }}</strong>
+                    </div>
+              @endif
               <!--begin::Dashboard-->
               <div class="card card-custom gutter-b">
                 <!--begin::Header-->
                 <div class="card-header border-0 py-5">
-                  <h3 class="card-title align-items-start flex-column">
-                  </h3>
+                  <h3 class="card-title align-items-start flex-column"></h3>
                   <div class="card-toolbar">
-                    <a href="{{ url('/user-groups')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">User Groups</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Users</a>
+                    <a href="{{ url('/resource-location')}}" class="btn btn-success font-weight-bolder font-size-sm mr-3">Resource Location</a>
+                    <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
+                    <a href="#" class="btn btn-primary font-weight-bolder font-size-sm">Resources</a>
                   </div>
                 </div>
                 <!--end::Header-->
@@ -60,7 +66,7 @@
                 <!--begin::Header-->
                 <div class="card-header border-0 py-5">
                   <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label font-weight-bolder text-dark mb-4">User</span>
+                    <span class="card-label font-weight-bolder text-dark mb-4">Resource Location</span>
                     <form class="form-inline">
                       <span class="mr-4">Show</span>
                       <div class="form-group">
@@ -94,7 +100,7 @@
                     </form>
                   </h3>
                   <div class="card-toolbar">
-                    <a href="{{ url('/add-user')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
+                    <a href="{{ url ('/add-new-resource-location') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
                     <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a>
                   </div>
                 </div>
@@ -109,36 +115,28 @@
                           <tr class="text-left text-uppercase">
                             <th style="min-width: 30px">S.No.</th>
                             <th style="min-width: 200px">Name</th>
-                            <th style="min-width: 100px">EmailAddress</th>
-                            <th style="min-width: 100px">PhoneNumbers</th>
-                            <th style="min-width: 150px">AdminLevel</th>
+                            <th style="min-width: 100px">Address</th>
                             <th style="min-width: 80px">Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                        @foreach($users as $user)
+                        @isset($data)
+                        @foreach($data as $res)
                           <tr>
                             <td>{{$loop->iteration}}</td>
                             <td class="pl-0 py-8">
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['Name'] }}</span>
+                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $res['Name'] }}</span>
                             </td>
                             <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['EmailAddress'] }}</span></span>
+                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $res['Address1'] }}</span></span>
                             </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['PhoneNumbers'] }}</span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['userType'] }}</span>
-                            </td>
-                            <td class="pr-0 text-right">
-                              <a href="{{ url('/edit-user')}}/{{ $user['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
-                              @if($user['id'] != session('loginUserId'))
-                              <a href="#" onclick="deleteUser({{ $user['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
-                              @endif
+                            <td class="pr-0">
+                              <a href="{{ url('/edit-resource-location')}}/{{ $res['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
+                              <a href="#" onclick="deleteResourceLocation({{ $res['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
                             </td>
                           </tr>
                           @endforeach
+                          @endisset
                         </tbody>
                       </table>
                     </div>
@@ -540,30 +538,30 @@
   @include('footer')
   <!--end::Page Scripts-->
   <script>
-  function deleteUser(id){
+  function deleteResourceLocation(id){
   Swal.fire({
-  title: 'Do you want to delete the user?',
+  title: 'Do you want to delete the resource location?',
   showCancelButton: true,
   denyButtonText: `Delete`,
   }).then((result) => {
     if (result.isConfirmed) {
     var data = { "id" : id}
       $.ajax({
-        url : "{{ url('/api/delete-user') }}",
+        url : "{{ url('/api/delete-resource-location') }}",
         data : data,
         type:'post',
         success:function(result){
             console.log(result);
             var status = result['status'];
             if(status == 'success'){
-              window.location.href="{{ url('/user') }}";
+              window.location.href="{{ url('/resource-location') }}";
             }
         }
       });
     } 
    })
   }
-</script>
+    </script>
 </body>
 <!--end::Body-->
 </html>

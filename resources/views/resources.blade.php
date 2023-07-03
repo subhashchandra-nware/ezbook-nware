@@ -50,8 +50,9 @@
                   <h3 class="card-title align-items-start flex-column">
                   </h3>
                   <div class="card-toolbar">
-                    <a href="{{ url('/user-groups')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">User Groups</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Users</a>
+                  <a href="{{ url('/resource-location')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Location</a>
+                  <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
+                  <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Resources</a>
                   </div>
                 </div>
                 <!--end::Header-->
@@ -112,33 +113,11 @@
                             <th style="min-width: 100px">EmailAddress</th>
                             <th style="min-width: 100px">PhoneNumbers</th>
                             <th style="min-width: 150px">AdminLevel</th>
-                            <th style="min-width: 80px">Action</th>
+                            <th style="min-width: 80px"></th>
                           </tr>
                         </thead>
                         <tbody>
-                        @foreach($users as $user)
-                          <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td class="pl-0 py-8">
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['Name'] }}</span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['EmailAddress'] }}</span></span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['PhoneNumbers'] }}</span>
-                            </td>
-                            <td>
-                              <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ $user['userType'] }}</span>
-                            </td>
-                            <td class="pr-0 text-right">
-                              <a href="{{ url('/edit-user')}}/{{ $user['id'] }}" class="btn btn-light-success font-weight-bolder font-size-sm">View </a>
-                              @if($user['id'] != session('loginUserId'))
-                              <a href="#" onclick="deleteUser({{ $user['id'] }})" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
-                              @endif
-                            </td>
-                          </tr>
-                          @endforeach
+                        
                         </tbody>
                       </table>
                     </div>
