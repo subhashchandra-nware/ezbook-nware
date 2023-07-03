@@ -50,7 +50,7 @@
                       <div class="row row-paddingless">
                         <!--begin:Item-->
                         <div class="col-6">
-                          <a href="{{ url('/resource') }}" class="d-block py-10 px-5 text-center bg-hover-light border-right border-bottom">
+                          <a href="#" class="d-block py-10 px-5 text-center bg-hover-light border-right border-bottom">
                             <span class="svg-icon svg-icon-3x svg-icon-success">
                               <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Euro.svg-->
                               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -115,7 +115,7 @@
                   <div class="topbar-item">
                     <div class="btn btn-icon btn-hover-transparent-white w-sm-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
                       <div class="d-flex flex-column text-right pr-sm-3">
-                        <span class="text-white opacity-50 font-weight-bold font-size-sm d-none d-sm-inline">{{ session('loginUserName') }}</span>
+                        <span class="text-white font-weight-bold font-size-sm d-none d-sm-inline">{{ session('loginUserName') }}</span>
                       </div>
                       <span class="symbol symbol-35">
                         <span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30">S</span>

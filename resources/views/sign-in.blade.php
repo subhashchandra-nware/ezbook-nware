@@ -28,20 +28,20 @@
 		<!--begin::Main-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Aside header-->
-						<a href="#" class="login-logo text-center mb-4 mt-4">
+						<a href="#" class="login-logo text-center mb-4 mt-50">
 							<img src="{{ asset('media/logos/Logo.png') }}" class="max-h-50px" alt="" />
 						</a>
-			<!--begin::Login-->
-			<div class="login login-3 wizard d-flex flex-column flex-lg-row flex-column-fluid">
+			<!--begin::Login--> 
+			<div class="login login-3 wizard d-flex flex-column flex-lg-row flex-column-fluid ">
 				<!--begin::Aside-->
 
 				<!--begin::Content-->
-				<div class="login-content flex-row-fluid d-flex flex-column p-10">
+				<div class="login-content col-md-6 d-flex flex-column p-10">
 					
 					<!--begin::Wrapper-->
 					<div class="d-flex flex-row-fluid flex-center">
 						<!--begin::Signin-->
-						<div class="login-form">
+						<div class="login-form lform-bg">
 							<!--begin::Form-->
 								<!--begin::Title-->
 								<div class="pb-5 pb-lg-15">
@@ -59,7 +59,7 @@
                 				@csrf
 								<div class="form-group">
 									<label class="font-size-h6 font-weight-bolder text-dark">Your Email</label>
-									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="EmailAddress" required autocomplete="off" value="{{ old('EmailAddress') }}" />
+									<input class="form-control l-input  rounded-lg border-1" type="text" name="EmailAddress" required autocomplete="off" value="{{ old('EmailAddress') }}" />
 								</div>
 								<!--end::Form group-->
 								<!--begin::Form group-->
@@ -68,12 +68,12 @@
 										<label class="font-size-h6 font-weight-bolder text-dark pt-5">Your Password</label>
 										<a href="forgot.html" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5">Forgot Password ?</a>
 									</div>
-									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="password" name="Password" required autocomplete="off" />
+									<input class="form-control l-input rounded-lg border-1" type="password" name="Password" required autocomplete="off" />
 								</div>
 								<!--end::Form group-->
 								<!--begin::Action-->
 								<div class="pb-lg-0 pb-5">
-									<button type="submit" id="" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
+									<button type="submit" id="" class="btn btn-outline-primary font-weight-bolder font-size-h6  my-3 mr-3">Sign In</button>
 									
 								</div>
 								<!--end::Action-->
@@ -84,11 +84,14 @@
 					</div>
 					<!--end::Wrapper-->
 				</div>
+				<div class="ordiv">
+					<h4>OR</h4>
+				</div>
 				<!--end::Content-->
-				<div class="login-aside d-flex flex-column flex-row-auto justify-content-center">
+				<div class="login-aside col-md-5 d-flex flex-column justify-content-center lbdr">
 					<!--begin::Aside Top-->
 					<div class="d-flex flex-column-auto flex-column pt-lg-10 align-items-center pt-15 pt-sm-0 pt-xs-0 sso">
-						<div class="col-md-6 col-6 "><a href="#" class="btn btn-primary w-100 f-16"> Login with SSO</a></div>
+						<div class="col-md-12  "><a href="#" class="btn btn-primary btn-sso f-16"> Login with SSO</a></div>
 						
 					</div>
 					<!--end::Aside Top-->

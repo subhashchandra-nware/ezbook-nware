@@ -28,17 +28,14 @@
   <body id="kt_body" class="header-fixed header-mobile-fixed header-bottom-enabled subheader-enabled page-loading">
     <!--begin::Main-->
     <div class="d-flex flex-column flex-root">
-      <div class="top-signin text-right d-flex justify-content-end pt-5 pb-lg-0 pr-5 ">
-        <span class="font-weight-bold text-muted font-size-h4">Having issues?</span>
-        <a href="javascript:;" class="font-weight-bold text-primary font-size-h4 ml-2" id="kt_login_signup">Get Help</a>
-      </div>
+      
       <!--begin::Aside header-->
-      <a href="#" class="login-logo text-center mb-4 mt-4">
+      <a href="#" class="login-logo text-center mb-4 mt-50">
       <img src="{{ asset('media/logos/Logo.png') }}" class="max-h-50px" alt="" />
       </a>
-      <div class="pb-5 pb-lg-15 text-center">
-        <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Create Account</h3>
-        <div class="text-muted font-weight-bold font-size-h4">Already have an Account?
+      <div class=" text-center">
+        <h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg mt-5" >Create Account</h3>
+        <div class="text-muted font-weight-bold font-size-h4 ">Already have an Account?
           <a href="{{ url('/')}}" class="text-primary font-weight-bolder">Signin</a>
         </div>
       </div>
@@ -46,11 +43,11 @@
       <div class="login login-3 wizard d-flex flex-column flex-lg-row flex-column-fluid">
         <!--begin::Aside-->
         <!--begin::Content-->
-        <div class="login-content flex-row-fluid d-flex flex-column p-10">
+        <div class="login-content flex-row-fluid d-flex flex-column p-0">
           <!--begin::Wrapper-->
           <div class="d-flex flex-row-fluid flex-center">
             <!--begin::Signin-->
-            <div class="login-form login-form-signup">
+            <div class="login-form login-form-signup lform-bg">
               <!--begin::Form-->
               <form class="form" id="signupForm" action="{{ url('signup')}}" method="post">
               @csrf
@@ -58,27 +55,27 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class="font-size-h6 font-weight-bolder text-dark">Organization Name</label>
-                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="Name" autocomplete="off" required value="{{ old('Name') }}"/>
+                      <input class="form-control rounded-lg border-1 l-input " type="text" name="Name" autocomplete="off" required value="{{ old('Name') }}"/>
                       <span class="text-danger">@error('Name') {{ $message }} @enderror</span>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label class="font-size-h6 font-weight-bolder text-dark">First Name</label>
-                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="firstName" autocomplete="off" required value="{{ old('firstName') }}"/>
+                      <input class="form-control rounded-lg border-1 l-input" type="text" name="firstName" autocomplete="off" required value="{{ old('firstName') }}"/>
                       <span class="text-danger">@error('firstName') {{ $message }} @enderror</span>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label class="font-size-h6 font-weight-bolder text-dark">Last Name</label>
-                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="lastName" autocomplete="off" value="{{ old('lastName') }}" />
+                      <input class="form-control rounded-lg border-1 l-input" type="text" name="lastName" autocomplete="off" value="{{ old('lastName') }}" />
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class="font-size-h6 font-weight-bolder text-dark">Your Email</label>
-                      <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="emailAddress" autocomplete="off" required  value="{{ old('emailAddress') }}"/>
+                      <input class="form-control rounded-lg border-1 l-input" type="text" name="emailAddress" autocomplete="off" required  value="{{ old('emailAddress') }}"/>
                       <span class="text-danger">@error('emailAddress') {{ $message }} @enderror</span>
                     </div>
                   </div>
@@ -89,7 +86,7 @@
                         <label class="checkbox checkbox-success">
                         <input type="checkbox" name="Checkboxes5" />
                         <span></span>
-                        I Agree the <a href="#" class="pl-1"> terms and conditions.</a></label>
+                        I have read and agree to the <a href="#" class="pl-1 font-weight-bold"> Terms and conditions.</a></label>
                       </div>
                     </div>
                   </div>
@@ -97,7 +94,7 @@
                 </div>
                 <!--begin::Action-->
                 <div class="pb-lg-0 pb-5">
-                  <button type="submit" id="" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Submit</button>
+                  <button type="submit" id="" class="btn btn-outline-primary  font-weight-bolder font-size-h6 my-3 mr-3">Submit</button>
                 </div>
                 <!--end::Action-->
               </form>
