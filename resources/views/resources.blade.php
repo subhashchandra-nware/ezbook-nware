@@ -51,7 +51,7 @@
                   </h3>
                   <div class="card-toolbar">
                   <a href="{{ url('/resource-location')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Location</a>
-                  <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
+                  <a href="{{ url('/resource-type') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
                   <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Resources</a>
                   </div>
                 </div>
@@ -61,7 +61,7 @@
                 <!--begin::Header-->
                 <div class="card-header border-0 py-5">
                   <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label font-weight-bolder text-dark mb-4">User</span>
+                    <span class="card-label font-weight-bolder text-dark mb-4">Resources</span>
                     <form class="form-inline">
                       <span class="mr-4">Show</span>
                       <div class="form-group">
@@ -95,7 +95,7 @@
                     </form>
                   </h3>
                   <div class="card-toolbar">
-                    <a href="{{ url('/add-user')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
+                    <a href="{{ url('/add-resource')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
                     <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a>
                   </div>
                 </div>
@@ -117,7 +117,20 @@
                           </tr>
                         </thead>
                         <tbody>
-                        
+                            @php
+                                $i = 1;
+                            @endphp
+                            @foreach ( $listResources as $k => $v )
+
+                            <tr class="text-left">
+                                <th style="min-width: 30px"> {{ $i++ }} </th>
+                                <th style="min-width: 200px">{{ $v['Name'] }}</th>
+                                <th style="min-width: 100px">{{ $v['EmailRecipients'] }}</th>
+                                <th style="min-width: 100px">PhoneNumbers</th>
+                                <th style="min-width: 150px">AdminLevel</th>
+                                <th style="min-width: 80px"></th>
+                            </tr>
+                            @endforeach
                         </tbody>
                       </table>
                     </div>
@@ -539,7 +552,7 @@
             }
         }
       });
-    } 
+    }
    })
   }
 </script>

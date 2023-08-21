@@ -1,11 +1,12 @@
 @include('header')
+
 <body id="kt_body" class="header-fixed header-mobile-fixed header-bottom-enabled page-loading">
   <!--begin::Main-->
   <!--begin::Header Mobile-->
   <div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed">
     <!--begin::Logo-->
     <a href="index.html">
-    <img alt="Logo" src="assets/media/logos/logo-1.png" class="max-h-30px" />
+      <img alt="Logo" src="assets/media/logos/logo-1.png" class="max-h-30px" />
     </a>
     <!--end::Logo-->
     <!--begin::Toolbar-->
@@ -46,7 +47,7 @@
               </div>
               <div class="card card-custom">
                 <div class="card-body p-0">
-                  <div >
+                  <div>
                     <!--begin::Wizard Body-->
                     <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
                       <div class="col-xl-12">
@@ -116,7 +117,7 @@
                                   <div class="col-lg-9 col-xl-9">
                                     <select class="form-control " id="show" name="Country">
                                       @foreach($countries as $country)
-                                      <option value= "{{ $country['id'] }}">{{ $country['name'] }}</option>
+                                      <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
                                       @endforeach
                                     </select>
                                     <span class="form-text text-muted">Select Your Country </span>
@@ -130,7 +131,7 @@
                           <!--begin::Actions-->
                           <div class="d-flex justify-content-end border-top mt-5 pt-10">
                             <div>
-                              <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
+                              <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4">Back</button>
                               <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
                             </div>
                           </div>
@@ -185,7 +186,7 @@
         <small class="text-muted font-size-sm ml-2">12 messages</small>
       </h3>
       <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
-      <i class="ki ki-close icon-xs text-muted"></i>
+        <i class="ki ki-close icon-xs text-muted"></i>
       </a>
     </div>
     <!--end::Header-->
@@ -460,7 +461,7 @@
     <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7">
       <h4 class="font-weight-bold m-0">Select A Demo</h4>
       <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
-      <i class="ki ki-close icon-xs text-muted"></i>
+        <i class="ki ki-close icon-xs text-muted"></i>
       </a>
     </div>
     <!--end::Header-->
@@ -764,4 +765,5 @@
   @include('footer')
 </body>
 <!--end::Body-->
+
 </html>

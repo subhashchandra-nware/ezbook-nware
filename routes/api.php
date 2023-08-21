@@ -8,7 +8,9 @@ use App\Http\Controllers\Api\UsersApiController;
 use App\Http\Controllers\Api\EmailApiController;
 use App\Http\Controllers\Api\UserGroupApiController;
 use App\Http\Controllers\Api\Resource\ResourceApiController;
+use App\Http\Controllers\Api\Resource\ResourceTypeApiController;
 use App\Http\Controllers\Api\Countries\CountriesApiController;
+use App\Http\Controllers\ResourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +29,12 @@ use App\Http\Controllers\Api\Countries\CountriesApiController;
 
 
 Route::get('/test',function(){
-    p("working");
+    // p("working");
 });
 
 Route::post('signup-detailSaved','App\Http\Controllers\Api\SignupApiController@store');
-Route::get('users/get',[SignupController::class,'index']);
+// Route::get('users/get',[SignupController::class,'index']);
+Route::get('users/get',[SignupApiController::class,'index']);
 Route::post('set-password',[SignupApiController::class,'setFirstTimePassword']);
 Route::post('password-check',[SignupApiController::class,'passwordCheck']);
 Route::post('check-user-has-password',[SignupApiController::class,'checkUserhasPassword']);
@@ -56,11 +59,23 @@ Route::post('update-user-group',[UserGroupApiController::class,'updateUserGroup'
 
 Route::controller(ResourceApiController::class)->group(function(){
     Route::get('all-resources','getAllResources');
+    Route::get('resource', 'getAllResource')->name('api.resource.resource');
     Route::get('all-resource-location','getAllResourcesLocation');
+    Route::post('add-resource', 'storeResource');
     Route::post('add-new-resource-location','addNewResourceLocationPost');
     Route::post('find-resource-location','findResourceLocation');
     Route::post('update-resource-location','updateResourceLocation');
     Route::post('delete-resource-location','deleteResourceLocation');
+});
+
+Route::get('resource/test', [ResourceController::class, 'test'])->name('resource.test');
+
+Route::controller(ResourceTypeApiController::class)->group(function(){
+    Route::post('resource-type','getAllResourceType');
+    Route::get('resource-configuration-type','getAllConfigurationTypes');
+    Route::post('add-new-resource-type','addNewResourceType');
+    Route::post('resource-type-limited-field','getAllResourceTypeLimitedField');
+    Route::post('delete-resource-type','deleteResourceType');
 });
 
 // Route::get('all-resources',[ResourceApiController::class,'getAllResources']);
@@ -78,7 +93,7 @@ Route::get('all-countries',[CountriesApiController::class,'getAllCountryName']);
 // });
 
 // Route::post('/user',function(){
-//     return response()->json("Post Api hit Succesffuly"); 
+//     return response()->json("Post Api hit Succesffuly");
 // });
 
 // Route::delete('/user/{id}',function($id){
@@ -86,5 +101,5 @@ Route::get('all-countries',[CountriesApiController::class,'getAllCountryName']);
 // });
 
 // Route::put('/user/{id}',function($id){
-//     return response("Update = ".$id,200); 
+//     return response("Update = ".$id,200);
 // });

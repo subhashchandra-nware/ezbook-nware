@@ -43,12 +43,8 @@
           <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
             <div class="container">
-              @if ($message = Session::get('success'))
-                    <div class="alert alert-success alert-block">
-                      <button type="button" class="close" data-dismiss="alert">×</button>	
-                      <strong>{{ $message }}</strong>
-                    </div>
-              @endif
+                <x-layouts.message />
+
               <!--begin::Dashboard-->
               <div class="card card-custom gutter-b">
                 <!--begin::Header-->
@@ -56,7 +52,7 @@
                   <h3 class="card-title align-items-start flex-column"></h3>
                   <div class="card-toolbar">
                     <a href="{{ url('/resource-location')}}" class="btn btn-success font-weight-bolder font-size-sm mr-3">Resource Location</a>
-                    <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
+                    <a href="{{ url('/resource-type') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
                     <a href="#" class="btn btn-primary font-weight-bolder font-size-sm">Resources</a>
                   </div>
                 </div>
@@ -558,7 +554,7 @@
             }
         }
       });
-    } 
+    }
    })
   }
     </script>

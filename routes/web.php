@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SignupApiController;
+// use App\Http\Controllers\Api\SignupApiController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\ResourceLocationController;
+use App\Http\Controllers\ResourceTypeController;
 use App\Http\Controllers\ResourceController;
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +23,8 @@ use App\Http\Controllers\ResourceController;
 */
 
 // Auth::routes();
+
+
 
 Route::get('/', [LoginSignupController::class,'signIn']);
 Route::get('/sign-in', [LoginSignupController::class,'signIn']);
@@ -60,8 +65,7 @@ Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost'])
 // Route::get('/resources',[ResourceController::class,'getAllResources']);
 
 
-Route::controller(ResourceController::class)->group(function(){
-    Route::get('resource', 'getAllResource');
+Route::controller(ResourceLocationController::class)->group(function(){
     Route::get('resource-location', 'getAllResourceLocation');
     Route::get('add-new-resource-location', 'addNewResourceLocation');
     Route::post('add-new-resource-location', 'addNewResourceLocationPost');
@@ -69,4 +73,38 @@ Route::controller(ResourceController::class)->group(function(){
     Route::post('update-resource-location','updateResourceLocation');
 });
 
+Route::controller(ResourceTypeController::class)->group(function(){
+    Route::get('resource-type', 'resourceType');
+    Route::get('add-new-resource-type', 'addNewResourceType');
+    Route::get('edit-resource-type/{id}', 'editResourceType');
+    //Route::post('add-new-resource-type', 'addNewResourceTypePost');
+});
+
+Route::controller(ResourceController::class)->group(function(){
+    Route::get('resource', 'getAllResource')->name('resource.resource');
+    Route::get('resource/test', 'test')->name('resource.test');
+    Route::get('add-resource', 'addResource')->name('resource.create');
+    Route::post('add-resource', 'storeResource')->name('resource.store');
+    Route::get('edit-resource/{resource}', 'editResource')->name('resource.edit');
+    Route::put('update-resource/{resource}', 'updateResource')->name('resource.update');
+    Route::delete('destroy-resource/{resource}', 'destroyResource')->name('resource.destroy');
+});
+
+Route::controller(BookController::class)->group(function(){
+    Route::resource('book', BookController::class);
+});
+
+
+
+
 Route::get('/emailSend',[EmailController::class,'sendEmail']);
+
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+});
+
+Route::get('/config-clear', function() {
+    Artisan::call('config:clear');
+});
+
+

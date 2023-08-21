@@ -112,7 +112,7 @@
                             <th style="min-width: 100px">EmailAddress</th>
                             <th style="min-width: 100px">PhoneNumbers</th>
                             <th style="min-width: 150px">AdminLevel</th>
-                            <th style="min-width: 80px"></th>
+                            <th style="min-width: 80px">Action</th>
                           </tr>
                         </thead>
                         <tbody>
