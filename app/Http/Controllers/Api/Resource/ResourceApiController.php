@@ -4,10 +4,16 @@ namespace App\Http\Controllers\Api\Resource;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreResourceRequest;
+use App\Models\CustomBookingInfo;
+use App\Models\OperationHour;
 use App\Models\Resource;
 use Illuminate\Http\Request;
 use App\Models\ResourceLocation;
 use App\Models\ResourceConfigurationType;
+use App\Models\ResourceType;
+use App\Models\SubResource;
+use App\Models\User;
+use App\Models\UserGroup;
 use App\Models\Usergroupright;
 use App\Models\Userright;
 use Illuminate\Support\Facades\DB;
@@ -257,6 +263,8 @@ class ResourceApiController extends Controller
         $opretionalHours = $this->columnDataArr( $opretionalHours);
         $custombookinginfos = $this->columnDataArr( $custombookinginfos, ['Name','FieldType', 'Description', 'Require']);
 
+        $SubResources = $this->columnDataArr( $request->all('SubResourcesName'), ['Name']);
+        // dd($request->all(), $SubResources);
         DB::beginTransaction();
         try {
             $resource = Resource::create($request->all());
@@ -300,6 +308,9 @@ class ResourceApiController extends Controller
             if (isset($custombookinginfos) && count($custombookinginfos))
                 $resource->customBookingInfo()->createMany($custombookinginfos);
 
+            if (isset($SubResources) && count($SubResources))
+                $resource->SubResource()->createMany($SubResources);
+
             DB::commit();
             return response()->json([
                 "message" => "Resource Create Successfully.",
@@ -316,6 +327,71 @@ class ResourceApiController extends Controller
             ], 500);
         }
     }
+
+     /**
+     * Show the form for editing the specified resource.
+     */
+    public function editResource(Resource $resource)
+    {
+        // $d = $resource->toArray();
+        // $d = $resource->usersRight()->where('id', 92)->get();
+        // $d = Resource::with('usersRight')->where('id', 92)->get()->toArray();
+        // $d = Resource::with(['usersRight'])->find(60)->toArray();
+
+        // $data['resource'] = $resource->toArray();
+        $data = [];
+        $PermissionType = ['1'=>'BookingRights', '2'=>'ViewingRights', '3'=>'RequestRights', '4'=>'ModRights', ];
+
+        $AllRightsUsers = Userright::where('userrights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
+        $AllRightsUserGroups = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
+
+        array_walk($PermissionType, function($v)use(&$data){
+            $data[$v.'Users'] = [];
+            $data[$v.'UserGroups'] = [];
+        });
+        array_walk($AllRightsUsers, function($v)use(&$data, $PermissionType){
+            $key = $PermissionType[$v['PermissionType']].'Users';
+            $data[$key][] = $v;
+        });
+        array_walk($AllRightsUserGroups, function($v)use(&$data, $PermissionType){
+            $key = $PermissionType[$v['PermissionType']].'UserGroups';
+            $data[$key][] = $v;
+        });
+
+        // $data['BookingRightsUsers'] = Userright::where('userrights.Resource', '=', $resource->ID)->where('userrights.PermissionType', '=', $resource->BookingRights)->get()->toArray();
+        // $data['BookingRightsUserGroups'] = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->where('usergrouprights.PermissionType', '=', $resource->BookingRights)->get()->toArray();
+
+        // $data['ViewingRightsUsers'] = Userright::where('userrights.Resource', '=', $resource->ID)->where('userrights.PermissionType', '=', $resource->ViewingRights)->get()->toArray();
+        // $data['ViewingRightsUserGroups'] = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->where('usergrouprights.PermissionType', '=', $resource->ViewingRights)->get()->toArray();
+
+
+        $data['custombookinginfos'] = CustomBookingInfo::where('custombookinginfos.Resource', '=', $resource->ID)->get()->toArray();
+        $data['operationhours'] = OperationHour::where('operationhours.Resource', '=', $resource->ID)->get()->toArray();
+        $data['SubResources'] = SubResource::where('subresource.Resource', '=', $resource->ID)->get()->toArray();
+
+        $data['resourceTypes'] = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
+        $data['resourceLocations'] = ResourceLocation::all(['id', 'Name'])->toArray(); // [['id'=>'1', 'Name'=>'demo']];
+        $data['users'] = User::all(['id', 'Name'])->toArray();
+        $data['usersGroups'] = UserGroup::all(['id', 'Name'])->toArray();
+
+        $data = array_merge($resource->toArray(), $data);
+        // dd($d, $data);
+        // return view('pages.resources.edit-resource', compact('data'));
+        if ($data != null) {
+            return response()->json([
+                "message" => "Reource Data Found Successfully",
+                "status" => "success",
+                "data" => $data,
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "No Resource Data found",
+                "status" => "failed",
+            ], 200);
+        }
+    }
+
+
     public function updateResource( Request $request, Resource $resource)
     {
 
@@ -364,6 +440,8 @@ class ResourceApiController extends Controller
 
         $opretionalHours = $this->columnDataArr( $opretionalHours);
         $custombookinginfos = $this->columnDataArr( $custombookinginfos, ['Name','FieldType', 'Description', 'Require']);
+
+        $SubResources = $this->columnDataArr( $request->all('SubResourcesName'), ['Name']);
         // $userrights = array_merge($BookingRightsUsers??[], $ViewingRightsUsers??[], $RequestRightsUsers??[],$ModRightsUsers??[] );
         // dd($userrights);
         DB::beginTransaction();
@@ -372,6 +450,7 @@ class ResourceApiController extends Controller
             $resource->userGroupsRight()->delete();
             $resource->operationhours()->delete();
             $resource->customBookingInfo()->delete();
+            $resource->SubResource()->delete();
             $resource->fill($request->all());
             if($resource->save()){
 
@@ -390,6 +469,9 @@ class ResourceApiController extends Controller
 
                 if (isset($custombookinginfos) && count($custombookinginfos))
                 $resource->customBookingInfo()->createMany($custombookinginfos);
+
+                if (isset($SubResources) && count($SubResources))
+                $resource->SubResource()->createMany($SubResources);
 
           }  // echo "<pre>";print_r($resource->toArray());echo "</pre>";
                 DB::commit();
@@ -425,6 +507,7 @@ class ResourceApiController extends Controller
             $resource->userGroupsRight()->delete();
             $resource->operationhours()->delete();
             $resource->customBookingInfo()->delete();
+            $resource->SubResource()->delete();
             $resource->delete();
 
             // echo "<pre>";print_r($resource->toArray());echo "</pre>";

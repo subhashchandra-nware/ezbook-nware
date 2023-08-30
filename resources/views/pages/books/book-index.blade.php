@@ -16,7 +16,7 @@
                             extract($data);
                             $LocationOptions = ['0' => 'Select Location'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
                         @endphp
-                        <ul class="menu-nav ">
+                        <ul class="menu-nav pb-0">
                             <li class="menu-section">
                                 <h4 class="menu-text">Location</h4>
                                 <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
@@ -29,7 +29,8 @@
                                     </div>
                                     <div class="form-group">
                                         <x-forms.input name="searchResources" placeholder="Search Resources" type="text"
-                                            class="form-control form-control-md" />
+                                            class="font-size-base form-control form-control-md" />
+
                                     </div>
                                     {{-- <div class="form-group">
                                         <x-forms.button design="2" name="submit" type="submit" value="Search"/>
@@ -38,24 +39,23 @@
                             </li>
                         </ul>
 
-                        <x-layouts.menu-vertical name="Choose A Resource" :menus="$ResourceTypes" childkey="resource" />
-
+                        <x-layouts.menu-vertical name="Choose A Resource" :menus="$ResourceTypes" childkey="resources" />
+                        {{-- @dd($ResourceTypes) --}}
                         <!--end::Menu Nav-->
                     </div>
                 </div>
                 <!--Side Col Sidebar End-->
 
-                <div class="col-md-10">
+                <div class="col-md-10" id="id-resource-sub-resource">
                     <!--begin::Card-->
                     <div class="card card-custom">
-                        <div class="card-header">
+
+                        <div class="card-header" id="ajax-header">
                             <div class="card-title">
                                 <h3 class="card-label">Resource Name</h3>
                             </div>
+                            <pre id="ajax-test"></pre>
                             <div class="card-toolbar">
-                                <a href="#" class="btn btn-primary font-weight-bold">
-                                    <i class="ki ki-plus icon-md mr-2"></i>Add Event</a>
-
                                 <form class="form p-5">
                                     <div class="form-group mb-0">
                                         <select class="form-control form-control-md " id="show">
@@ -69,7 +69,9 @@
                                 </form>
                             </div>
                         </div>
+
                         <div class="card-body">
+                            <div id="calendar"></div>
                             <div id="kt_calendar"></div>
                         </div>
                     </div>
@@ -80,15 +82,80 @@
         </div>
         <!--end::Container-->
     </x-layouts.page>
+
+
+
+
+
 @endsection
 @pushOnce('scripts')
     <!--begin::Page Scripts(used by this page)-->
-    <script src="{{ asset('js/pages/features/calendar/google.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    {{-- <script src="{{ asset('js/pages/features/calendar/google.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/pages/features/calendar/external-events.js') }}"></script> --}}
+    <script src="{{ asset('js/ajax-full-calendar.js') }}"></script>
     <!--end::Page Scripts-->
 
     <script>
+        "use strict";
+
+
+
         $(document).ready(function() {
-            $('.location-select2').select2();
+
+
+            // console.log();
+            let CalendarOptions = {
+                plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'googleCalendar'],
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                navLinks: true,
+                editable: true,
+                events: "{{ route('getbookedresource', ['resource' => 104]) }}",
+                // displayEventTime: false,
+                selectable: true,
+                selectHelper: true,
+                select: function() {
+                    $("#myModal").modal();
+
+
+                },
+                eventRender: function(event, element, view) {
+                    if (event.allDay === 'true') {
+                        event.allDay = true;
+                    } else {
+                        event.allDay = false;
+                    }
+                }
+            };
+            let CalendarElement = $('#calendar').get(0);
+            var calendar = new FullCalendar.Calendar(CalendarElement, CalendarOptions);
+            // var calendar = $("#calendar").fullCalendar(CalendarOptions);
+            calendar.render();
+            $('.ajax').on('click', function() {
+                let url = $(this).data('href');
+                ajaxCall(url, {
+                    type: 'POST',
+                    data: {
+                        url: url,
+                        name: "subhash"
+                    },
+                    complete: function (response) {
+            alert("complete: " + JSON.stringify(response));
+            $('#id-resource-sub-resource').html(response.responseText);
+            // $("#calendar").fullCalendar("refetchEvents");
+
+
+        }
+                });
+            });
+
+            /**
+             * END::READY
+             */
         });
     </script>
 @endPushOnce

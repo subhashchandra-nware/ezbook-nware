@@ -28,7 +28,8 @@
             $ModRightsUserGroupsSelected = array_column($ModRightsUserGroups, 'GroupID');
             // ViewingRightsUserGroupsSelected
 
-            // dd($BookingRightsUsersSelected, $BookingRightsUserGroupsSelected);
+            // dd($resourceTypes, $resourceTypesDataConfigurationType);
+            $resourceTypesDataConfigType = ['0' => '0'] + array_combine(array_column($resourceTypes, 'id'), array_column($resourceTypes, 'configurationType'));
             $resourceTypes = ['0' => 'Select'] + array_combine(array_column($resourceTypes, 'id'), array_column($resourceTypes, 'Name'));
             $resourceLocations = ['0' => 'Select'] + array_combine(array_column($resourceLocations, 'id'), array_column($resourceLocations, 'Name'));
             $BookingRight = $BookingRightOptions = ['0' => 'All User', '1' => 'Specific Users/Groups'];
@@ -63,10 +64,48 @@
                             desc="Enter a descriptive paragraph about your resource here.
                             This will be seen as its tooltip where the resource is listed." />
 
-                        <x-forms.select selected="{{ $resourceType }}" design="1" name="resourceType"
+                        <x-forms.select :data="$resourceTypesDataConfigType" selected="{{ $resourceType }}" design="1" name="resourceType"
                             label="Resource Type" :options="$resourceTypes"
                             desc="From the list, selecr the type of resource this is. You may
                             also define your own Types if none of these seem applicable." />
+
+                        <div id="id-resourceType-SubResources" class="mb-10" style="display: none">
+                            <div class="ml-10 border border-2 border-light border-top-0">
+                                <div class="bg-light p-2 w-100 mt-5 mb-5">
+                                    <h6 class="mb-0"><strong>Individual Sub Resources <i class="small">(collective resource)</i></strong>
+                                        <button type="button" id="id-button-SubResources"
+                                    class="btn btn-sm btn-success ml-5 font-weight-bolder text-uppercase ">Add</button>
+                                    </h6>
+                                </div>
+                                <div class="mx-5">
+                                    <p class="form-text text-muted">Since this is a collective resource, it should consist of multiple sub-resources.
+                                        <br />To add a new sub-resource, type a unique name for it and click the Add button below.</p>
+                                        <table id="id-table-SubResources"
+                                        class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                                        <thead>
+                                            <tr class="text-left text-uppercase">
+                                                <th>Name</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @isset($SubResources)
+                                                @foreach ($SubResources as $k => $SubResource)
+                                                    <tr>
+                                                        <td><x-forms.input value="{{ $SubResource['Name'] }}"
+                                                                class="form-control form-control-sm" name="SubResourcesName[]" /></td>
+
+                                                        <td><x-forms.button design="2" :removeclass="true"
+                                                                class="btn btn-sm btn-save font-weight-bolder text-uppercase tr-delete" value="delete" /></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endisset
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
 
                         <x-forms.select selected="{{ $resourceLocation }}" design="1" name="resourceLocation"
                             label="Resource Gruop (Location)" :options="$resourceLocations"
@@ -339,6 +378,13 @@
                     value="delete" /></td>
         </tr>
     </table>
+    <table id="id-table-SubResources-none" style="display: none">
+        <tr>
+            <td><x-forms.input class="form-control form-control-sm" name="SubResourcesName[]" /></td>
+            <td><x-forms.button design="2" :removeclass="true"
+                    class="btn btn-sm btn-save font-weight-bolder text-uppercase tr-delete" value="delete" /></td>
+        </tr>
+    </table>
 
 
 @endsection
@@ -346,6 +392,33 @@
     <script>
         // Your custom JavaScript...
         $(document).ready(function() {
+
+            $("#id-resourceType").on('change', function () {
+                var $this = $(this);
+                id = $this.attr('id');
+               let data = $( "option:selected", this ).attr('data');
+               if ( data == 2 ) {
+                $('#' + id + "-SubResources").show();
+                // $("#id-resourceTypes-SubResources").hide();
+                // alert(data + id);
+            }else{
+                $('#' + id + "-SubResources").hide();
+               }
+               console.log();
+            });
+            $("#id-resourceType").trigger("change");
+
+            $("#id-button-SubResources").on("click", function() {
+                var $html = $("#id-table-SubResources-none tbody").html();
+                $("#id-table-SubResources tbody").append($html);
+                // alert('hi'+ $html);
+                // console.log();
+            });
+
+
+
+
+
 
             if ($("#id-Booking-moderate").is(':checked')) {
                 $('#id-Booking-moderate-rights').show();
@@ -360,7 +433,7 @@
                     $('#' + cls + '-rights').hide();
                     $('#' + cls + '-rights select, #' + cls + '-rights input').prop('disabled', true);
                 }
-                console.log();
+                // console.log();
             });
             // $( "#id-Booking-moderate" ).trigger( "click" );
 
@@ -371,7 +444,7 @@
                 } else {
                     $('.' + cls).prop('disabled', true);
                 }
-                console.log();
+                // console.log();
             });
 
 

@@ -19,7 +19,8 @@
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item mr-3">
-                      <a href="#" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Book</a>
+                      {{-- <a href="#" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Book</a> --}}
+                      <a href="{{route('book.index')}}" class="nav-link py-4 px-6">Book</a>
                     </li>
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>

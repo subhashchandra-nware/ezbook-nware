@@ -4,6 +4,7 @@
     'desc' => null,
     'options' => [],
     'selected' => null,
+    'data' => null,
     'name',
 ])
 
@@ -20,12 +21,12 @@
                    @endphp
                     @foreach ($options as $value => $option)
                     @if ($attributes->has('multiple'))
-                    <option value="{{ $value }}" @selected(old($name, (isset($selected) && in_array($value, $selected)) ? $value : '' ) == $value)>
+                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, (isset($selected) && in_array($value, $selected)) ? $value : '' ) == $value)>
                         {{ $option }}
                     </option>
                     @else
 
-                    <option value="{{ $value }}" @selected(old($name, $selected) == $value)>
+                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, $selected) == $value)>
                         {{ $option }}
                     </option>
                     @endif
@@ -50,11 +51,11 @@
             @endphp
             @foreach ($options as $value => $option)
             @if ($attributes->has('multiple'))
-                    <option value="{{ $value }}" @selected(old($name, isset($selected[$i]) ? $selected[$i] : '' ) == $value)>
+                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, isset($selected[$i]) ? $selected[$i] : '' ) == $value)>
                         {{ $option }}
                     </option>
                     @else
-                <option value="{{ $value }}" @selected(old($name, $selected) == $value)>
+                <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, $selected) == $value)>
                     {{ $option }}
                 </option>
                 @endif

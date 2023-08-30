@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\Api\SignupApiController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
@@ -90,8 +91,14 @@ Route::controller(ResourceController::class)->group(function(){
     Route::delete('destroy-resource/{resource}', 'destroyResource')->name('resource.destroy');
 });
 
+Route::resource('booking', BookingController::class);
+Route::controller(BookingController::class)->group(function(){});
+
+Route::resource('book', BookController::class);
 Route::controller(BookController::class)->group(function(){
-    Route::resource('book', BookController::class);
+    Route::post('book/resource', 'getResource')->name('getresource');
+    Route::post('booked/resource/{resource}', 'getBookedResource')->name('getbookedresource');
+    Route::post('book/store', 'store')->name('bookstore');
 });
 
 

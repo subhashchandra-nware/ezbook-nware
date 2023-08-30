@@ -1,6 +1,7 @@
 <!--begin::Head-->
 <head><base href="">
     <meta charset="utf-8" />
+    <meta name="_token" content="{{ csrf_token() }}">
     <title> @yield('pageTitle') </title>
     <meta name="description" content="Updates and statistics" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -23,6 +24,19 @@
     <link rel="shortcut icon" href="{{ asset('media/logos/favicon.ico') }}" />
     <link href="{{ asset('css/chosen.min.css') }}" rel="stylesheet"/>
     <!-- <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <!-- default::JQuery -->
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
     <script src="{{ asset('js/chosen.jquery.min.js') }}"></script>
+    <script>
+        var csrf_token = {{ csrf_token() }};
+        var csrf_name = "_token";
+
+    </script>
+
 </head>

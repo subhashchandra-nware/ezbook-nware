@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ResourceType extends Model
 {
@@ -23,11 +24,24 @@ class ResourceType extends Model
         'updated_at'
     ];
 
-    function resource() : HasMany {
-
+    function resources() : HasMany
+    {
+        // return $this->through('environments')->has('deployments');
         return $this->hasMany(Resource::class, 'resourceType', 'id');
     }
 
+    public function SubResources() : HasManyThrough
+    {
+        // return $this->through('environments')->has('deployments');
+        return $this->hasManyThrough(
+            SubResource::class,
+            Resource::class,
+            'resourceType', // Foreign key on the environments table...
+            'resource', // Foreign key on the deployments table...
+            'id', // Local key on the projects table...
+            'ID' // Local key on the environments table...
+        );
+    }
 
 
 

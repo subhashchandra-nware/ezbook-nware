@@ -59,6 +59,16 @@ class Resource extends Model
         return $this->hasMany(CustomBookingInfo::class, 'Resource', 'ID');
     }
 
+    public function SubResources() : HasMany
+    {
+        return $this->hasMany(SubResource::class, 'resource', 'ID');
+    }
+
+    public function Bookings() : HasMany
+    {
+        return $this->hasMany(Booking::class, 'FacID', 'ID');
+    }
+
 
     /**
      * END::CLASS

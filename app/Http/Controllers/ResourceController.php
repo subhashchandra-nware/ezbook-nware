@@ -12,6 +12,7 @@ use App\Models\custombookinginfo;
 use App\Models\operationhour;
 use App\Models\Resource;
 use App\Models\ResourceType;
+use App\Models\SubResource;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\Usergroupright;
@@ -53,7 +54,7 @@ class ResourceController extends Controller
             }
         } else {
             $listResources = $data;
-            return view('pages.resources.resources', compact('listResources'));
+            return view('pages.resources.resources', compact('listResources') );
         }
     }
 
@@ -115,14 +116,14 @@ class ResourceController extends Controller
         }
 
         // dd($users, $usersGroups);
-        $resourceType = $response['data'];
+        $response['data'] = null;
+        $resourceType = $response['data'] ?? ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
         $resourceLocation = $responseLocation['data'] ?? ResourceLocation::all(['id', 'Name'])->toArray(); // [['id'=>'1', 'Name'=>'demo']];
         return view('pages.resources.add-resource', compact('resourceType', 'resourceLocation', 'users', 'usersGroups'));
         // return view('add-resource', compact('resourceType', 'resourceLocation'));
     }
 
     public function storeResource(Request $request)
-    // public function storeResource( StoreResourceRequest $request)
     {
         $request->request->add(['ProviderID' => session()->get('siteId')]);
         $request->request->add(['CreatedBy' => session()->get('loginUserId')]);
@@ -160,6 +161,13 @@ class ResourceController extends Controller
 
         // $data['resource'] = $resource->toArray();
         $data = [];
+
+        // $apiJSON = (new ResourceApiController)->editResource($resource);
+        // $original = collect($apiJSON)->get('original');
+        // $data = collect($original)->get('data');
+        // dd($data);
+
+
         $PermissionType = ['1'=>'BookingRights', '2'=>'ViewingRights', '3'=>'RequestRights', '4'=>'ModRights', ];
 
         $AllRightsUsers = Userright::where('userrights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
@@ -187,8 +195,9 @@ class ResourceController extends Controller
 
         $data['custombookinginfos'] = custombookinginfo::where('custombookinginfos.Resource', '=', $resource->ID)->get()->toArray();
         $data['operationhours'] = operationhour::where('operationhours.Resource', '=', $resource->ID)->get()->toArray();
+        $data['SubResources'] = SubResource::where('subresource.Resource', '=', $resource->ID)->get()->toArray();
 
-        $data['resourceTypes'] = ResourceType::all(['id', 'Name'])->toArray();
+        $data['resourceTypes'] = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
         $data['resourceLocations'] = ResourceLocation::all(['id', 'Name'])->toArray(); // [['id'=>'1', 'Name'=>'demo']];
         $data['users'] = User::all(['id', 'Name'])->toArray();
         $data['usersGroups'] = UserGroup::all(['id', 'Name'])->toArray();

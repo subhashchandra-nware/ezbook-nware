@@ -2712,7 +2712,7 @@ input:-internal-autofill-selected {
   height: calc(1.5em + 1.3rem + 2px);
   padding: 0.65rem 1rem;
   font-size: 14px;
-  font-weight: 600;
+  /* font-weight: 600; by subhash */
   line-height: 1.5;
   color: #000000;
   background-color: #fff !important;
@@ -2724,7 +2724,8 @@ input:-internal-autofill-selected {
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out; font-family: 'Open Sans';
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  /* font-family: 'Open Sans'; by subhash */
 }
 .form-control:focus {
     color: #000 !important;
@@ -80437,7 +80438,7 @@ button.fc-today-button.fc-button.fc-button-primary {
 .f-16{ font-size: 18px; }
 .fc-view-container {
     position: relative;
-   
+
 }
 .fc-unthemed .fc-toolbar .fc-button .fc-icon {
   color: #000000;
@@ -87517,7 +87518,7 @@ i.far.fa-circle {
     color: #ffffff;
 }
 
-.btn-delete{   
+.btn-delete{
     padding: 11px !important;
     height: 38px !important;
      }

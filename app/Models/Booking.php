@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Book extends Model
+class Booking extends Model
 {
     use HasFactory;
-    protected $table = 'bookings';
+    // protected $table = 'bookings';
 
     protected  $primaryKey = 'ID';
 
-    const CREATED_AT = 'CreatedDate';
+    const CREATED_AT = 'CreateDate';
     const UPDATED_AT = null;
 
     protected $fillable = [
@@ -32,4 +32,8 @@ class Book extends Model
         'ModeratedByName' ,
         // 'CreateDate'
     ];
+
+
+
+
 }
