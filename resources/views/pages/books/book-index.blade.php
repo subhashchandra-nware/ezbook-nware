@@ -14,7 +14,7 @@
                         @php
                             // dd($data);
                             extract($data);
-                            $LocationOptions = ['0' => 'Select Location'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
+                            $LocationOptions = ['0' => 'All'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
                         @endphp
                         <ul class="menu-nav pb-0">
                             <li class="menu-section">
@@ -24,7 +24,8 @@
                             <li>
                                 <x-forms.form class="form p-5">
                                     <div class="form-group">
-                                        <x-forms.select name="resourceLocation" :options="$LocationOptions"
+
+                                        <x-forms.select selected="{{ request()->segment(2) }}" onchange="window.location.href='{{route('book.index')}}/'+ $(this).val()" name="resourceLocation" :options="$LocationOptions"
                                             class="form-control form-control-md location-select2" id="show" />
                                     </div>
                                     <div class="form-group">
@@ -50,7 +51,7 @@
                     <!--begin::Card-->
                     <div class="card card-custom">
 
-                        <div class="card-header" id="ajax-header">
+                        {{-- <div class="card-header" id="ajax-header">
                             <div class="card-title">
                                 <h3 class="card-label">Resource Name</h3>
                             </div>
@@ -68,7 +69,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="card-body">
                             <div id="calendar"></div>
@@ -110,8 +111,10 @@
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    // right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    right: 'timeGridWeek,timeGridDay,listWeek'
                 },
+                defaultView: 'timeGridWeek',
                 navLinks: true,
                 editable: true,
                 events: "{{ route('getbookedresource', ['resource' => 104]) }}",
@@ -119,11 +122,29 @@
                 selectable: true,
                 selectHelper: true,
                 select: function() {
-                    $("#myModal").modal();
+                    swal.fire("Select Resource for booking.");
+                    // $("#myModal").modal();
+                    // return false;
 
 
                 },
                 eventRender: function(event, element, view) {
+                    var element = $(info.el);
+                    if (info.event.extendedProps && info.event.extendedProps.description) {
+                        if (element.hasClass('fc-day-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.hasClass('fc-time-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        }
+                    }
                     if (event.allDay === 'true') {
                         event.allDay = true;
                     } else {

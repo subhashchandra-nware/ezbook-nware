@@ -91,14 +91,18 @@ Route::controller(ResourceController::class)->group(function(){
     Route::delete('destroy-resource/{resource}', 'destroyResource')->name('resource.destroy');
 });
 
-Route::resource('booking', BookingController::class);
-Route::controller(BookingController::class)->group(function(){});
+// Route::resource('booking', BookingController::class);
+// Route::controller(BookingController::class)->group(function(){});
 
 Route::resource('book', BookController::class);
 Route::controller(BookController::class)->group(function(){
     Route::post('book/resource', 'getResource')->name('getresource');
     Route::post('booked/resource/{resource}', 'getBookedResource')->name('getbookedresource');
     Route::post('book/store', 'store')->name('bookstore');
+
+    // Route::get('book/{location?}', 'index')->name('book.location');
+    Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
+
 });
 
 

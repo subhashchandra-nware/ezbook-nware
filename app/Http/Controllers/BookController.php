@@ -17,18 +17,14 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $locationId = null)
     {
         $data = [];
-        $apiJSON = (new BookApiController)->index();
+        $apiJSON = (new BookApiController)->index($locationId);
         $original = collect($apiJSON)->get('original');
         $data = collect($original)->get('data');
 
-
-
         // dd($apiJSON, $data);
-        // $data['ResourceLocation'] = ResourceLocation::all()->toArray();
-        // $data['ResourceTypes'] = ResourceType::with('resource')->get()->toArray();
         return view('pages.books.book-index', compact('data'));
     }
 
@@ -81,18 +77,22 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    // public function show(string $resourceId, string $locationId = '0')
+    public function show(string $locationId, string $resourceId = '0')
     {
         // dd($id);
         $data = [];
-        $apiJSON = (new BookApiController)->show($id);
+        $apiJSON = (new BookApiController)->show($locationId,$resourceId );
         $original = collect($apiJSON)->get('original');
         $data = collect($original)->get('data');
 
 
 
         // dd($apiJSON, $data);
+        if( $resourceId != 0 )
         return view('pages.books.book-show', compact('data'));
+        else
+        return view('pages.books.book-index', compact('data'));
     }
 
     /**
@@ -118,6 +118,11 @@ class BookController extends Controller
     {
         //
     }
+    public function getLocationResource(string $locationId, string $resourceId)
+    {
+
+    }
+
 
     public function getResource()
     {

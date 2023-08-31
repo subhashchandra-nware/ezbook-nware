@@ -15,21 +15,22 @@
                 class="col-xl-3 col-lg-3 col-form-label">{{ $label }}</label>
             <div class="col-lg-9 col-xl-9">
                 <select name="{{ $name }}"
-                    {{ $attributes->class(['border-danger' =>  $errors->has($name), 'is-invalid' =>  $errors->has($name), "form-control" ])->merge(['id' => 'id-' . $name, ]) }}>
-                   @php
-                       $i=0;
-                   @endphp
+                    {{ $attributes->class(['border-danger' => $errors->has($name), 'is-invalid' => $errors->has($name), 'form-control'])->merge(['id' => 'id-' . $name]) }}>
+                    @php
+                        $i = 0;
+                    @endphp
                     @foreach ($options as $value => $option)
-                    @if ($attributes->has('multiple'))
-                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, (isset($selected) && in_array($value, $selected)) ? $value : '' ) == $value)>
-                        {{ $option }}
-                    </option>
-                    @else
-
-                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, $selected) == $value)>
-                        {{ $option }}
-                    </option>
-                    @endif
+                        @if ($attributes->has('multiple'))
+                            <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset
+                                value="{{ $value }}" @selected(old($name, isset($selected) && in_array($value, $selected) ? $value : '') == $value)>
+                                {{ $option }}
+                            </option>
+                        @else
+                            <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset
+                                value="{{ $value }}" @selected(old($name, $selected) == $value)>
+                                {{ $option }}
+                            </option>
+                        @endif
                         @php
                             $i++;
                         @endphp
@@ -47,17 +48,19 @@
     @default
         <select {{ $attributes->merge(['name' => $name]) }}>
             @php
-                $i=0;
+                $i = 0;
             @endphp
             @foreach ($options as $value => $option)
-            @if ($attributes->has('multiple'))
-                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, isset($selected[$i]) ? $selected[$i] : '' ) == $value)>
+                @if ($attributes->has('multiple'))
+                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset
+                        value="{{ $value }}" @selected(old($name, isset($selected[$i]) ? $selected[$i] : '') == $value)>
                         {{ $option }}
                     </option>
-                    @else
-                <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset value="{{ $value }}" @selected(old($name, $selected) == $value)>
-                    {{ $option }}
-                </option>
+                @else
+                    <option @isset($data[$value]) data="{{ $data[$value] }}" @endisset
+                        value="{{ $value }}" @selected(old($name, $selected) == $value)>
+                        {{ $option }}
+                    </option>
                 @endif
                 @php
                     $i++;

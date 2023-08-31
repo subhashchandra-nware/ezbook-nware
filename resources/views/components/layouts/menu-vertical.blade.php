@@ -24,7 +24,7 @@
                     <ul class="menu-subnav">
                         @foreach ($menu[$childkey] as $k => $submenu)
                             <li class="menu-item " aria-haspopup="true">
-                                <a href="{{route('book.show', ['book'=>  $submenu['ID']])}}" data-href="{{route('getbookedresource', ['resource' => $submenu['ID']])}}" class="ajaxa menu-link menu-toggle" title="{{ $submenu['Description'] }}">
+                                <a href="{{route('book.location.resource', ['location' => $submenu['resourceLocation'],'resource'=>  $submenu['ID']])}}" data-href="{{route('getbookedresource', ['resource' => $submenu['ID']])}}" class="ajaxa menu-link menu-toggle" title="{{ $submenu['Description'] }}">
                                     <span class="menu-text"> <i class="far fa-circle"></i>
                                         {{ $submenu['Name'] }}</span>
                                 </a>

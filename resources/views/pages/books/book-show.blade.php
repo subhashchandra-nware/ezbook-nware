@@ -12,10 +12,11 @@
                         data-menu-dropdown-timeout="500">
                         <!--begin::Menu Nav-->
                         @php
-                            // dd($data);
+                            // dd( $data);
                             extract($data);
-                            $LocationOptions = ['0' => 'Select Location'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
+                            $LocationOptions = ['0' => 'All'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
                         @endphp
+
                         <ul class="menu-nav pb-0">
                             <li class="menu-section">
                                 <h4 class="menu-text">Location</h4>
@@ -24,7 +25,8 @@
                             <li>
                                 <x-forms.form class="form p-5">
                                     <div class="form-group">
-                                        <x-forms.select name="resourceLocation" :options="$LocationOptions"
+
+                                        <x-forms.select selected="{{ request()->segment(2) }}" onchange="window.location.href='{{route('book.index')}}/'+ $(this).val()" name="resourceLocation" :options="$LocationOptions"
                                             class="form-control form-control-md location-select2" id="show" />
                                     </div>
                                     <div class="form-group">
@@ -56,18 +58,20 @@
                                 // dd($Resources);
                                 extract($Resources);
                                 $events = [];
+                                if(isset($bookings) && count($bookings) ){
                                 foreach ($bookings as $key => $booking) {
                                     $booking = (object) $booking;
                                     $events[] = [
-                                    // $events[] = [
+                                        // $events[] = [
                                         'id' => $booking->ID,
                                         'title' => $Name,
                                         'start' => $booking->FromTime,
-                                        'description'=> "[{$booking->FromTime} - {$booking->ToTime} : {$Name} (Booked by {$booking->BookedBy})]",
-                                        'end'=> $booking->ToTime,
-                                        'className'=> "fc-event-success",
+                                        'description' => "[{$booking->FromTime} - {$booking->ToTime} : {$Name} (Booked by {$booking->BookedBy})]",
+                                        'end' => $booking->ToTime,
+                                        'className' => 'fc-event-success',
                                     ];
                                 }
+                            }
                                 // $events = json_decode(json_encode($events), FALSE);
 
                                 // dd($events);
@@ -119,8 +123,8 @@
 
             <!-- Modal content-->
             <div class="modal-content">
-                <x-forms.form id="ajaax-create-resource" action="{{route('book.store')}}">
-                    <x-forms.input name="FacID" type="hidden" value="{{$ID}}"/>
+                <x-forms.form id="ajaax-create-resource" action="{{ route('book.store') }}">
+                    <x-forms.input name="FacID" type="hidden" value="{{ $ID }}" />
                     <x-forms.input name="SubID" type="hidden" value="0" />
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -170,16 +174,17 @@
                 defaultView: 'timeGridWeek',
                 navLinks: true,
                 editable: true,
+                eventLimit: true, // allow "more" link when too many events
                 // events: "{{ route('getbookedresource', ['resource' => 104]) }}",
-                events:  {!! json_encode($events) !!} ,
+                events: {!! json_encode($events) !!},
                 // displayEventTime: false,
                 selectable: true,
-                selectHelper: true,
+                // selectHelper: true,
                 select: function(info) {
-                    var s = moment(info.start).format( "YYYY-MM-DD HH:mm:ss");
-                    var e = moment(info.end).format( "YYYY-MM-DD HH:mm:ss");
+                    var s = moment(info.start).format("YYYY-MM-DD HH:mm:ss");
+                    var e = moment(info.end).format("YYYY-MM-DD HH:mm:ss");
                     var sr = 0
-                    if($('#sub_resource').length ){
+                    if ($('#sub_resource').length) {
                         sr = $('#id-sub_resource').val();
                     }
                     // alert(s);
@@ -187,31 +192,57 @@
                     $("#id-ToTime").val(e);
                     $("#id-SubID").val(sr);
                     $("#booking-create-modal").modal();
-                    $("#ajaax-create-resource").submit(function (e) {
+                    $("#ajaax-create-resource").submit(function(e) {
                         e.preventDefault();
                         var $form = $(this);
                         var $actionUrl = $form.attr('action');
                         var $type = $form.attr('method');
                         var $data = $form.serialize();
-                        var $success = function (response) {$("#booking-create-modal").modal('hide');};
-                        var $complete = function (response) {window.location.reload(true);};
-                        ajaxCall($actionUrl, {type: $type, data: $data, success: $success, complete: $complete});
+                        var $success = function(response) {
+                            $("#booking-create-modal").modal('hide');
+                        };
+                        var $complete = function(response) {
+                            window.location.reload(true);
+                        };
+                        ajaxCall($actionUrl, {
+                            type: $type,
+                            data: $data,
+                            success: $success,
+                            complete: $complete
+                        });
                     });
-                    console.log(info);
+                    // console.log(info);
                 },
                 eventClick: function(event) {
                     alert("eventClick: ");
-                        // opens events in a popup window
-                        // window.open(event.url, 'gcalevent', 'width=700,height=600');
-                        return false;
-                    },
-                eventRender: function(event, element, view) {
-                    if (event.allDay === 'true') {
-                        event.allDay = true;
+                    // opens events in a popup window
+                    // window.open(event.url, 'gcalevent', 'width=700,height=600');
+                    return false;
+                },
+                eventRender: function(info) {
+                    var element = $(info.el);
+                    if (info.event.extendedProps && info.event.extendedProps.description) {
+                        if (element.hasClass('fc-day-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.hasClass('fc-time-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        }
+                    }
+                    if (info.allDay === 'true') {
+                        info.allDay = true;
                     } else {
-                        event.allDay = false;
+                        info.allDay = false;
                     }
                 }
+
             };
             let CalendarElement = $('#calendar').get(0);
             var calendar = new FullCalendar.Calendar(CalendarElement, CalendarOptions);
@@ -241,3 +272,4 @@
         });
     </script>
 @endPushOnce
+
