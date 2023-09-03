@@ -1,16 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SignupApiController;
-use App\Http\Controllers\Api\SiteSettingApiController;
-use App\Http\Controllers\Api\UsersApiController;
+use App\Http\Controllers\Api\Book\BookApiController;
+use App\Http\Controllers\Api\Countries\CountriesApiController;
 use App\Http\Controllers\Api\EmailApiController;
-use App\Http\Controllers\Api\UserGroupApiController;
 use App\Http\Controllers\Api\Resource\ResourceApiController;
 use App\Http\Controllers\Api\Resource\ResourceTypeApiController;
-use App\Http\Controllers\Api\Countries\CountriesApiController;
+use App\Http\Controllers\Api\SignupApiController;
+use App\Http\Controllers\Api\SiteSettingApiController;
+use App\Http\Controllers\Api\UserGroupApiController;
+use App\Http\Controllers\Api\UsersApiController;
 use App\Http\Controllers\ResourceController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +77,22 @@ Route::controller(ResourceTypeApiController::class)->group(function(){
     Route::post('resource-type-limited-field','getAllResourceTypeLimitedField');
     Route::post('delete-resource-type','deleteResourceType');
 });
+
+// Route::resource('booking', BookingApiController::class);
+// Route::controller(BookingController::class)->group(function(){});
+
+Route::resource('book', BookApiController::class);
+Route::controller(BookApiController::class)->group(function(){
+    Route::post('book/resource', 'getResource')->name('getresource');
+    Route::post('booked/resource/{resource}', 'getBookedResource')->name('getbookedresource');
+    Route::post('book/store', 'store')->name('bookstore');
+    // Route::get('book/{location?}', 'index')->name('book.location');
+    Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
+});
+
+
+
+
 
 // Route::get('all-resources',[ResourceApiController::class,'getAllResources']);
 // Route::get('all-resource-location',[ResourceApiController::class,'getAllResourcesLocation']);

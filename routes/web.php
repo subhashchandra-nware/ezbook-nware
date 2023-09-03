@@ -1,17 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\Api\SignupApiController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ResourceLocationController;
 use App\Http\Controllers\ResourceTypeController;
-use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\SiteSettingController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserGroupController;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,11 +97,14 @@ Route::resource('book', BookController::class);
 Route::controller(BookController::class)->group(function(){
     Route::post('book/resource', 'getResource')->name('getresource');
     Route::post('booked/resource/{resource}', 'getBookedResource')->name('getbookedresource');
+    // Route::get('book/resource/{resource}', 'getBookedResource')->name('getbookedresource');
     Route::post('book/store', 'store')->name('bookstore');
+    Route::get('book/{location?}', 'index')->name('book.location');
+    // Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
+    Route::get('book/location/{location}/resource/{resource?}', 'show')->name('book.location.resource');
 
-    // Route::get('book/{location?}', 'index')->name('book.location');
-    Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
-
+    Route::get('book/booking/{booking}', 'getBooking')->name('book.getbooking');
+    Route::put('book/booking/{booking}', 'update')->name('book.update');
 });
 
 

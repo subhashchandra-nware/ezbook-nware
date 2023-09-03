@@ -13,7 +13,7 @@ class Book extends Model
     protected  $primaryKey = 'ID';
 
     const CREATED_AT = 'CreatedDate';
-    const UPDATED_AT = null;
+    // const UPDATED_AT = null;
 
     protected $fillable = [
         'BookedBy' ,

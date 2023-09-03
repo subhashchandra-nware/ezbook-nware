@@ -103,22 +103,16 @@ class ResourceController extends Controller
             $users = http::post($api . 'user')->json();
             $usersGroups = http::post($api . 'user-groups')->json();
         } else {
-            $response = Http::post($url, [
-                'ProviderID' => '1',
-            ])->json();
-
-            $responseLocation = Http::post($api . "resource-location", [
-                'ProviderID' => '1',
-            ])->json();
-
+            $response = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
+            $responseLocation = ResourceLocation::all(['id', 'Name'])->toArray();
             $users = User::all()->toArray();
             $usersGroups = UserGroup::all()->toArray();
         }
 
         // dd($users, $usersGroups);
         $response['data'] = null;
-        $resourceType = $response['data'] ?? ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
-        $resourceLocation = $responseLocation['data'] ?? ResourceLocation::all(['id', 'Name'])->toArray(); // [['id'=>'1', 'Name'=>'demo']];
+        $resourceType = $response['data'] ?? $response;
+        $resourceLocation = $responseLocation['data'] ?? $responseLocation; // [['id'=>'1', 'Name'=>'demo']];
         return view('pages.resources.add-resource', compact('resourceType', 'resourceLocation', 'users', 'usersGroups'));
         // return view('add-resource', compact('resourceType', 'resourceLocation'));
     }
@@ -154,19 +148,7 @@ class ResourceController extends Controller
      */
     public function editResource(Resource $resource)
     {
-        // $d = $resource->toArray();
-        // $d = $resource->usersRight()->where('id', 92)->get();
-        // $d = Resource::with('usersRight')->where('id', 92)->get()->toArray();
-        // $d = Resource::with(['usersRight'])->find(60)->toArray();
-
-        // $data['resource'] = $resource->toArray();
         $data = [];
-
-        // $apiJSON = (new ResourceApiController)->editResource($resource);
-        // $original = collect($apiJSON)->get('original');
-        // $data = collect($original)->get('data');
-        // dd($data);
-
 
         $PermissionType = ['1'=>'BookingRights', '2'=>'ViewingRights', '3'=>'RequestRights', '4'=>'ModRights', ];
 
@@ -185,13 +167,6 @@ class ResourceController extends Controller
             $key = $PermissionType[$v['PermissionType']].'UserGroups';
             $data[$key][] = $v;
         });
-
-        // $data['BookingRightsUsers'] = Userright::where('userrights.Resource', '=', $resource->ID)->where('userrights.PermissionType', '=', $resource->BookingRights)->get()->toArray();
-        // $data['BookingRightsUserGroups'] = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->where('usergrouprights.PermissionType', '=', $resource->BookingRights)->get()->toArray();
-
-        // $data['ViewingRightsUsers'] = Userright::where('userrights.Resource', '=', $resource->ID)->where('userrights.PermissionType', '=', $resource->ViewingRights)->get()->toArray();
-        // $data['ViewingRightsUserGroups'] = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->where('usergrouprights.PermissionType', '=', $resource->ViewingRights)->get()->toArray();
-
 
         $data['custombookinginfos'] = custombookinginfo::where('custombookinginfos.Resource', '=', $resource->ID)->get()->toArray();
         $data['operationhours'] = operationhour::where('operationhours.Resource', '=', $resource->ID)->get()->toArray();

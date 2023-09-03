@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\API\Book\BookApiController;
+use App\Http\Controllers\Api\Book\BookApiController;
 use App\Models\Book;
-use App\Models\Booking;
-use App\Models\Resource;
-use App\Models\ResourceLocation;
-use App\Models\ResourceType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -53,25 +49,13 @@ class BookController extends Controller
             return response()->json($validator->messages(), 400);
         }
 
+        $resultArr = (new BookApiController)->store($request);
+        // dd(collect( $resultArr)->get('original'));
+        $msg = collect($resultArr)->get('original');
+        return redirect()->route('resource.resource')->with($msg['status'], $msg['message']);
+
         // dd($request->all(), $SubResources);
-        DB::beginTransaction();
-        try {
-            $booking = Booking::create($request->all());
-            DB::commit();
-            return response()->json([
-                "message" => "Resource Booked Successfully.",
-                "status" => "success",
-                "data" => $booking,
-            ], 200);
-        } catch (\Exception $exc) {
-            DB::rollBack();
-            // echo "<pre>";print_r($exc->getMessage());echo "</pre>";
-            return response()->json([
-                "message" => "Resource not Booked.",
-                "status" => "error",
-                'data' => $exc->getMessage(),
-            ], 500);
-        }
+
     }
 
     /**
@@ -82,17 +66,17 @@ class BookController extends Controller
     {
         // dd($id);
         $data = [];
-        $apiJSON = (new BookApiController)->show($locationId,$resourceId );
+        $apiJSON = (new BookApiController)->show($locationId, $resourceId);
         $original = collect($apiJSON)->get('original');
         $data = collect($original)->get('data');
 
 
 
         // dd($apiJSON, $data);
-        if( $resourceId != 0 )
-        return view('pages.books.book-show', compact('data'));
+        if ($resourceId != 0)
+            return view('pages.books.book-show', compact('data'));
         else
-        return view('pages.books.book-index', compact('data'));
+            return view('pages.books.book-index', compact('data'));
     }
 
     /**
@@ -108,23 +92,77 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        if (request()->ajax()) {
+            $book = Book::find($request->ID);
+            // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
+            $book->fill($request->all());
+            DB::beginTransaction();
+            try {
+                $book->save();
+                DB::commit();
+                return response()->json([
+                    "message" => "Resource Update Successfully.",
+                    "status" => "success",
+                    "data" => $book,
+                ], 200);
+            } catch (\Exception $exc) {
+                DB::rollBack();
+                // echo "<pre>error:"; print_r($exc->getMessage()); echo "</pre>";
+                // echo "<pre>error:";print_r($book->all()->toJson());echo "</pre>";
+                return response()->json([
+                    "message" => "Resource not Create.",
+                    "status" => "error",
+                ], 500);
+            }
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified book from storage.
      */
     public function destroy(Book $book)
     {
-        //
+        // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
+
+        // echo "<pre>";print_r($book->toArray());echo "</pre>";
+        DB::beginTransaction();
+        try {
+            $book->delete();
+                DB::commit();
+            // dd($userrights, $usergrouprights, $opretionalHours, $custombookinginfos);
+
+            return response()->json([
+                "message" => "Resource Deleted Successfully.",
+                "status" => "success",
+                "data" => $book,
+            ], 200);
+        } catch (\Exception $exc) {
+            DB::rollBack();
+            // echo "<pre>";print_r($exc->getMessage());echo "</pre>";
+            return response()->json([
+                "message" => "Resource not Create.",
+                "status" => "error",
+            ], 500);
+        }
     }
-    public function getLocationResource(string $locationId, string $resourceId)
+    public function getBooking(string $bookingID)
     {
-
+        // dd($bookingID);
+        $apiJSON = (new BookApiController)->getBooking($bookingID);
+        $original = collect($apiJSON)->get('original');
+        $data = $original;
+        $data = collect($original)->get('data');
+        $data = (isset($data) && count($data) == 1) ? $data[0] : $data;
+        if (request()->ajax()) {
+            return response()->json($data);
+        } else {
+            dd($data, response()->json($data));
+        }
     }
 
 
-    public function getResource()
+    /*
+   public function getResource()
     {
 
         // print_r( $request, $book);
@@ -165,23 +203,34 @@ class BookController extends Controller
         // return "<pre>" . print_r($data) . print_r($request->all()) . print_r($resource->ID) . "</pre>" ?? "<div>Subhash</div>";
         return view('pages.books.ajax.book-ajax', compact('data'));
     }
-    public function getBookedResource(Request $request, Resource $resource)
+    */
+
+
+    public function getBookedResource(Book $book, string $id)
     {
 
+        dd($id, $book->toArray());
         // print_r( $request, $book);
         $data = [];
         // $data['resources'] = (new BookApiController)->getResource();
 
-        $apiJSON = (new BookApiController)->getResource($request, $resource);
+        $apiJSON = (new BookApiController)->getBookedResource($book);
         $original = collect($apiJSON)->get('original');
         $data = collect($original)->get('data');
-        $data = (count($data) == 1) ? $data[0] : $data ;
+        $data = (isset($data) && count($data) == 1) ? $data[0] : $data;
 
+        dd($data);
 
-        // dd(response()->json($data));
+        dd(response()->json($data));
         // return "<pre>" . print_r($data) . print_r($request->all()) . print_r($resource->ID) . "</pre>" ?? "<div>Subhash</div>";
         return view('pages.books.ajax.book-ajax', compact('data'));
     }
+
+
+
+
+
+
     /**
      * END::CLASS
      */

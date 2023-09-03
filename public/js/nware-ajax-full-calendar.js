@@ -1,5 +1,119 @@
 "use strict";
-
+/**
+ * @see https://fullcalendar.io/
+ * @returns
+ */
+var NWareSoft = function () {
+    var defaultAjaxOption = {
+        // url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        },
+        data: { _token: "{{ csrf_token() }}" },
+        type: "GET",
+        error: function (response) {
+            // alert("error: " + JSON.stringify(response));
+            console.log(response);
+        },
+        // beforeSend: function (response) {alert("beforeSend: " + JSON.stringify(response));},
+        // dataFilter: function (response) {alert("dataFilter: " + JSON.stringify(response));return response;},
+        // success: function (response) {alert("success: " + JSON.stringify(response));},
+        // complete: function (response) {alert("complete: " + JSON.stringify(response));}
+    };
+    var defaultFullCalendarOption = {
+        plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'googleCalendar'],
+        defaultView: 'timeGridWeek',
+        navLinks: true,
+        editable: true,
+        eventLimit: true, // allow "more" link when too many events
+        // slotDuration: "{{ $slotDuration }}", // Duration, default: '00:30:00' (30 minutes)
+        // events: "{{ route('getbookedresource', ['resource' => 104]) }}",
+        // events: {!! json_encode($events) !!},
+        // displayEventTime: false,
+        selectable: true,
+        selectHelper: true,
+        select: function (info) {
+            var s = moment(info.start).format("YYYY-MM-DD HH:mm:ss");
+            var e = moment(info.end).format("YYYY-MM-DD HH:mm:ss");
+            var sr = 0
+            // alert($('#id-sub_resource').length);
+            if ($('#id-sub_resource').length) {
+                sr = $('#id-sub_resource').val();
+                // alert(sr);
+            }
+            $("#id-FromTime").val(s);
+            $("#id-ToTime").val(e);
+            $("#id-SubID").val(sr);
+            $("#booking-create-modal").modal();
+            $("#ajaax-create-resource").submit(function (e) {
+                e.preventDefault();
+                var $form = $(this);
+                var $actionUrl = $form.attr('action');
+                var $type = $form.attr('method');
+                var $data = $form.serialize();
+                var $success = function (response) {
+                    $("#booking-create-modal").modal('hide');
+                };
+                var $complete = function (response) {
+                    window.location.reload(true);
+                };
+                ajaxCall($actionUrl, {
+                    type: $type,
+                    data: $data,
+                    success: $success,
+                    complete: $complete
+                });
+            });
+            // console.log(info);
+        },
+        eventClick: function (event) {
+            alert("eventClick: ");
+            // opens events in a popup window
+            // window.open(event.url, 'gcalevent', 'width=700,height=600');
+            return false;
+        },
+        eventRender: function (info) {
+            var element = $(info.el);
+            element.attr('title', info.event.extendedProps.description);
+            if (info.event.extendedProps && info.event.extendedProps.description) {
+                if (element.hasClass('fc-day-grid-event')) {
+                    element.data('content', info.event.extendedProps.description);
+                    element.data('placement', 'top');
+                    // KTApp.initPopover(element);
+                } else if (element.hasClass('fc-time-grid-event')) {
+                    element.data('content', info.event.extendedProps.description);
+                    element.data('placement', 'top');
+                    // KTApp.initPopover(element);
+                } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                    element.data('content', info.event.extendedProps.description);
+                    element.data('placement', 'top');
+                    // KTApp.initPopover(element);
+                }
+            }
+            if (info.allDay === 'true') {
+                info.allDay = true;
+            } else {
+                info.allDay = false;
+            }
+        }
+    };
+    return {
+        Init: function () { },
+        Ajx: function (url = '', options = {}) {
+            let ajaxSettings = { ...defaultAjaxOption, ...options };
+            $.ajax(ajaxSettings);
+        },
+        Calendar: function (ElementId, options = {}) {
+            let calendarSetting = { ...defaultFullCalendarOption, ...options };
+            var calendar = $("#" + ElementId).fullCalendar(calendarSetting);
+            // let CalendarElement = $('#'+ElementId).get(0);
+            // let CalendarElement = document.getElementById(ElementId);
+            // var calendar = new FullCalendar.Calendar(CalendarElement, calendarSetting);
+            // calendar.render();
+            return calendar;
+        }
+    };
+}();
 
 /*
 
@@ -188,46 +302,43 @@
 
 
 
-var ajaxCall = function (url = '', options = {}) {
-    let defaultObj = {
-        url: url,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-        },
-        type: "GET",
-        data: { _token: "{{ csrf_token() }}" },
-        error: function (response) {
-            // alert("error: " + JSON.stringify(response));
-            // $('#id-resource-sub-resource').html(response);
-            console.log(response);
-        },
-        beforeSend: function (response) {
-            $('input[type="submit"]').attr('disabled','disabled');
-            // alert("beforeSend: " + JSON.stringify(response));
-        }
-        // ,
-        // dataFilter: function (response) {
-        //     // alert("dataFilter: " + JSON.stringify(response));
-        //     return response;
-        // },
-        // success: function (response) {
-        //     // alert("success: " + JSON.stringify(response));
-        //     // console.log(response);
-        //     // $('#id-resource-sub-resource').html(response);
-        // },
-        // complete: function (response) {
-        //     // alert("complete: " + JSON.stringify(response));
-        //     // $('#id-resource-sub-resource').html(response.responseText);
-        //     // calendar.render();
+// var ajaxCall = function (url = '', options = {}) {
+//     let defaultObj = {
+//         url: url,
+//         type: "GET",
+//         headers: {
+//             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+//         },
+//         data: { _token: "{{ csrf_token() }}" },
+//         beforeSend: function (response) {
+//             // alert("beforeSend: " + JSON.stringify(response));
+//         },
+//         error: function (response) {
+//             // alert("error: " + JSON.stringify(response));
+//             // $('#id-resource-sub-resource').html(response);
+//         },
+//         dataFilter: function (response) {
+//             // alert("dataFilter: " + JSON.stringify(response));
+//             return response;
+//         },
+//         success: function (response) {
+//             // alert("success: " + JSON.stringify(response));
+//             // console.log(response);
+//             // $('#id-resource-sub-resource').html(response);
+//         },
+//         complete: function (response) {
+//             // alert("complete: " + JSON.stringify(response));
+//             // $('#id-resource-sub-resource').html(response.responseText);
+//             // calendar.render();
 
-        // }
-    };
-    let settings = {
-        ...defaultObj,
-        ...options
-    };
-    return $.ajax(settings);
-}
+//         }
+//     };
+//     let settings = {
+//         ...defaultObj,
+//         ...options
+//     };
+//     $.ajax(settings);
+// }
 
 // $(document).ready(function () {
 //     $('.location-select2').select2();

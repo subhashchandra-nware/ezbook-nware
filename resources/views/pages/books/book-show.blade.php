@@ -15,6 +15,7 @@
                             // dd( $data);
                             extract($data);
                             $LocationOptions = ['0' => 'All'] + array_combine(array_column($ResourceLocation, 'id'), array_column($ResourceLocation, 'Name'));
+
                         @endphp
 
                         <ul class="menu-nav pb-0">
@@ -26,7 +27,9 @@
                                 <x-forms.form class="form p-5">
                                     <div class="form-group">
 
-                                        <x-forms.select selected="{{ request()->segment(2) }}" onchange="window.location.href='{{route('book.index')}}/'+ $(this).val()" name="resourceLocation" :options="$LocationOptions"
+                                        <x-forms.select selected="{{ request()->segment(2) }}"
+                                            onchange="window.location.href='{{ route('book.index') }}/'+ $(this).val()"
+                                            name="resourceLocation" :options="$LocationOptions"
                                             class="form-control form-control-md location-select2" id="show" />
                                     </div>
                                     <div class="form-group">
@@ -34,9 +37,6 @@
                                             class="font-size-base form-control form-control-md" />
 
                                     </div>
-                                    {{-- <div class="form-group">
-                                        <x-forms.button design="2" name="submit" type="submit" value="Search"/>
-                                    </div> --}}
                                 </x-forms.form>
                             </li>
                         </ul>
@@ -54,41 +54,35 @@
 
                         <div class="card-header" id="ajax-header">
                             @php
-                                $Resources = count($Resources) == 1 ? $Resources[0] : $Resources;
+                                $Resources = isset($Resources) && count($Resources) == 1 ? $Resources[0] : $Resources;
                                 // dd($Resources);
                                 extract($Resources);
+                                $slotDuration = date('H:i:s', mktime(0, $SlotLength));
                                 $events = [];
-                                if(isset($bookings) && count($bookings) ){
-                                foreach ($bookings as $key => $booking) {
-                                    $booking = (object) $booking;
-                                    $events[] = [
-                                        // $events[] = [
-                                        'id' => $booking->ID,
-                                        'title' => $Name,
-                                        'start' => $booking->FromTime,
-                                        'description' => "[{$booking->FromTime} - {$booking->ToTime} : {$Name} (Booked by {$booking->BookedBy})]",
-                                        'end' => $booking->ToTime,
-                                        'className' => 'fc-event-success',
-                                    ];
+                                if (isset($bookings) && count($bookings)) {
+                                    foreach ($bookings as $key => $booking) {
+                                        $booking = (object) $booking;
+                                        $events[] = [
+                                            'id' => $booking->ID,
+                                            'title' => $Name,
+                                            'start' => $booking->FromTime,
+                                            'description' => "[{$booking->FromTime} - {$booking->ToTime} : {$Name} (Booked by {$booking->BookedBy})]",
+                                            'end' => $booking->ToTime,
+                                            'className' => 'fc-event-success',
+                                        ];
+                                    }
                                 }
-                            }
-                                // $events = json_decode(json_encode($events), FALSE);
-
                                 // dd($events);
                             @endphp
                             <div class="card-title">
                                 <h3 class="card-label">{{ $Name }}</h3>
                             </div>
-                            <pre id="ajax-test"></pre>
                             <div class="card-toolbar">
-                                {{-- <a href="#" class="btn btn-primary font-weight-bold">
-                                    <i class="ki ki-plus icon-md mr-2"></i>Add Event</a> --}}
-
                                 @if (count($sub_resources) > 0)
-
                                     <form class="form p-5">
                                         <div class="form-group mb-0">
-                                            <select class="form-control form-control-md " id="id-sub_resource">
+                                            <select onchange="$('#id-SubID').val($(this).val())"
+                                                class="form-control form-control-md " id="id-sub_resource">
                                                 <option>All</option>
                                                 <option>Any</option>
                                                 @foreach ($sub_resources as $sub)
@@ -116,22 +110,25 @@
     </x-layouts.page>
 
 
-
-    <!-- start::Modal -->
+    <!-- start::booking-create-modal -->
     <div class="modal fade" id="booking-create-modal" role="dialog">
         <div class="modal-dialog">
-
             <!-- Modal content-->
             <div class="modal-content">
-                <x-forms.form id="ajaax-create-resource" action="{{ route('book.store') }}">
+                <x-forms.form id="ajax-create-booking" action="{{ route('book.store') }}">
                     <x-forms.input name="FacID" type="hidden" value="{{ $ID }}" />
-                    <x-forms.input name="SubID" type="hidden" value="0" />
+                    {{-- <x-forms.input name="SubID" type="hidden" value="0" /> --}}
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">New Booking for {{ $Name }} </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <p>Some text in the modal.</p>
+                        @if (count($sub_resources) > 0)
+                            @php
+                                $options = ['0' => 'All', '1' => 'Any'] + array_combine(array_column($sub_resources, 'ID'), array_column($sub_resources, 'Name'));
+                            @endphp
+                            <x-forms.select design="1" name="SubID" :options="$options" label="Sub Resource" />
+                        @endif
                         <x-forms.input design="2" name="FromTime" type="datetime-local" label="From" />
                         <x-forms.input design="2" name="ToTime" type="datetime-local" label="To" />
                         <x-forms.input design="2" name="BookedFor" label="For" />
@@ -147,7 +144,46 @@
 
         </div>
     </div>
-    <!-- end::Modal -->
+    <!-- end::booking-create-modal -->
+
+    <!-- start::booking-update-modal -->
+    <div class="modal fade" id="booking-update-modal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <x-forms.form method="PUT" id="ajax-update-booking" action="">
+                    <x-forms.input name="ID" type="hidden" value="" />
+                    {{-- <x-forms.input name="SubID" type="hidden" value="0" /> --}}
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Booking for {{ $Name }} </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        @if (count($sub_resources) > 0)
+                            @php
+                                $options = ['0' => 'All', '1' => 'Any'] + array_combine(array_column($sub_resources, 'ID'), array_column($sub_resources, 'Name'));
+                            @endphp
+                            <x-forms.select design="1" name="SubID" :options="$options" label="Sub Resource" />
+                        @endif
+                        <x-forms.input design="2" name="FromTime" type="datetime-local" label="From" />
+                        <x-forms.input design="2" name="ToTime" type="datetime-local" label="To" />
+                        <x-forms.input design="2" name="BookedFor" label="For" />
+                        <x-forms.textarea design="1" name="Purpose" label="Additional Info" />
+                        {{-- <x-forms.input design="2" name="end" type="color" value="#22A6DB" label="Color" title="Choose your color" /> --}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default">Update</button>
+                    </x-forms.form>
+                    <x-forms.form method="DELETE" id="ajax-delete-booking" action="">
+                        <x-forms.input id="id-delete" name="ID" type="hidden" value="" />
+                        <button type="submit" class="btn btn-default">Delete</button>
+                    </x-forms.form>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end::booking-update-modal -->
 
 @endsection
 @pushOnce('scripts')
@@ -175,7 +211,8 @@
                 navLinks: true,
                 editable: true,
                 eventLimit: true, // allow "more" link when too many events
-                // events: "{{ route('getbookedresource', ['resource' => 104]) }}",
+                // slotDuration: "{{ $slotDuration }}", // Duration, default: '00:30:00' (30 minutes)
+                // {{-- events: "{{ route('getbookedresource', ['resource' => 104]) }}", --}}
                 events: {!! json_encode($events) !!},
                 // displayEventTime: false,
                 selectable: true,
@@ -184,16 +221,23 @@
                     var s = moment(info.start).format("YYYY-MM-DD HH:mm:ss");
                     var e = moment(info.end).format("YYYY-MM-DD HH:mm:ss");
                     var sr = 0
-                    if ($('#sub_resource').length) {
+                    // alert($('#id-sub_resource').length);
+                    if ($('#id-sub_resource').length) {
                         sr = $('#id-sub_resource').val();
+                        // alert(sr);
                     }
-                    // alert(s);
                     $("#id-FromTime").val(s);
                     $("#id-ToTime").val(e);
                     $("#id-SubID").val(sr);
-                    $("#booking-create-modal").modal();
-                    $("#ajaax-create-resource").submit(function(e) {
+                    $("#booking-create-modal").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    // $('#modal').modal({backdrop: 'static', keyboard: false}, 'show');
+                    $("#ajax-create-booking").submit(function(e) {
                         e.preventDefault();
+                        $('button[type=submit], input[type=submit]').prop('disabled',true);
+
                         var $form = $(this);
                         var $actionUrl = $form.attr('action');
                         var $type = $form.attr('method');
@@ -211,16 +255,93 @@
                             complete: $complete
                         });
                     });
+
                     // console.log(info);
                 },
-                eventClick: function(event) {
-                    alert("eventClick: ");
-                    // opens events in a popup window
-                    // window.open(event.url, 'gcalevent', 'width=700,height=600');
+                eventClick: function(info) {
+
+                    $("#booking-update-modal").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    let url = "{!! route('book.getbooking', ':id') !!}";
+                    url = url.replace(':id', info.event.id);
+
+                    ajaxCall(url, {
+                        success: function(response) {
+                            $("#ajax-update-booking").attr("action", url);
+                            $.each(response, function(indexInArray, valueOfElement) {
+                                $("#ajax-update-booking input[name=" + indexInArray +
+                                    "]").val(valueOfElement);
+                                $("#ajax-update-booking textarea[name=" + indexInArray +
+                                    "]").val(valueOfElement);
+                                $("#ajax-update-booking select[name=" + indexInArray +
+                                    "]").val(valueOfElement);
+                            });
+                            console.log(response);
+                            return response;
+                        }
+                    });
+                    // alert(JSON.stringify(bookingData));
+                    // console.log(Object.values(bookingData) );
+                    $("#ajax-update-booking").submit(function(e) {
+                        e.preventDefault();
+                        $('input[type="submit"]', this).attr('disabled','disabled');
+
+                        var $form = $(this);
+                        var $actionUrl = $form.attr('action');
+                        var $type = $form.attr('method');
+                        var $data = $form.serialize();
+                        var $success = function(response) {
+                            // alert("success: " + JSON.stringify(response));
+                            $("#booking-update-modal").modal('hide');
+                        };
+                        var $complete = function(response) {
+                            // alert("complete:" + JSON.stringify(response));
+                            // console.log(response);
+                            window.location.reload(true);
+                        };
+                        ajaxCall($actionUrl, {
+                            type: $type,
+                            data: $data,
+                            success: $success,
+                            complete: $complete
+                        });
+                    });
+
+                    let deleteUrl = "{!! route('book.destroy', ':id') !!}";
+                    deleteUrl = deleteUrl.replace(':id', info.event.id);
+                    $("#ajax-delete-booking").submit(function(e) {
+                        e.preventDefault();
+                        $('input[type="submit"]', this).attr('disabled','disabled');
+
+                        var $form = $(this);
+                        $form.attr("action", deleteUrl);
+                        deleteUrl = $form.attr("action");
+                        var $type = $form.attr('method');
+                        var $data = $form.serialize();
+                        var $success = function(response) {
+                            // alert("success: " + JSON.stringify(response));
+                            $("#booking-update-modal").modal('hide');
+                        };
+                        var $complete = function(response) {
+                            // console.log(response);
+                            // alert("complete:" + JSON.stringify(response));
+                            window.location.reload(true);
+                        };
+                        ajaxCall(deleteUrl, {
+                            type: $type,
+                            data: $data,
+                            success: $success,
+                            complete: $complete
+                        });
+                    });
+
                     return false;
                 },
                 eventRender: function(info) {
                     var element = $(info.el);
+                    // element.attr('title', info.event.extendedProps.description);
                     if (info.event.extendedProps && info.event.extendedProps.description) {
                         if (element.hasClass('fc-day-grid-event')) {
                             element.data('content', info.event.extendedProps.description);
@@ -248,23 +369,8 @@
             var calendar = new FullCalendar.Calendar(CalendarElement, CalendarOptions);
             // var calendar = $("#calendar").fullCalendar(CalendarOptions);
             calendar.render();
-            // $('.ajax').on('click', function() {
-            //     let url = $(this).data('href');
-            //     ajaxCall(url, {
-            //         type: 'POST',
-            //         data: {
-            //             url: url,
-            //             name: "subhash"
-            //         },
-            //         complete: function(response) {
-            //             alert("complete: " + JSON.stringify(response));
-            //             $('#id-resource-sub-resource').html(response.responseText);
-            //             // $("#calendar").fullCalendar("refetchEvents");
 
 
-            //         }
-            //     });
-            // });
 
             /**
              * END::READY
@@ -272,4 +378,3 @@
         });
     </script>
 @endPushOnce
-
