@@ -99,11 +99,12 @@ Route::controller(BookController::class)->group(function(){
     Route::post('booked/resource/{resource}', 'getBookedResource')->name('getbookedresource');
     // Route::get('book/resource/{resource}', 'getBookedResource')->name('getbookedresource');
     Route::post('book/store', 'store')->name('bookstore');
-    Route::get('book/{location?}', 'index')->name('book.location');
+    Route::get('book/location/{location?}', 'index')->name('book.location');
     // Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
     Route::get('book/location/{location}/resource/{resource?}', 'show')->name('book.location.resource');
 
     Route::get('book/booking/{booking}', 'getBooking')->name('book.getbooking');
+    Route::get('book/subbooking/{SubID}', 'getBookingBySubID')->name('book.getbooking.SubID');
     Route::put('book/booking/{booking}', 'update')->name('book.update');
 });
 

@@ -25,7 +25,7 @@
                                 <x-forms.form class="form p-5">
                                     <div class="form-group">
 
-                                        <x-forms.select selected="{{ request()->segment(2) }}" onchange="window.location.href='{{route('book.index')}}/'+ $(this).val()" name="resourceLocation" :options="$LocationOptions"
+                                        <x-forms.select selected="{{ request()->segment(3) }}" onchange="let url = '{!! route('book.location', ':id') !!}';url = url.replace(':id', $(this).val()); window.location.href=url" name="resourceLocation" :options="$LocationOptions"
                                             class="form-control form-control-md location-select2" id="show" />
                                     </div>
                                     <div class="form-group">

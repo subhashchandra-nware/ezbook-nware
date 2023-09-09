@@ -37,7 +37,6 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $booking = null;
         // $request->request->add(['ProviderID' => session()->get('siteId')]);
         $request->request->add(['BookedBy' => session()->get('loginUserId')]);
 
@@ -93,6 +92,14 @@ class BookController extends Controller
     public function update(Request $request, Book $book)
     {
         if (request()->ajax()) {
+            $validator = Validator::make($request->all(), [
+                'BookedFor' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->messages(), 400);
+            }
+
             $book = Book::find($request->ID);
             // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
             $book->fill($request->all());
@@ -123,12 +130,11 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
-
         // echo "<pre>";print_r($book->toArray());echo "</pre>";
         DB::beginTransaction();
         try {
             $book->delete();
-                DB::commit();
+            DB::commit();
             // dd($userrights, $usergrouprights, $opretionalHours, $custombookinginfos);
 
             return response()->json([
@@ -145,9 +151,11 @@ class BookController extends Controller
             ], 500);
         }
     }
-    public function getBooking(string $bookingID)
+    public function getBooking( string $bookingID )
     {
         // dd($bookingID);
+        // return "getBooking";
+
         $apiJSON = (new BookApiController)->getBooking($bookingID);
         $original = collect($apiJSON)->get('original');
         $data = $original;
@@ -159,7 +167,21 @@ class BookController extends Controller
             dd($data, response()->json($data));
         }
     }
-
+    public function getBookingBySubID( string $SubID )
+    {
+        // return "getBookingBySubID";
+        $apiJSON = (new BookApiController)->getBookingBySubID($SubID);
+        $original = collect($apiJSON)->get('original');
+        $data = $original;
+        $data = collect($original)->get('data');
+        // $data = (isset($data) && count($data) == 1 && isset($data[0])) ? $data[0] : $data;
+        // echo "<pre>";print_r($data);echo "</pre>";return;
+        if (request()->ajax()) {
+            return response()->json($data);
+        } else {
+            dd($data, response()->json($data));
+        }
+    }
 
     /*
    public function getResource()

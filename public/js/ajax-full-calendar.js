@@ -195,9 +195,10 @@ var ajaxCall = function (url = '', options = {}) {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         },
         type: "GET",
-        data: { _token: "{{ csrf_token() }}" },
+        data: { _token: "{!! csrf_token() !!}" },
         error: function (response) {
-            // alert("error: " + JSON.stringify(response));
+            alert("error: " + JSON.stringify(response));
+            $('button[type=submit], input[type=submit]').prop('disabled',false);
             // $('#id-resource-sub-resource').html(response);
             console.log(response);
         },

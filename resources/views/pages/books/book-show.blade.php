@@ -27,8 +27,8 @@
                                 <x-forms.form class="form p-5">
                                     <div class="form-group">
 
-                                        <x-forms.select selected="{{ request()->segment(2) }}"
-                                            onchange="window.location.href='{{ route('book.index') }}/'+ $(this).val()"
+                                        <x-forms.select selected="{{ request()->segment(3) }}"
+                                            onchange="let url = '{!! route('book.location', ':id') !!}';url = url.replace(':id', $(this).val()); window.location.href=url"
                                             name="resourceLocation" :options="$LocationOptions"
                                             class="form-control form-control-md location-select2" id="show" />
                                     </div>
@@ -81,8 +81,7 @@
                                 @if (count($sub_resources) > 0)
                                     <form class="form p-5">
                                         <div class="form-group mb-0">
-                                            <select onchange="$('#id-SubID').val($(this).val())"
-                                                class="form-control form-control-md " id="id-sub_resource">
+                                            <select class="form-control form-control-md " id="id-sub_resource">
                                                 <option>All</option>
                                                 <option>Any</option>
                                                 @foreach ($sub_resources as $sub)
@@ -173,15 +172,15 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-default">Update</button>
-                    </x-forms.form>
-                    <x-forms.form method="DELETE" id="ajax-delete-booking" action="">
-                        <x-forms.input id="id-delete" name="ID" type="hidden" value="" />
-                        <button type="submit" class="btn btn-default">Delete</button>
-                    </x-forms.form>
-                    </div>
+                </x-forms.form>
+                <x-forms.form method="DELETE" id="ajax-delete-booking" action="">
+                    <x-forms.input id="id-delete" name="ID" type="hidden" value="" />
+                    <button type="submit" class="btn btn-default">Delete</button>
+                </x-forms.form>
             </div>
-
         </div>
+
+    </div>
     </div>
     <!-- end::booking-update-modal -->
 
@@ -211,12 +210,12 @@
                 navLinks: true,
                 editable: true,
                 eventLimit: true, // allow "more" link when too many events
+                selectable: true,
+                // selectHelper: true,
+                // displayEventTime: false,
                 // slotDuration: "{{ $slotDuration }}", // Duration, default: '00:30:00' (30 minutes)
                 // {{-- events: "{{ route('getbookedresource', ['resource' => 104]) }}", --}}
                 events: {!! json_encode($events) !!},
-                // displayEventTime: false,
-                selectable: true,
-                // selectHelper: true,
                 select: function(info) {
                     var s = moment(info.start).format("YYYY-MM-DD HH:mm:ss");
                     var e = moment(info.end).format("YYYY-MM-DD HH:mm:ss");
@@ -236,7 +235,7 @@
                     // $('#modal').modal({backdrop: 'static', keyboard: false}, 'show');
                     $("#ajax-create-booking").submit(function(e) {
                         e.preventDefault();
-                        $('button[type=submit], input[type=submit]').prop('disabled',true);
+                        $('button[type=submit], input[type=submit]').prop('disabled', true);
 
                         var $form = $(this);
                         var $actionUrl = $form.attr('action');
@@ -244,10 +243,9 @@
                         var $data = $form.serialize();
                         var $success = function(response) {
                             $("#booking-create-modal").modal('hide');
-                        };
-                        var $complete = function(response) {
                             window.location.reload(true);
                         };
+                        var $complete = function(response) {};
                         ajaxCall($actionUrl, {
                             type: $type,
                             data: $data,
@@ -286,20 +284,20 @@
                     // console.log(Object.values(bookingData) );
                     $("#ajax-update-booking").submit(function(e) {
                         e.preventDefault();
-                        $('input[type="submit"]', this).attr('disabled','disabled');
+                        $('button[type=submit], input[type=submit]').prop('disabled', true);
 
                         var $form = $(this);
                         var $actionUrl = $form.attr('action');
                         var $type = $form.attr('method');
                         var $data = $form.serialize();
                         var $success = function(response) {
-                            // alert("success: " + JSON.stringify(response));
+                            alert("success: " + JSON.stringify(response));
                             $("#booking-update-modal").modal('hide');
+                            window.location.reload(true);
                         };
                         var $complete = function(response) {
-                            // alert("complete:" + JSON.stringify(response));
+                            alert("complete:" + JSON.stringify(response));
                             // console.log(response);
-                            window.location.reload(true);
                         };
                         ajaxCall($actionUrl, {
                             type: $type,
@@ -313,7 +311,7 @@
                     deleteUrl = deleteUrl.replace(':id', info.event.id);
                     $("#ajax-delete-booking").submit(function(e) {
                         e.preventDefault();
-                        $('input[type="submit"]', this).attr('disabled','disabled');
+                        $('input[type="submit"]', this).attr('disabled', 'disabled');
 
                         var $form = $(this);
                         $form.attr("action", deleteUrl);
@@ -323,11 +321,11 @@
                         var $success = function(response) {
                             // alert("success: " + JSON.stringify(response));
                             $("#booking-update-modal").modal('hide');
+                            window.location.reload(true);
                         };
                         var $complete = function(response) {
                             // console.log(response);
                             // alert("complete:" + JSON.stringify(response));
-                            window.location.reload(true);
                         };
                         ajaxCall(deleteUrl, {
                             type: $type,
@@ -342,6 +340,16 @@
                 eventRender: function(info) {
                     var element = $(info.el);
                     // element.attr('title', info.event.extendedProps.description);
+                    // $(info.el).popover({
+                    //     title: titleCase(info.event.title),
+                    //     content: multiline('Start: ' + info.event.start.toDateString() + ' ' + info
+                    //         .event.start.toLocaleTimeString() + '\n' + 'End: ' + info.event.end
+                    //         .toDateString() + ' ' + info.event.end.toLocaleTimeString()),
+                    //     html: true,
+                    //     trigger: 'hover',
+                    //     container: 'body',
+                    //     placement: 'top',
+                    // });
                     if (info.event.extendedProps && info.event.extendedProps.description) {
                         if (element.hasClass('fc-day-grid-event')) {
                             element.data('content', info.event.extendedProps.description);
@@ -370,6 +378,24 @@
             // var calendar = $("#calendar").fullCalendar(CalendarOptions);
             calendar.render();
 
+            $("#id-sub_resource").change(function(e) {
+                e.preventDefault();
+                console.log(e);
+                let $url = "{!! route('book.getbooking.SubID', ':id') !!}";
+                $url = $url.replace(':id', $(this).val());
+                // alert($url);
+                ajaxCall($url, {
+                    success: function(response) {
+
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(response);
+                        calendar.refetchEvents();
+                        console.log(response);
+                        // console.log(eventSources);
+                        // return events;
+                    }
+                });
+            });
 
 
             /**

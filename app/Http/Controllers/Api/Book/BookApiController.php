@@ -18,17 +18,24 @@ class BookApiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $locationId = null)
     {
         $data = [];
         $data['ResourceLocation'] = ResourceLocation::all()->toArray();
-        $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
-
+        if (!is_null($locationId) && $locationId != 0) {
+            $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) use ($locationId) {
+                $query->where('resourceLocation', '=', $locationId);
+            }])->whereHas('resources', function ($query) use ($locationId) {
+                $query->where('resourceLocation', '=', $locationId);
+            })->get()->toArray();
+        } else {
+            $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
+        }
         // $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->whereHas('resources', function(Builder $query) use ($locationId){
         //     if(! is_null($locationId) ){$query->where('resourceLocation', '=', $locationId);}
         // })->get()->toArray();
 
-        // dd($data);
+        // dd('index', $data);
         if ($data != null) {
             return response()->json([
                 "message" => "Reource Location and Type Found Successfully",
@@ -100,9 +107,23 @@ class BookApiController extends Controller
         // $data['ResourceTypes'] = ResourceType::with('resource')->get()->toArray();
 
         if (!is_null($locationId) && $locationId != 0) {
-            $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->whereHas('resources', function (Builder $query) use ($locationId) {
+            $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) use ($locationId) {
+                $query->where('resourceLocation', '=', $locationId);
+            }])->whereHas('resources', function ($query) use ($locationId) {
                 $query->where('resourceLocation', '=', $locationId);
             })->get()->toArray();
+
+            // $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ( $query) use ($locationId) {
+            //     $query->where('resourceLocation', '=', $locationId);
+            // }])->whereHas('resources', function ( $query) use ($locationId) {
+            //     $query->where('resourceLocation', '=', $locationId);
+            // })->get()->toArray();
+
+            // $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->whereHas('resources', function ( $query) use ($locationId) {
+            //     $query->where('resourceLocation', '=', $locationId);
+            //     // $query->only()
+            // })->get()->toArray();
+
         } else {
             $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
         }
@@ -113,7 +134,7 @@ class BookApiController extends Controller
         // $data['Bookings'] = Resource::with('Booking')->where('ID', '=', $id)->get()->toArray();
         // $data['ALL'] = Resource::with('SubResource','Booking')->where('ID', '=', $id)->get()->toArray();
 
-        // dd($data);
+        // dd($locationId, $resourceId, $data);
         if ($data != null) {
             return response()->json([
                 "message" => "Reource Location and Type Found Successfully",
@@ -141,7 +162,37 @@ class BookApiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if (request()->ajax()) {
+            $validator = Validator::make($request->all(), [
+                'BookedFor' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->messages(), 400);
+            }
+
+            $book = Book::find($request->ID);
+            // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
+            $book->fill($request->all());
+            DB::beginTransaction();
+            try {
+                $book->save();
+                DB::commit();
+                return response()->json([
+                    "message" => "Resource Update Successfully.",
+                    "status" => "success",
+                    "data" => $book,
+                ], 200);
+            } catch (\Exception $exc) {
+                DB::rollBack();
+                // echo "<pre>error:"; print_r($exc->getMessage()); echo "</pre>";
+                // echo "<pre>error:";print_r($book->all()->toJson());echo "</pre>";
+                return response()->json([
+                    "message" => "Resource not Create.",
+                    "status" => "error",
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -152,10 +203,10 @@ class BookApiController extends Controller
         //
     }
 
-    public function getBooking(string $bookingID )
+    public function getBooking(string $bookingID)
     {
         $data = [];
-        $data = Book::findOrFail($bookingID )->toArray();
+        $data = Book::findOrFail($bookingID)->toArray();
         // $data = Book::findOrFail($bookingID );
         if ($data != null) {
             return response()->json([
@@ -170,7 +221,59 @@ class BookApiController extends Controller
             ], 200);
         }
     }
+    public function getBookingBySubID(string $SubID)
+    {
+        $data = [];
+        // $data = Book::where('SubID', '=', $SubID)->get()->toArray();
 
+        $tmp = Resource::with(['SubResources' => function ($query) use ($SubID) {
+            $query->where('ID', '=', $SubID);
+        }, 'Bookings' => function ($query) use ($SubID) {
+            $query->where('SubID', '=', $SubID);
+        }])->whereHas('Bookings', function ($query) use ($SubID) {
+            $query->where('SubID', '=', $SubID);
+        })->get()->toArray();
+        // $data['Resources'] = Resource::select(['ID', 'Name', 'Description', 'Name as Resource'])->with(['SubResources' => function ($query) use ($SubID) {
+        //     $query->select(['ID', 'resource', 'Name', 'Name as SubResource'])->where('ID', '=', $SubID);
+        // }, 'Bookings' => function ($query) use ($SubID) {
+        //     $query->select(['ID', 'ID as id', 'BookedBy', 'SubID', 'FacID', 'BookedFor', 'FromTime as start', 'ToTime as end'])->where('SubID', '=', $SubID);
+        // }])->whereHas('Bookings', function ($query) use ($SubID) {
+        //     $query->where('SubID', '=', $SubID);
+        // })->get()->toArray();
+        $tmp = (isset($tmp) && count($tmp) == 1 && isset($tmp[0])) ? $tmp[0] : $tmp;
+        extract($tmp);
+
+        if (isset($bookings) && count($bookings)) {
+            foreach ($bookings as $key => $booking) {
+                $booking = (object) $booking;
+                $events[] = [
+                    'id' => $booking->ID,
+                    'title' => $Name,
+                    'start' => $booking->FromTime,
+                    'description' => "[{$booking->FromTime} - {$booking->ToTime} : {$Name} (Booked by {$booking->BookedBy})]",
+                    'end' => $booking->ToTime,
+                    'className' => 'fc-event-success',
+                ];
+            }
+        }
+
+
+        // $data = $tmp;
+        // echo "<pre>";print_r($events);echo "</pre>";return;
+        $data = $events;
+        if ($data != null) {
+            return response()->json([
+                "message" => "Reource Booking Found Successfully",
+                "status" => "success",
+                "data" => $data,
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "No Booking found",
+                "status" => "failed",
+            ], 200);
+        }
+    }
 
     public function getLocationResource(string $locationId, string $resourceId)
     {
@@ -194,7 +297,8 @@ class BookApiController extends Controller
     }
 
 
-    public function getBookedResource(Book $book){
+    public function getBookedResource(Book $book)
+    {
         dd($book->toArray());
         $data = [];
         $data = Book::where("FacID", "=", $book->ID)->get()->toArray();

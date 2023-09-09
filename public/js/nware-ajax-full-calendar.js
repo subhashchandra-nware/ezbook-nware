@@ -2,6 +2,7 @@
 /**
  * @see https://fullcalendar.io/
  * @returns
+ * @author
  */
 var NWareSoft = function () {
     var defaultAjaxOption = {
@@ -26,12 +27,12 @@ var NWareSoft = function () {
         navLinks: true,
         editable: true,
         eventLimit: true, // allow "more" link when too many events
+        selectable: true,
+        // selectHelper: true,
+        // displayEventTime: false,
         // slotDuration: "{{ $slotDuration }}", // Duration, default: '00:30:00' (30 minutes)
         // events: "{{ route('getbookedresource', ['resource' => 104]) }}",
         // events: {!! json_encode($events) !!},
-        // displayEventTime: false,
-        selectable: true,
-        selectHelper: true,
         select: function (info) {
             var s = moment(info.start).format("YYYY-MM-DD HH:mm:ss");
             var e = moment(info.end).format("YYYY-MM-DD HH:mm:ss");
@@ -99,7 +100,7 @@ var NWareSoft = function () {
     };
     return {
         Init: function () { },
-        Ajx: function (url = '', options = {}) {
+        Ajax: function (url = '', options = {}) {
             let ajaxSettings = { ...defaultAjaxOption, ...options };
             $.ajax(ajaxSettings);
         },
