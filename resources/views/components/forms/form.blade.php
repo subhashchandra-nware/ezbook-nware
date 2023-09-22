@@ -1,7 +1,8 @@
 @props([
     'method' => "POST",
+    'attr' => null,
 ])
-<form {{ $attributes }} method=@if (strtoupper($method) == 'GET') "GET" @else "POST" @endif >
+<form {{ $attr ?? $attributes }} method= @if (strtoupper($method) == 'GET') "GET" @else "POST" @endif >
     @csrf
     @if (strtoupper($method) == 'PUT')
         @method('PUT')

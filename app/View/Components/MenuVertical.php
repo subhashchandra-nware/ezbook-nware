@@ -6,7 +6,8 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class layouts.menu-vertical extends Component
+// class layouts.menu-vertical extends Component
+class MenuVertical extends Component
 {
     /**
      * Create a new component instance.

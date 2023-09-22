@@ -197,14 +197,41 @@ var ajaxCall = function (url = '', options = {}) {
         type: "GET",
         data: { _token: "{!! csrf_token() !!}" },
         error: function (response) {
-            alert("error: " + JSON.stringify(response));
-            $('button[type=submit], input[type=submit]').prop('disabled',false);
+            // alert("error: " + JSON.stringify(response));
+            Swal.fire("Oops Got An Error!", response.responseText, "error");
+            // Swal.fire("Oops Got An Error!", "Error in Code : " + JSON.stringify(response), "error");
+            $('button[type=submit], input[type=submit]').prop('disabled', false);
             // $('#id-resource-sub-resource').html(response);
-            console.log(response);
+            let input = JSON.parse(response.responseText);
+            let i = 1;
+            $.each( input, function( indexInArray, valueOfElement ) {
+                var frm = $('[name="' + indexInArray + '"]').closest("form");
+                if(i==1){
+                    $( frm ).find(".is-invalid").removeClass("is-invalid");
+                    $( frm ).find(".text-danger").remove();
+                }
+                $('[name="' + indexInArray + '"]').addClass("is-invalid").removeClass("form-control-solid").after( '<span class="form-text text-danger">'+valueOfElement+'</span>' );
+                // $( ".inner" ).after( "<p>Test</p>" );
+                i++;
+                console.log(frm);
+            });
+            // console.log(response);
         },
         beforeSend: function (response) {
-            $('input[type="submit"]').attr('disabled','disabled');
             // alert("beforeSend: " + JSON.stringify(response));
+            $('input[type="submit"]').attr('disabled', 'disabled');
+            Swal.fire({
+                title: "Loading...",
+                html: "Please wait a moment",
+                showConfirmButton: false,
+                onOpen: function () {
+                    Swal.showLoading()
+                }
+            });
+        },
+        complete: function (response) {
+            // alert("complete: " + JSON.stringify(response));
+            Swal.close();
         }
         // ,
         // dataFilter: function (response) {
@@ -216,12 +243,6 @@ var ajaxCall = function (url = '', options = {}) {
         //     // console.log(response);
         //     // $('#id-resource-sub-resource').html(response);
         // },
-        // complete: function (response) {
-        //     // alert("complete: " + JSON.stringify(response));
-        //     // $('#id-resource-sub-resource').html(response.responseText);
-        //     // calendar.render();
-
-        // }
     };
     let settings = {
         ...defaultObj,
@@ -250,35 +271,35 @@ var ajaxCall = function (url = '', options = {}) {
 
 
 
-    // $(document).ready(function () {
-    //     let CalendarOptions = {
-    //         plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'googleCalendar'],
-    //         header: {
-    //             left: 'prev,next today',
-    //             center: 'title',
-    //             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-    //         },
-    //         navLinks: true,
-    //         editable: true,
-    //         events: "{{ route('getresource') }}",
-    //         // displayEventTime: false,
-    //         selectable: true,
-    //         selectHelper: true,
-    //         eventRender: function (event, element, view) {
-    //             if (event.allDay === 'true') {
-    //                 event.allDay = true;
-    //             } else {
-    //                 event.allDay = false;
-    //             }
-    //         }
-    //     };
-    //     let CalendarElement = $('#calendar').get(0);
-    //     // var calendar = new FullCalendar.Calendar(CalendarElement, CalendarOptions);
-    //     var calendar = $("#calendar").fullCalendar(CalendarOptions);
-    //     // calendar.render();
+// $(document).ready(function () {
+//     let CalendarOptions = {
+//         plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'googleCalendar'],
+//         header: {
+//             left: 'prev,next today',
+//             center: 'title',
+//             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+//         },
+//         navLinks: true,
+//         editable: true,
+//         events: "{{ route('getresource') }}",
+//         // displayEventTime: false,
+//         selectable: true,
+//         selectHelper: true,
+//         eventRender: function (event, element, view) {
+//             if (event.allDay === 'true') {
+//                 event.allDay = true;
+//             } else {
+//                 event.allDay = false;
+//             }
+//         }
+//     };
+//     let CalendarElement = $('#calendar').get(0);
+//     // var calendar = new FullCalendar.Calendar(CalendarElement, CalendarOptions);
+//     var calendar = $("#calendar").fullCalendar(CalendarOptions);
+//     // calendar.render();
 
 
-    //     /**
-    //      * END::READY
-    //      */
-    // });
+//     /**
+//      * END::READY
+//      */
+// });

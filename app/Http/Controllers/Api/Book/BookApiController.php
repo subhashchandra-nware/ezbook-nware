@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Book;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Booking;
+use App\Models\BookingRecurrence;
 use App\Models\Resource;
 use App\Models\ResourceLocation;
 use App\Models\ResourceType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,27 +65,115 @@ class BookApiController extends Controller
      */
     public function store(Request $request)
     {
-        $booking = null;
+        $data = null;
+        $dates = [];
+        $requestData = $request->all();
+
         // $request->request->add(['ProviderID' => session()->get('siteId')]);
         $request->request->add(['BookedBy' => session()->get('loginUserId')]);
 
         $validator = Validator::make($request->all(), [
             'BookedFor' => 'required',
+            'Purpose' => 'required',
+            'SubID' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->messages(), 400);
         }
+        // CARBON::DATING START
+        if ($request->BookingType) {
+            if ($request->daysOfWeek != null) {
+                $requestData['daysOfWeek'] = implode(",", $request->daysOfWeek);
+            }
+            // $requestData['daysOfWeek'] = ($request->daysOfWeek != null) ? implode(",", $request->daysOfWeek) : "";
+            $requestData['userid'] = $request->BookedBy;
 
-        // dd($request->all(), $SubResources);
+            // for Day intervals
+            if ($request->recurrenceType == 1) {
+                $period = Carbon::parse($request->FromTime)->daysUntil($request->untilDate, $request->recurrenceInterval);
+                foreach ($period->toArray() as $key => $value) {
+                    // $dates[] = ['date' => $value->toDate()->format('D, Y-m-d H:i:s')];
+                    $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
+                    $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
+                }
+            }
+            // for Week intervals
+            elseif ($request->recurrenceType == 2) {
+                $period = Carbon::parse($request->FromTime)->daysUntil($request->untilDate, 1)
+                    ->filter(static fn (Carbon $date) => in_array($date->dayOfWeek, array_map('intval', $request->daysOfWeek), true));
+                foreach ($period->toArray() as $key => $value) {
+                    if ($request->recurrenceInterval > 1 && $request->recurrenceInterval == $value->weekOfMonth) {
+                        // $dates['weeksInMonth'][] = $value->weekOfMonth;
+                        $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
+                        $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
+                    } elseif ($request->recurrenceInterval == 1) {
+                        $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
+                        $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
+                    }
+                }
+            }
+            // for Month intervals
+            elseif ($request->recurrenceType == 3) {
+                if ($request->monthIntervalsType == 1) {
+                    $period = Carbon::parse($request->FromTime)->monthsUntil($request->untilDate, $request->recurrenceInterval);
+                    foreach ($period->toArray() as $key => $value) {
+                        if( is_null( $request->MonthIntervalDay ) ){
+                            $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
+                            $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
+                        }else{
+                            $dates['FromTime1'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->FromTime));
+                            $dates['ToTime1'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->ToTime));
+                        }
+                    }
+                } elseif ($request->monthIntervalsType == 2) {
+                    $period = Carbon::parse($request->FromTime)->daysUntil($request->untilDate, 1)
+                    ->filter(static fn (Carbon $date) => in_array($date->dayOfWeek, array_map('intval', $request->daysOfWeek), true));
+                    $months = [];
+                foreach ($period->toArray() as $key => $value) {
+                    $MonthIntervalDateSelection = $request->MonthIntervalDateSelection + 1;
+                    $dt = collect($value->monthsUntil( $request->untilDate, $request->recurrenceInterval )->toArray())->get($key);
+
+                    if( !is_null($dt) ){
+                        $months[] = $dt->month;
+                    }
+                    // $dates['month'][] =  ( !is_null($dt) ) ? "$MonthIntervalDateSelection == $value->weekOfMonth=".$dt->month . "=".$value->month."=" .$value->toDate()->format('D, Y-m-d H:i:s') : "n";
+                    if ( in_array($value->month, $months)  && $MonthIntervalDateSelection == $value->weekOfMonth) {
+                        $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
+                        $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
+                    }
+                }
+                }
+            }
+            unset($requestData['FromTime'], $requestData['ToTime']);
+            $BookingInterval = $this->columnDataArr($dates, null, $requestData);
+        }
+        // CARBON::DATING END
+
+
+
+
+
+        // dd($BookingInterval, $dates, $request->all());
+        // echo "<pre>";print_r($request->all());echo "</pre>";
+        // return;
         DB::beginTransaction();
         try {
-            $booking = Booking::create($request->all());
+            if ($request->BookingType) {
+                $BookingRecurrence = BookingRecurrence::create($requestData);
+                $BookingRecurrence->Bookings()->createMany($BookingInterval);
+
+                $data = $BookingRecurrence;
+            } else {
+                $booking = Booking::create($request->all());
+                $data = $booking;
+            }
+            // dd( $data, $request->all() );
             DB::commit();
             return response()->json([
                 "message" => "Resource Booked Successfully.",
                 "status" => "success",
-                "data" => $booking,
+                "data" => $data,
             ], 200);
         } catch (\Exception $exc) {
             DB::rollBack();
@@ -203,7 +293,7 @@ class BookApiController extends Controller
         //
     }
 
-    public function getBooking(string $bookingID)
+    public function getBooking(string $bookingID, string $SubID = '0')
     {
         $data = [];
         $data = Book::findOrFail($bookingID)->toArray();
@@ -224,6 +314,7 @@ class BookApiController extends Controller
     public function getBookingBySubID(string $SubID)
     {
         $data = [];
+        // $events = [];
         // $data = Book::where('SubID', '=', $SubID)->get()->toArray();
 
         $tmp = Resource::with(['SubResources' => function ($query) use ($SubID) {
@@ -242,7 +333,6 @@ class BookApiController extends Controller
         // })->get()->toArray();
         $tmp = (isset($tmp) && count($tmp) == 1 && isset($tmp[0])) ? $tmp[0] : $tmp;
         extract($tmp);
-
         if (isset($bookings) && count($bookings)) {
             foreach ($bookings as $key => $booking) {
                 $booking = (object) $booking;

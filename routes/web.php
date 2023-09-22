@@ -103,7 +103,7 @@ Route::controller(BookController::class)->group(function(){
     // Route::get('book/{location}/{resource?}', 'show')->name('book.location.resource');
     Route::get('book/location/{location}/resource/{resource?}', 'show')->name('book.location.resource');
 
-    Route::get('book/booking/{booking}', 'getBooking')->name('book.getbooking');
+    Route::get('book/booking/{booking}/subbooking/{SubID?}', 'getBooking')->name('book.getbooking');
     Route::get('book/subbooking/{SubID}', 'getBookingBySubID')->name('book.getbooking.SubID');
     Route::put('book/booking/{booking}', 'update')->name('book.update');
 });

@@ -110,13 +110,13 @@
 
 
     <!-- start::booking-create-modal -->
-    <div class="modal fade" id="booking-create-modal" role="dialog">
+    {{-- <div class="modal fade" id="booking-create-modal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <x-forms.form id="ajax-create-booking" action="{{ route('book.store') }}">
                     <x-forms.input name="FacID" type="hidden" value="{{ $ID }}" />
-                    {{-- <x-forms.input name="SubID" type="hidden" value="0" /> --}}
+                    {{-- <x-forms.input name="SubID" type="hidden" value="0" /> -- }}
                     <div class="modal-header">
                         <h4 class="modal-title">New Booking for {{ $Name }} </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -132,7 +132,13 @@
                         <x-forms.input design="2" name="ToTime" type="datetime-local" label="To" />
                         <x-forms.input design="2" name="BookedFor" label="For" />
                         <x-forms.textarea design="1" name="Purpose" label="Additional Info" />
-                        {{-- <x-forms.input design="2" name="end" type="color" value="#22A6DB" label="Color" title="Choose your color" /> --}}
+
+                        <x-forms.checkbox design="2" name="Recurrence" id="recurrence" label="Repeat this booking?" />
+
+
+                        <div id="recurrence-container" class="form-group row"></div>
+
+                        {{-- <x-forms.input design="2" name="end" type="color" value="#22A6DB" label="Color" title="Choose your color" /> -- }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-default">Submit</button>
@@ -142,17 +148,45 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
+    <x-layouts.modal id="booking-create-modal">
+        <x-slot:title>New Booking for {{ $Name }}</x-slot:title>
+
+        <x-slot:form id="ajax-create-booking" action="{{ route('book.store') }}"></x-slot:form>
+        <x-forms.input name="FacID" type="hidden" value="{{ $ID }}" />
+        @if (count($sub_resources) > 0)
+            @php
+                $options = ['0' => 'All', '1' => 'Any'] + array_combine(array_column($sub_resources, 'ID'), array_column($sub_resources, 'Name'));
+            @endphp
+            <x-forms.select design="1" name="SubID" :options="$options" label="Sub Resource" />
+        @endif
+
+        <x-forms.input design="2" name="FromTime" type="datetime-local" label="From" />
+        <x-forms.input design="2" name="ToTime" type="datetime-local" label="To" />
+        <x-forms.input design="2" name="BookedFor" label="For" />
+        <x-forms.textarea design="1" name="Purpose" label="Additional Info" />
+
+        <x-forms.checkbox design="2" name="BookingType" value="1" id="recurrence" label="Repeat this booking?" />
+        {{-- <x-forms.checkbox design="2" name="Recurrence" value="1" id="recurrence" label="Repeat this booking?" /> --}}
+
+        <div id="recurrence-container" class="form-group row"></div>
+
+        <x-slot:footer>
+            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </x-slot:footer>
+
+    </x-layouts.modal>
     <!-- end::booking-create-modal -->
 
     <!-- start::booking-update-modal -->
+
     <div class="modal fade" id="booking-update-modal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
                 <x-forms.form method="PUT" id="ajax-update-booking" action="">
                     <x-forms.input name="ID" type="hidden" value="" />
-                    {{-- <x-forms.input name="SubID" type="hidden" value="0" /> --}}
                     <div class="modal-header">
                         <h4 class="modal-title">New Booking for {{ $Name }} </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -168,7 +202,6 @@
                         <x-forms.input design="2" name="ToTime" type="datetime-local" label="To" />
                         <x-forms.input design="2" name="BookedFor" label="For" />
                         <x-forms.textarea design="1" name="Purpose" label="Additional Info" />
-                        {{-- <x-forms.input design="2" name="end" type="color" value="#22A6DB" label="Color" title="Choose your color" /> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-default">Update</button>
@@ -183,6 +216,80 @@
     </div>
     </div>
     <!-- end::booking-update-modal -->
+
+
+    <div id="id-recurrence-items" class="" style="display: none">
+        <div class="col recurrence">
+            <div class="form-group row">
+                <div class="form-check form-check-inline col">
+                    <x-forms.radio class="radio" name="recurrenceType" value="1" id="day-intervals" label="Day intervals" />
+                </div>
+                <div class="form-check form-check-inline col">
+                    <x-forms.radio class="radio" name="recurrenceType" value="2" id="week-intervals" label="Week intervals" />
+                </div>
+                <div class="form-check form-check-inline col">
+                    <x-forms.radio class="radio" name="recurrenceType" value="3" id="month-intervals" label="Month intervals" />
+                </div>
+            </div>
+            <div class="form-group row intervals"></div>
+        </div>
+
+        <div class="form-group col day-intervals">
+            <div class="form-group row">
+                <label class="col" for="id-day">Every</label>
+                <input class="col form-control" type="number" name="recurrenceInterval" id="id-day" />
+                <div class="col col-form-label">days</div>
+            </div>
+            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+
+        </div>
+
+        <div class="form-group col week-intervals">
+            <div class="form-group row">
+                <label class="col" for="id-day">Every</label>
+                <input class="col form-control" type="number" name="recurrenceInterval" id="id-day" />
+                <label class="col col-form-label">Week on</label>
+                <x-forms.select multiple class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']" name="daysOfWeek[]" />
+            </div>
+            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+
+        </div>
+        <div class="form-group col month-intervals">
+            <div class="form-group row">
+                <div class="pt-1"><input value="1" class="radio-2" type="radio" checked name="monthIntervalsType" id="month-intervals-type-2" />
+                </div>
+                <div class="ml-0 pl-0 month-intervals-type-1 month-intervals-type row col">
+                    <label class="col">Day</label>
+                    <input class="col form-control" type="number" name="MonthIntervalDay" />
+                    <label class="col col-form-label">of every</label>
+                    <input class="col form-control" type="number" name="recurrenceInterval" />
+                    <label class="col col-form-label">month(s)</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="pt-1"><input value="2" class="radio-2" type="radio" name="monthIntervalsType" id="month-intervals-type-1" /></div>
+                <div class="ml-0 pl-0 month-intervals-type-2 month-intervals-type row col">
+                    <label class="col">The </label>
+                    <x-forms.select disabled class="col form-control multiple-select2" :options="['First', 'Second', 'Third', 'Fourth', 'Last']" name="MonthIntervalDateSelection" />
+                    <label class="col">Day</label>
+                    <x-forms.select disabled class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']" name="daysOfWeek[]" />
+                    <label class="col col-form-label">of every</label>
+                    <input disabled class="col form-control" type="number" name="recurrenceInterval" />
+                    <label class="col col-form-label">month(s)</label>
+                </div>
+            </div>
+            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
 
 @endsection
 @pushOnce('scripts')
@@ -243,7 +350,10 @@
                         var $data = $form.serialize();
                         var $success = function(response) {
                             $("#booking-create-modal").modal('hide');
+                             swal.fire(JSON.stringify(response));
+                            // console.log(response);
                             window.location.reload(true);
+
                         };
                         var $complete = function(response) {};
                         ajaxCall($actionUrl, {
@@ -386,16 +496,50 @@
                 // alert($url);
                 ajaxCall($url, {
                     success: function(response) {
-
                         calendar.removeAllEvents();
                         calendar.addEventSource(response);
                         calendar.refetchEvents();
+                        // Swal.close();
                         console.log(response);
                         // console.log(eventSources);
                         // return events;
                     }
                 });
             });
+
+            $("#recurrence").click(function(e) {
+                // e.preventDefault();
+                var $this = $(this);
+                if ($this.is(":checked")) {
+                    $("#id-recurrence-items .recurrence").appendTo("#recurrence-container");
+                } else {
+                    $("#recurrence-container .recurrence").appendTo("#id-recurrence-items");
+                }
+            });
+
+            $(document).on("click", "#recurrence-container .recurrence .radio", function() {
+                var $this = $(this);
+                var id = $this.attr("id");
+                if ($("#recurrence-container .intervals>div").length) {
+                    $("#recurrence-container .intervals>div").appendTo("#id-recurrence-items");
+                }
+                $("#id-recurrence-items ." + id).appendTo("#recurrence-container .intervals");
+                // swal.fire("#recurrence-container .recurrence input:radio=="+id);
+                $('.multiple-select2').select2();
+
+            });
+
+            $(document).on("click", "#recurrence-container .recurrence .month-intervals .radio-2", function() {
+                var $this = $(this);
+                var id = $this.attr("id");
+                $(".month-intervals-type input, .month-intervals-type select").prop("disabled", false);
+                $("."+id+" input, ."+id+" select").prop("disabled", true);
+            });
+
+
+
+
+
 
 
             /**
