@@ -73,9 +73,9 @@ class BookApiController extends Controller
         $request->request->add(['BookedBy' => session()->get('loginUserId')]);
 
         $validator = Validator::make($request->all(), [
-            'BookedFor' => 'required',
-            'Purpose' => 'required',
-            'SubID' => 'required',
+            // 'BookedFor' => 'required',
+            // 'Purpose' => 'required',
+            // 'SubID' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -122,8 +122,8 @@ class BookApiController extends Controller
                             $dates['FromTime'][] = $value->toDate()->format('Y-m-d H:i:s');
                             $dates['ToTime'][] = $value->toDate()->format('Y-m-d') . " " . date('H:i:s', strtotime($request->ToTime));
                         }else{
-                            $dates['FromTime1'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->FromTime));
-                            $dates['ToTime1'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->ToTime));
+                            $dates['FromTime'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->FromTime));
+                            $dates['ToTime'][] = $value->toDate()->format('Y-m-') . sprintf("%02d", $request->MonthIntervalDay) . " " . date('H:i:s', strtotime($request->ToTime));
                         }
                     }
                 } elseif ($request->monthIntervalsType == 2) {
@@ -149,14 +149,6 @@ class BookApiController extends Controller
             $BookingInterval = $this->columnDataArr($dates, null, $requestData);
         }
         // CARBON::DATING END
-
-
-
-
-
-        // dd($BookingInterval, $dates, $request->all());
-        // echo "<pre>";print_r($request->all());echo "</pre>";
-        // return;
         DB::beginTransaction();
         try {
             if ($request->BookingType) {

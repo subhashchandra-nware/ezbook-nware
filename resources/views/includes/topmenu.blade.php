@@ -26,8 +26,8 @@
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Report</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown03">
-                            <a class="dropdown-item" href="#">Booking Report</a>
-                            <a class="dropdown-item" href="#">Utilization Report</a>
+                            <a class="dropdown-item" href="{{ route('report.booking') }}">Booking Report</a>
+                            <a class="dropdown-item" href="{{ route('report.utilization') }}">Utilization Report</a>
                         </div>
                     </li>
                     <!--end::Item-->

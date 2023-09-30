@@ -68,7 +68,7 @@ Route::controller(ResourceApiController::class)->group(function(){
     Route::post('delete-resource-location','deleteResourceLocation');
 });
 
-Route::get('resource/test', [ResourceController::class, 'test'])->name('resource.test');
+// Route::get('resource/test', [ResourceController::class, 'test'])->name('resource.test');
 
 Route::controller(ResourceTypeApiController::class)->group(function(){
     Route::post('resource-type','getAllResourceType');

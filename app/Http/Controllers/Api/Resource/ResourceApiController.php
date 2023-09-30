@@ -309,7 +309,7 @@ class ResourceApiController extends Controller
                 $resource->customBookingInfo()->createMany($custombookinginfos);
 
             if (isset($SubResources) && count($SubResources))
-                $resource->SubResource()->createMany($SubResources);
+                $resource->SubResources()->createMany($SubResources);
 
             DB::commit();
             return response()->json([
@@ -450,7 +450,7 @@ class ResourceApiController extends Controller
             $resource->userGroupsRight()->delete();
             $resource->operationhours()->delete();
             $resource->customBookingInfo()->delete();
-            $resource->SubResource()->delete();
+            $resource->SubResources()->delete();
             $resource->fill($request->all());
             if($resource->save()){
 
@@ -471,7 +471,7 @@ class ResourceApiController extends Controller
                 $resource->customBookingInfo()->createMany($custombookinginfos);
 
                 if (isset($SubResources) && count($SubResources))
-                $resource->SubResource()->createMany($SubResources);
+                $resource->SubResources()->createMany($SubResources);
 
           }  // echo "<pre>";print_r($resource->toArray());echo "</pre>";
                 DB::commit();
@@ -488,12 +488,12 @@ class ResourceApiController extends Controller
             // echo "<pre>";print_r($userrights);echo "</pre>";
             // echo "<pre>";print_r($resource);echo "</pre>";
             // echo "<pre>";print_r($id);echo "</pre>";
-            // dd($exc->getMessage());
+            dd($exc->getMessage());
             // echo "<pre>";
             // print_r($request->all());
             // echo "</pre>";
             return response()->json([
-                "message" => "Resource not Create.",
+                "message" => "Resource not Update.",
                 "status" => "error",
             ], 500);
         }
@@ -507,7 +507,7 @@ class ResourceApiController extends Controller
             $resource->userGroupsRight()->delete();
             $resource->operationhours()->delete();
             $resource->customBookingInfo()->delete();
-            $resource->SubResource()->delete();
+            $resource->SubResources()->delete();
             $resource->delete();
 
             // echo "<pre>";print_r($resource->toArray());echo "</pre>";

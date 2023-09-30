@@ -4,6 +4,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ResourceLocationController;
 use App\Http\Controllers\ResourceTypeController;
@@ -108,6 +109,13 @@ Route::controller(BookController::class)->group(function(){
     Route::put('book/booking/{booking}', 'update')->name('book.update');
 });
 
+Route::controller(ReportController::class)->group(function(){
+    Route::get('report/booking', 'indexBooking')->name('report.booking');
+    Route::post('report/booking', 'indexBooking')->name('report.booking');
+    Route::get('report/utilization', 'indexUtilization')->name('report.utilization');
+    Route::post('report/utilization', 'indexUtilization')->name('report.utilization');
+});
+// Route::resource('report', ReportController::class);
 
 
 

@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Resource extends Model
 {
@@ -68,6 +70,33 @@ class Resource extends Model
     {
         return $this->hasMany(Booking::class, 'FacID', 'ID');
     }
+
+
+
+   /**
+    * Get the ResourceType associated with the Resource
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasOne
+    */
+   public function ResourceTypes() : HasOne
+   {
+       return $this->hasOne(ResourceType::class, 'id', 'resourceType')->withDefault();
+   }
+
+   /**
+    * Get the user associated with the Resource
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasOne
+    */
+   public function user(): HasOne
+   {
+       return $this->hasOne(User::class, 'id', 'CreatedBy')->withDefault();
+   }
+
+
+
+
+
 
 
     /**

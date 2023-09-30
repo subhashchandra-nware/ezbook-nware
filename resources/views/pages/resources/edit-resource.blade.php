@@ -436,7 +436,14 @@
                 // console.log();
             });
             // $( "#id-Booking-moderate" ).trigger( "click" );
-
+            $(".day").each(function() {
+            var cls = $(this).attr('id');
+                if ($(this).is(':checked')) {
+                    $('.' + cls).prop('disabled', false);
+                } else {
+                    $('.' + cls).prop('disabled', true);
+                }
+            });
             $(".day").click(function() {
                 var cls = $(this).attr('id');
                 if ($(this).is(':checked')) {

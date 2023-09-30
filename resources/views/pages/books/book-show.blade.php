@@ -240,7 +240,7 @@
                 <input class="col form-control" type="number" name="recurrenceInterval" id="id-day" />
                 <div class="col col-form-label">days</div>
             </div>
-            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+            <x-forms.input design="2" size="2" type="date" name="untilDate" label="Until" />
 
         </div>
 
@@ -251,7 +251,7 @@
                 <label class="col col-form-label">Week on</label>
                 <x-forms.select multiple class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']" name="daysOfWeek[]" />
             </div>
-            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+            <x-forms.input design="2" size="2" type="date" name="untilDate" label="Until" />
 
         </div>
         <div class="form-group col month-intervals">
@@ -278,7 +278,8 @@
                     <label class="col col-form-label">month(s)</label>
                 </div>
             </div>
-            <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" />
+            <x-forms.input design="2" size="2" type="date" name="untilDate" label="Until" />
+            {{-- <x-forms.input design="2" size="2" type="datetime-local" name="untilDate" label="Until" /> --}}
 
 
         </div>
@@ -350,7 +351,7 @@
                         var $data = $form.serialize();
                         var $success = function(response) {
                             $("#booking-create-modal").modal('hide');
-                             swal.fire(JSON.stringify(response));
+                            //  swal.fire(JSON.stringify(response));
                             // console.log(response);
                             window.location.reload(true);
 
@@ -401,12 +402,12 @@
                         var $type = $form.attr('method');
                         var $data = $form.serialize();
                         var $success = function(response) {
-                            alert("success: " + JSON.stringify(response));
+                            // alert("success: " + JSON.stringify(response));
                             $("#booking-update-modal").modal('hide');
                             window.location.reload(true);
                         };
                         var $complete = function(response) {
-                            alert("complete:" + JSON.stringify(response));
+                            // alert("complete:" + JSON.stringify(response));
                             // console.log(response);
                         };
                         ajaxCall($actionUrl, {

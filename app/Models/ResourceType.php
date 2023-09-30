@@ -24,7 +24,7 @@ class ResourceType extends Model
         'updated_at'
     ];
 
-    function resources() : HasMany
+    public function resources() : HasMany
     {
         // return $this->through('environments')->has('deployments');
         return $this->hasMany(Resource::class, 'resourceType', 'id');
@@ -32,7 +32,6 @@ class ResourceType extends Model
 
     public function SubResources() : HasManyThrough
     {
-        // return $this->through('environments')->has('deployments');
         return $this->hasManyThrough(
             SubResource::class,
             Resource::class,
@@ -42,6 +41,8 @@ class ResourceType extends Model
             'ID' // Local key on the environments table...
         );
     }
+
+
 
 
 

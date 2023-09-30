@@ -1,6 +1,11 @@
 @props([
     'data' => null,
 ])
+@php
+    $checkedArr = array_column($data, 'DayofWeek');
+    // $search = array_search($k, $checkedArr);
+    // dd($data, $checkedArr, $search);
+@endphp
 <div class="form-group row align-items-center justify-content-center">
     <div class="col-lg-2 col-xl-2 bg-light  pt-2">
         <h6>Day</h6>
@@ -22,13 +27,13 @@
         <h5>{{ $v }}</h5>
     </div>
     <div class="col-lg-2 col-xl-2">
-        <input id="time-{{$k+1}}" class="day" type="checkbox" name="DayofWeek[]"  value="{{ $k+1 }}" @checked(old( 'DayofWeek[]', $data[$k]['DayofWeek']??null)) >
+        <input id="time-{{$k}}" class="day" type="checkbox" name="DayofWeek[]"  value="{{ $k }}" @checked(old( 'DayofWeek[]', in_array($k, $checkedArr) )) >
     </div>
     <div class="col-lg-2 col-xl-2">
-        <input @if(!isset($data[$k]['OpenTime'])) disabled @endif type="time" name="OpenTime[]" class="{{$v}}-time-from time-from time form-control time-{{$k+1}}" value="{{old( 'OpenTime[]', $data[$k]['OpenTime']??'00:00:00')}}">
+        <input @if(!in_array($k, $checkedArr)) disabled @endif type="time" name="OpenTime[]" class="{{$v}}-time-from time-from time form-control time-{{$k}}" value="{{ old( 'OpenTime[]', (in_array($k, $checkedArr)) ? $data[array_search($k, $checkedArr)]['OpenTime'] : '00:00:00') }}">
     </div>
     <div class="col-lg-2 col-xl-2">
-        <input @if(!isset($data[$k]['CloseTime'])) disabled @endif type="time" name="CloseTime[]" class="{{$v}}-time-to time-to time form-control time-{{$k+1}}" value="{{old( 'CloseTime[]', $data[$k]['CloseTime']??'00:00:00')}}">
+        <input @if(!in_array($k, $checkedArr)) disabled @endif type="time" name="CloseTime[]" class="{{$v}}-time-to time-to time form-control time-{{$k}}" value="{{ old( 'CloseTime[]', (in_array($k, $checkedArr)) ? $data[array_search($k, $checkedArr)]['CloseTime'] : '00:00:00') }}">
     </div>
 </div>
 @endforeach

@@ -32,4 +32,8 @@ class Book extends Model
         'ModeratedByName' ,
         // 'CreateDate'
     ];
+
+    /**
+     * END::CLASS
+     */
 }

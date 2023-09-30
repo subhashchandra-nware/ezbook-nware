@@ -23,7 +23,7 @@
                 $i = 1;
             @endphp
 
-            @isset($data)
+            @if(isset($data) )
                 @foreach ($data as $value)
                     <tr class="text-left">
                         @foreach ($headers as $key => $val)
@@ -38,8 +38,10 @@
                             @endif
                         @endforeach
                     </tr>
-                @endforeach
-            @endisset
+                    @endforeach
+                    @else
+                    {{ $slot }}
+            @endif
         </tbody>
     </table>
 </div>
