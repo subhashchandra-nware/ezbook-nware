@@ -14,8 +14,7 @@
                 <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
                     <!--begin::Item-->
                     <li class="nav-item">
-                        <a href="#" class="nav-link py-4 px-6 {{ Route::is('dashboard.index') ? ' active ' : '' }}" data-toggle="tab"
-                            data-target="#kt_header_tab_1" role="tab">Dashboard</a>
+                        <a href="{{ route('dashboard.index') }}" class="nav-link py-4 px-6 {{ Route::is('dashboard.index') ? ' active ' : '' }}" >Dashboard</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
@@ -32,6 +33,17 @@ class Book extends Model
         'ModeratedByName' ,
         // 'CreateDate'
     ];
+
+
+    /**
+     * Get the user that owns the Book
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'BookedBy', 'id')->withDefault();
+    }
 
     /**
      * END::CLASS

@@ -2,6 +2,7 @@
 
 // use App\Http\Controllers\Api\SignupApiController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginSignupController;
 use App\Http\Controllers\ReportController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,9 +50,7 @@ Route::get('/open-site/{siteName}',[LoginSignupController::class,'openSite']);
 Route::get('site-settings',[SiteSettingController::class,'siteSettings']);
 Route::post('site-settings',[SiteSettingController::class,'siteSettingsPost']);
 
-Route::get('/dashboard',function(){
-    return view('dashboard');
-});
+
 
 Route::get('/user',[UserController::class,'getAllUser']);
 Route::get('/add-user',[UserController::class,'addUser']);
@@ -65,6 +66,10 @@ Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost'])
 
 // Route::get('/resources',[ResourceController::class,'getAllResources']);
 
+Route::resource('dashboard', DashboardController::class);
+Route::controller(DashboardController::class)->group(function(){
+    Route::post('dashboard', 'index');
+});
 
 Route::controller(ResourceLocationController::class)->group(function(){
     Route::get('resource-location', 'getAllResourceLocation');

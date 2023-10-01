@@ -14,8 +14,8 @@
                     <x-forms.form class="form-inline">
                         <x-forms.input value="{{ date('Y') . '-01-01' }}"  design="2" type="date" name="from" label="From" />
                         <x-forms.input value="{{ date('Y-m-d') }}"  design="2" type="date" name="to" label="To" />
-                        <x-forms.select design="1" name="resourceTypes" label="Resource" :options="$resourceTypes" />
-                        <x-forms.select design="1" name="locations" label="Location" :options="$ResourceLocations" />
+                        <x-forms.select design="0" class="form-control ml-10" name="resourceTypes" :options="$resourceTypes" />
+                        <x-forms.select design="0" class="form-control mx-5" name="locations" :options="$ResourceLocations" />
                         <x-forms.button design="1" type="submit" value="Build" class="btn-primary" />
                     </x-forms.form>
                 </div>

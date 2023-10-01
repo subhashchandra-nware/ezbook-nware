@@ -1,5 +1,6 @@
 @props([
     'design' => 0,
+    'size' => '-lg',
     'label' => null,
     'value' => null,
     'desc' => '',
@@ -9,6 +10,16 @@
 
 @endphp
 @switch($design)
+    @case('4')
+        <label for="{{ $attributes->get('id') ?? 'id-' . $name }}"
+            class="mr-5 col-form-label{{$size}}">{{ $label }}</label>
+        <input class="@error($name) border-danger is-invalid @enderror mr-5 form-control form-control{{$size}} form-control-solid"
+            {{ $attributes->merge(['type' => 'text', 'name' => $name, 'value' => old($name, $value), 'id' => 'id-' . $name]) }} />
+        @error($name)
+            <div class="form-text text-danger">{{ $message }}</div>
+        @enderror
+        <span class="form-text text-muted">{{ $desc }} </span>
+    @break
     @case('3')
         <label for="{{ $attributes->get('id') ?? 'id-' . $name }}"
             class="col-xl-3 col-lg-3 col-form-label">{{ $label }}</label>

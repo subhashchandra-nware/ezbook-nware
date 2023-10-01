@@ -58,4 +58,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(UserType::class, 'id', 'AdminLevel');
     }
+
+    /**
+     * Get the booking associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function booking(): HasOne
+    {
+        return $this->hasOne(Book::class, 'BookedBy', 'id');
+    }
+
+
+
+
+    /**
+     * END::CLASS
+     */
 }

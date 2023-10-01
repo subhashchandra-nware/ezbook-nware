@@ -4,7 +4,7 @@
  * @returns
  * @author
  */
-var NWareSoft = function () {
+var NWare = function () {
     var defaultAjaxOption = {
         // url: url,
         headers: {
@@ -99,7 +99,9 @@ var NWareSoft = function () {
         }
     };
     return {
-        Init: function () { },
+        Options: function (options = {}) {
+            return this.defaultAjaxOption
+        },
         Ajax: function (url = '', options = {}) {
             let ajaxSettings = { ...defaultAjaxOption, ...options };
             $.ajax(ajaxSettings);

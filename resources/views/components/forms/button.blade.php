@@ -1,10 +1,11 @@
 @props([
     'design' => 0,
+    'size' => '',
     'value' => '',
     'removeclass' => null,
 ])
 @php
-$default = ['btn', 'btn-primary', 'font-weight-bolder', 'text-uppercase'];
+$default = ['btn', 'btn-primary', 'font-weight-bolder', 'text-uppercase', 'btn'.$size];
     if (is_array($removeclass)) {
         $default = array_diff($default, $removeclass);
     }elseif (is_string($removeclass)) {
