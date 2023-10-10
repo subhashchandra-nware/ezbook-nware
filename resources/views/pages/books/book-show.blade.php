@@ -375,10 +375,12 @@
                     });
                     let url = "{!! route('book.getbooking', ':id') !!}";
                     url = url.replace(':id', info.event.id);
+                    let updateUrl = "{!! route('book.update', ':id') !!}";
+                    updateUrl = updateUrl.replace(':id', info.event.id);
 
                     ajaxCall(url, {
                         success: function(response) {
-                            $("#ajax-update-booking").attr("action", url);
+                            $("#ajax-update-booking").attr("action", updateUrl);
                             $.each(response, function(indexInArray, valueOfElement) {
                                 $("#ajax-update-booking input[name=" + indexInArray +
                                     "]").val(valueOfElement);

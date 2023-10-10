@@ -24,13 +24,23 @@ class DashboardApiController extends Controller
 
         $numberBookingsSQL = "COUNT(ID) AS bookings, DATE_FORMAT(FromTime,'%m') AS months";
 
-        $data['upcomingBookings'] = Book::with('user')->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')" ), '>', date('Ymd') )->orderBy('FromTime')->paginate(5);
+        $data['upcomingBookings'] = Book::with(['user'])
+        ->whereHas('resources')
+        ->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')" ), '>', date('Ymd') )
+        ->orderBy('FromTime')
+        // ->toSql();
+        ->paginate(5);
+
         $data['summaryBookings'] = Book::select(DB::raw($summaryBookingsSQL))
+        ->whereHas('resources')
         ->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')" ), '>=', date('Ymd', strtotime($from)) )
         ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')" ), '<=', date('Ymd', strtotime($to)) )
         ->get();
-        $numberBookings = Book::select(DB::raw($numberBookingsSQL))->groupBy('months')->orderBy('months', 'ASC')->get()->toArray();
+        $numberBookings = Book::select(DB::raw($numberBookingsSQL))
+        ->whereHas('resources')
+        ->groupBy('months')->orderBy('months', 'ASC')->get()->toArray();
         $data['numberBookings'] = array_column($numberBookings, 'bookings');
+
         // dd($data);
         // Number-of-Bookings
         if ($data != null) {

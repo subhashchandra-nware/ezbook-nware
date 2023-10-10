@@ -1,7 +1,7 @@
 <div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
       <!--begin::Header-->
       <div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
-        <h3 class="font-weight-bold m-0">User Profile
+        <h3 class="font-weight-bold m-0">User Profile 
           <!-- <small class="text-muted font-size-sm ml-2">12 messages</small> -->
         </h3>
         <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
@@ -35,10 +35,10 @@
               </a>
             <div class="text-muted mt-1">Site: {{ session('siteName') }}</div>
             <div class="navi mt-2">
-
+              
               <a href="{{ url('/logout')}}" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Sign Out</a>
               @php
-              $totalSiteCount = session()->get('totalSiteCount');
+              $totalSiteCount = session()->get('totalSiteCount');      
               @endphp
               @if ($totalSiteCount > 1)
               <a href="{{ url('/select-site')}}" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Switch Site</a>
@@ -221,7 +221,7 @@
 
 
 
-
+          
         </div>
         <!--end::Notifications-->
       </div>

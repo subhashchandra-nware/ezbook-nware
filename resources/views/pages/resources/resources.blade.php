@@ -27,7 +27,7 @@
                 $actions = [ 'Edit' => 'resource.edit', 'Delete' => 'resource.destroy',];
             @endphp
             {{-- @dd($listResources) --}}
-            <x-layouts.table :headers="$headers" :data="$listResources" :actions="$actions" route="resource" />
+            <x-layouts.table id="kt_datatable" :headers="$headers" :data="$listResources" :actions="$actions" route="resource" />
 
         </div>
         <!--end::Table-->
@@ -36,3 +36,25 @@
     <!--end::Main-->
 
 @endsection
+
+@pushOnce('scripts')
+    <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script>
+        // Your custom JavaScript...
+        $(document).ready(function() {
+            let opt = {
+                dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    text: 'Export to Excel',
+                }],
+                lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
+
+
+        };
+            var datatable = $('#kt_datatable').DataTable(opt);
+
+            // END::DOCUMENT READY
+        });
+    </script>
+@endPushOnce

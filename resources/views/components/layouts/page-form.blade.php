@@ -14,8 +14,6 @@
                     <!--begin::Container-->
                     <div class="container">
                         <!--begin::Card-->
-                        <div class="card card-custom gutter-b">
-                        </div>
                         <div class="card card-custom">
                             <div class="card-body p-0">
                                 <!--begin::Wizard Body-->

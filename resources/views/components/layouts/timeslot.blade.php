@@ -1,5 +1,5 @@
 @props([
-    'data' => null,
+    'data' => [],
 ])
 @php
     $checkedArr = array_column($data, 'DayofWeek');

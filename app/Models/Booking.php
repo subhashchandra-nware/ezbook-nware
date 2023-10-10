@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Book extends Model
+class Booking extends Model
 {
     use HasFactory;
-    protected $table = 'bookings';
+    // protected $table = 'bookings';
 
     protected  $primaryKey = 'ID';
 
-    const CREATED_AT = 'CreatedDate';
+    const CREATED_AT = 'CreateDate';
     const UPDATED_AT = null;
 
     protected $fillable = [
@@ -46,21 +46,4 @@ class Book extends Model
     }
 
 
-    /**
-     * Get the resource that owns the Book
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function resources(): BelongsTo
-    {
-        return $this->belongsTo(Resource::class, 'FacID', 'ID')->withDefault();
-    }
-    // public function Resource(): BelongsTo
-    // {
-    //     return $this->belongsTo(Resource::class, 'FacID', 'ID')->withDefault();
-    // }
-
-    /**
-     * END::CLASS
-     */
 }

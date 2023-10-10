@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserRight extends Model
 {
     use HasFactory;
-    protected $table = 'Userrights';
+    protected $table = 'userrights';
     protected  $primaryKey = 'ID';
     const CREATED_AT = 'CreatedDate';
     const UPDATED_AT = null;

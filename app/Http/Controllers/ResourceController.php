@@ -6,18 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\ResourceLocation;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Api\Resource\ResourceApiController;
-use App\Http\Controllers\Api\Countries\CountriesApiController;
-use App\Http\Requests\StoreResourceRequest;
-use App\Models\custombookinginfo;
-use App\Models\operationhour;
+use App\Models\CustomBookingInfo;
+use App\Models\OperationHour;
 use App\Models\Resource;
 use App\Models\ResourceType;
 use App\Models\SubResource;
 use App\Models\User;
 use App\Models\UserGroup;
-use App\Models\Usergroupright;
-use App\Models\Userright;
-use Illuminate\Support\Arr;
+use App\Models\UserGroupRight;
+use App\Models\UserRight;
 use Illuminate\Support\Facades\Validator;
 
 class ResourceController extends Controller
@@ -33,6 +30,7 @@ class ResourceController extends Controller
 
         if ($http) {
             $data = Http::post($apiURL . 'resources')->object();
+
         } else {
             $data = Resource::where("ProviderID", session()->get('siteId') ?? 1)->get()->toArray();
         }
@@ -62,57 +60,36 @@ class ResourceController extends Controller
     {
         // $this->api('api');
 
-        $api = config('global.api.url');
+        // $api = config('global.api.url');
         // $listResources = Http::post($api.'resources');
         // dd($this->api('api'));
-        $newRequest = new Request();
-        $newRequest->setMethod('POST');
-        $newRequest->request->add(['ProviderID' => session()->get('siteId')]);
-        $result = json_decode(json_encode((new ResourceApiController)->getAllResource($newRequest)), JSON_UNESCAPED_SLASHES);
-        $listResources = [];
-        // dd($result);
+        // $newRequest = new Request();
+        // $newRequest->setMethod('POST');
+        // $newRequest->request->add(['ProviderID' => session()->get('siteId')]);
+        // $result = json_decode(json_encode((new ResourceApiController)->getAllResource()), JSON_UNESCAPED_SLASHES);
 
-        if ($result['original']['status'] == 'success') {
-            $listResources = $result['original']['data'];
-            return view('pages.resources.resources', compact('listResources'));
-            // return view('resources',compact('listResources'));
-        } else {
-            // return view('pages.resources.resources',compact('listResources'));
-            return view('resources', compact('listResources'));
-        }
+        $data = [];
+        $listResources = [];
+        $apiJSON = (new ResourceApiController)->getAllResource();
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        $listResources = $data;
+        return view('pages.resources.resources', compact('listResources'));
+
+
 
         // return view('resources', compact('listResources'));
     }
 
     public function addResource()
     {
-        $http = false;
-        $api = config('global.api.url');
-        $url = config('global.api.url');
-        $url = $url . "resource-type";
 
-        if ($http) {
-            $response = Http::post($url, [
-                'ProviderID' => '1',
-            ])->json();
+        $data = [];
+        $apiJSON = (new ResourceApiController)->addResource();
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        extract($data);
 
-            $responseLocation = Http::post($api . "resource-location", [
-                'ProviderID' => '1',
-            ])->json();
-
-            $users = http::post($api . 'user')->json();
-            $usersGroups = http::post($api . 'user-groups')->json();
-        } else {
-            $response = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
-            $responseLocation = ResourceLocation::all(['id', 'Name'])->toArray();
-            $users = User::all()->toArray();
-            $usersGroups = UserGroup::all()->toArray();
-        }
-
-        // dd($users, $usersGroups);
-        $response['data'] = null;
-        $resourceType = $response['data'] ?? $response;
-        $resourceLocation = $responseLocation['data'] ?? $responseLocation; // [['id'=>'1', 'Name'=>'demo']];
         return view('pages.resources.add-resource', compact('resourceType', 'resourceLocation', 'users', 'usersGroups'));
         // return view('add-resource', compact('resourceType', 'resourceLocation'));
     }
@@ -152,8 +129,8 @@ class ResourceController extends Controller
 
         $PermissionType = ['1'=>'BookingRights', '2'=>'ViewingRights', '3'=>'RequestRights', '4'=>'ModRights', ];
 
-        $AllRightsUsers = Userright::where('userrights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
-        $AllRightsUserGroups = Usergroupright::where('usergrouprights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
+        $AllRightsUsers = UserRight::where('userrights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
+        $AllRightsUserGroups = UserGroupRight::where('usergrouprights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
 
         array_walk($PermissionType, function($v)use(&$data){
             $data[$v.'Users'] = [];
@@ -168,8 +145,8 @@ class ResourceController extends Controller
             $data[$key][] = $v;
         });
 
-        $data['custombookinginfos'] = custombookinginfo::where('custombookinginfos.Resource', '=', $resource->ID)->get()->toArray();
-        $data['operationhours'] = operationhour::where('operationhours.Resource', '=', $resource->ID)->get()->toArray();
+        $data['custombookinginfos'] = CustomBookingInfo::where('custombookinginfos.Resource', '=', $resource->ID)->get()->toArray();
+        $data['operationhours'] = OperationHour::where('operationhours.Resource', '=', $resource->ID)->get()->toArray();
         $data['SubResources'] = SubResource::where('subresource.Resource', '=', $resource->ID)->get()->toArray();
 
         $data['resourceTypes'] = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();

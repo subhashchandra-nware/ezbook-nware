@@ -9,6 +9,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\ResourceLocationController;
 use App\Http\Controllers\ResourceTypeController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
@@ -30,7 +31,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 
 
-Route::get('/', [LoginSignupController::class,'signIn']);
+Route::get('/', [LoginSignupController::class,'signIn'])->name('login');
 Route::get('/sign-in', [LoginSignupController::class,'signIn']);
 Route::post('/sign-in',[LoginSignupController::class,'signInPost']);
 Route::get('/signup',[LoginSignupController::class,'signupView']);
@@ -51,6 +52,12 @@ Route::get('site-settings',[SiteSettingController::class,'siteSettings']);
 Route::post('site-settings',[SiteSettingController::class,'siteSettingsPost']);
 
 
+Route::controller(UserController::class)->group(function(){
+    Route::get('user/resetpassword', 'password')->name('password.reset');
+    Route::put('user/resetpassword', 'updatePassword')->name('password.update');
+});
+
+Route::middleware(['auth.chcek'])->group(function () {
 
 Route::get('/user',[UserController::class,'getAllUser']);
 Route::get('/add-user',[UserController::class,'addUser']);
@@ -65,6 +72,9 @@ Route::get('/edit-user-group/{id}',[UserGroupController::class,'editUserGroup'])
 Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost']);
 
 // Route::get('/resources',[ResourceController::class,'getAllResources']);
+
+
+Route::resource('setting', SettingController::class);
 
 Route::resource('dashboard', DashboardController::class);
 Route::controller(DashboardController::class)->group(function(){
@@ -134,4 +144,4 @@ Route::get('/config-clear', function() {
     Artisan::call('config:clear');
 });
 
-
+});

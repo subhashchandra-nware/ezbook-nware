@@ -126,8 +126,9 @@ class BookController extends Controller
                 // echo "<pre>error:"; print_r($exc->getMessage()); echo "</pre>";
                 // echo "<pre>error:";print_r($book->all()->toJson());echo "</pre>";
                 return response()->json([
-                    "message" => "Resource not Create.",
+                    "message" => "Resource not Update.",
                     "status" => "error",
+                    'data' => $exc->getMessage(),
                 ], 500);
             }
         }

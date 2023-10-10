@@ -17,13 +17,61 @@ use App\Models\UserGroup;
 use App\Models\Usergroupright;
 use App\Models\Userright;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class ResourceApiController extends Controller
 {
-    public function getAllResources($id)
+    public function addResource()
     {
+        $http = false;
+        $api = config('global.api.url');
+        $url = config('global.api.url');
+        $url = $url . "resource-type";
+        $data = [];
+
+        if ($http) {
+            $response = Http::post($url, [
+                'ProviderID' => '1',
+            ])->json();
+
+            $responseLocation = Http::post($api . "resource-location", [
+                'ProviderID' => '1',
+            ])->json();
+
+            $users = http::post($api . 'user')->json();
+            $usersGroups = http::post($api . 'user-groups')->json();
+        } else {
+            $response = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
+            $responseLocation = ResourceLocation::all(['id', 'Name'])->toArray();
+            $users = User::all()->toArray();
+            $usersGroups = UserGroup::all()->toArray();
+        }
+
+        // dd($users, $usersGroups);
+        $response['data'] = null;
+        $resourceType = $response['data'] ?? $response;
+        $resourceLocation = $responseLocation['data'] ?? $responseLocation; // [['id'=>'1', 'Name'=>'demo']];
+        $data['resourceType'] = $resourceType;
+        $data['resourceLocation'] = $resourceLocation;
+        $data['users'] = $users;
+        $data['usersGroups'] = $usersGroups;
+
+        if ($data != null) {
+            return response()->json([
+                "message" => "Reource Data Found Successfully",
+                "status" => "success",
+                "data" => $data,
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "No Resource Data found",
+                "status" => "failed",
+            ], 200);
+        }
+        // return view('pages.resources.add-resource', compact('resourceType', 'resourceLocation', 'users', 'usersGroups'));
+        // return view('add-resource', compact('resourceType', 'resourceLocation'));
     }
 
     public function addNewResourceLocationPost(Request $request)
@@ -190,17 +238,23 @@ class ResourceApiController extends Controller
         }
     }
 
-    public function getAllResource(Request $request)
+    public function getAllResource()
     {
+        // $ProviderID = session()->get('siteId');
+        // $data = Resource::select()->selectRaw('(SELECT Name FROM resourcetype WHERE id=resourceType LIMIT 1) AS resourceType,
+        // (SELECT Name FROM resourcelocation WHERE id=resourceLocation LIMIT 1) AS resourceLocation')
+        // ->where("ProviderID", $ProviderID)->orderBy('id', 'desc')
+        // ->toSql();
+        // ->get()->toArray();
+
         $data = Resource::select()->selectRaw('(SELECT Name FROM resourcetype WHERE id=resourceType LIMIT 1) AS resourceType,
         (SELECT Name FROM resourcelocation WHERE id=resourceLocation LIMIT 1) AS resourceLocation')
-        ->where("ProviderID", $request->ProviderID)->orderBy('id', 'desc')->get()->toArray();
-
+        ->orderBy('id', 'desc')->ProviderID()->get()->toArray();
         // dd($data);
         if ($data != null) {
             return response()->json([
-                "message" => "Reource Found Successfully",
-                "status" => "success",
+                // "message" => "Reource Found Successfully",
+                // "status" => "success",
                 "data" => $data,
             ], 200);
         } else {
@@ -488,7 +542,7 @@ class ResourceApiController extends Controller
             // echo "<pre>";print_r($userrights);echo "</pre>";
             // echo "<pre>";print_r($resource);echo "</pre>";
             // echo "<pre>";print_r($id);echo "</pre>";
-            dd($exc->getMessage());
+            // dd($exc->getMessage());
             // echo "<pre>";
             // print_r($request->all());
             // echo "</pre>";

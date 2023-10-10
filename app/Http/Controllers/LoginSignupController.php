@@ -52,7 +52,6 @@ class LoginSignupController extends Controller
             $siteResult = $array['original'];
             $totalSiteCount = $siteResult['total_site_count'];
             session()->put('totalSiteCount',$totalSiteCount);
-            
             if($totalSiteCount > 1){
                 $siteName = preg_split("/[,]/",$siteResult['site_name']);
                 session()->put('allSitesName',$siteName);
@@ -60,12 +59,16 @@ class LoginSignupController extends Controller
             }else{
                 $siteName = $siteResult['site_name'];
                 $facProviderId = FacProvider::where('Name', $siteName)->value('id');
+                $siteData = FacProvider::where('Name', $siteName)->get()->toArray();
                 session()->put('siteName',$siteName);
                 session()->put('allSitesName',$siteName);
                 session()->put('siteId',$facProviderId);
+                session()->put('siteData',$siteData[0]);
+                // dd($siteData);
                 $accountStatus = $this->redirectSingleSite($userId);
                 if($accountStatus == 1){
-                    return redirect('/site-settings');
+                    return redirect()->route('setting.index');
+                    // return redirect('/site-settings');
                 }else{
                     return redirect('/welcome');
                 }
@@ -104,13 +107,14 @@ class LoginSignupController extends Controller
             $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
             $finalResult = $array['original'];
             $status = $finalResult['status'];
+            dd($array);
             if($status == 'success'){
             return redirect('/verify-email');
             }
         }else{
             // return back()->withInput();
             return back();
-        }        
+        }
     }
 
     public function emailVerificationSend(){
@@ -158,7 +162,7 @@ class LoginSignupController extends Controller
         $passToken = session()->get('passToken');
         $result = (new SignupApiController)->setFirstTimePassword($request,$passToken);
         $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
-        $finalResult = $array['original'];  
+        $finalResult = $array['original'];
         $status = $finalResult['status'];
         if($status == "success"){
             session()->flush();
@@ -191,6 +195,7 @@ class LoginSignupController extends Controller
             $result = (new SiteSettingApiController)->accountStatusActivated($myRequest);
             $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
             $finalResult = $array['original'];
+            // dd($result);
             if($finalResult['status'] == "success"){
                 return view('welcome');
             }

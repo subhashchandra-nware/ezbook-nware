@@ -65,7 +65,7 @@
               </div>
               @foreach ($siteName as $site)
               <a href="{{url('/open-site')}}/{{$site}}" class="site" style="text-transform:uppercase;"><img src="{{ asset('media/site1.png') }}"> {{ $site}}</a>
-              @endforeach
+              @endforeach							
               <!--end::Form-->
             </div>
             <!--end::Signin-->

@@ -12,40 +12,42 @@ use App\Models\FacProvider;
 use App\Models\UserProviderMapping;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UsersApiController extends Controller
 {
-    public function addUser(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function addUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'siteId' => 'required',
             'Name' => ['required'],
             'LogonName' => ['required'],
             'LogonPassword' => ['required'],
             'EmailAddress' => ['required'],
             'AdminLevel' => 'required'
-           ]);
-           if($validator->fails()){
-            return response()->json($validator->messages(),400);
-           }else{
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
+        } else {
             $siteId = $request->siteId;
             $ManageUsers = 0;
-            $ManageFacilities = 0; 
+            $ManageFacilities = 0;
             $ManageSysSettings = 0;
             $CollectiveBookings = 0;
             $CancelBookings = 0;
-            if($request->has('ManageUsers')){
+            if ($request->has('ManageUsers')) {
                 $ManageUsers = 1;
             }
-            if($request->has('ManageFacilities')){
+            if ($request->has('ManageFacilities')) {
                 $ManageFacilities = 1;
             }
-            if($request->has('ManageSysSettings')){
+            if ($request->has('ManageSysSettings')) {
                 $ManageSysSettings = 1;
             }
-            if($request->has('CollectiveBookings')){
+            if ($request->has('CollectiveBookings')) {
                 $CollectiveBookings = 1;
             }
-            if($request->has('CancelBookings')){
+            if ($request->has('CancelBookings')) {
                 $CancelBookings = 1;
             }
             $userData = [
@@ -61,7 +63,7 @@ class UsersApiController extends Controller
                 'ManageSysSettings' => $ManageSysSettings,
                 'CollectiveBookings' => $CollectiveBookings,
                 'CancelBookings' => $CancelBookings
-              ];
+            ];
 
             DB::beginTransaction();
             try {
@@ -79,7 +81,7 @@ class UsersApiController extends Controller
                 'ProviderId' => $siteId,
                 'Active' => 1,
             ];
-    
+
             DB::beginTransaction();
             try {
                 $userProviderMapping = UserProviderMapping::create($userProviderMappingData);
@@ -90,53 +92,54 @@ class UsersApiController extends Controller
                 // print_r($e->getMessage());
                 // echo "</pre>";
             }
-           }
+        }
 
-         if($user !=null && $userProviderMapping !=null){
+        if ($user != null && $userProviderMapping != null) {
             return response()->json([
                 'message' => 'User register Successfully',
                 'status' => 'success',
                 'User' => $user
-            ],200);
-           }else{
+            ], 200);
+        } else {
             return response()->json([
                 'message' => 'User not Register',
                 'status' => 'failed'
-            ],500);
-           }
+            ], 500);
+        }
     }
 
-    public function editUserPost(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function editUserPost(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'userId' => 'required',
             'Name' => ['required'],
             'LogonName' => ['required'],
             'EmailAddress' => ['required'],
             'AdminLevel' => 'required'
-           ]);
-           if($validator->fails()){
-            return response()->json($validator->messages(),400);
-           }else{
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
+        } else {
             $siteId = $request->siteId;
             $ManageUsers = 0;
-            $ManageFacilities = 0; 
+            $ManageFacilities = 0;
             $ManageSysSettings = 0;
             $CollectiveBookings = 0;
             $CancelBookings = 0;
             $LogonPassword = $request->LogonPassword;
-            if($request->has('ManageUsers')){
+            if ($request->has('ManageUsers')) {
                 $ManageUsers = 1;
             }
-            if($request->has('ManageFacilities')){
+            if ($request->has('ManageFacilities')) {
                 $ManageFacilities = 1;
             }
-            if($request->has('ManageSysSettings')){
+            if ($request->has('ManageSysSettings')) {
                 $ManageSysSettings = 1;
             }
-            if($request->has('CollectiveBookings')){
+            if ($request->has('CollectiveBookings')) {
                 $CollectiveBookings = 1;
             }
-            if($request->has('CancelBookings')){
+            if ($request->has('CancelBookings')) {
                 $CancelBookings = 1;
             }
 
@@ -152,28 +155,29 @@ class UsersApiController extends Controller
             $user->ManageSysSettings = $ManageSysSettings;
             $user->CollectiveBookings = $CollectiveBookings;
             $user->CancelBookings = $CancelBookings;
-            if($LogonPassword != null){
+            if ($LogonPassword != null) {
                 $user->Password = Hash::make($request->LogonPassword);
             }
 
-            if($user->save()){
-            return response()->json([
-                'message' => 'User update Successfully',
-                'status' => 'success',
-                'User' => $user
-            ],200);
-            }else{
-            return response()->json([
-                'message' => 'User not updated',
-                'status' => 'failed'
-            ],500);
+            if ($user->save()) {
+                return response()->json([
+                    'message' => 'User update Successfully',
+                    'status' => 'success',
+                    'User' => $user
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'User not updated',
+                    'status' => 'failed'
+                ], 500);
             }
-           }
+        }
     }
 
 
-    public function siteDetailSaved(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function siteDetailSaved(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'id' => ['required'],
             'companyName' => ['required'],
             'siteId' => ['required'],
@@ -187,13 +191,13 @@ class UsersApiController extends Controller
             'country' => ['required'],
             'zipcode' => ['required'],
             'registrationDate' => ['required']
-           ]);
+        ]);
 
-           if($validator->fails()){
-            return response()->json($validator->messages(),400);
-           }else{
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
+        } else {
             $facProvider = FacProvider::find($request->id);
-            if($facProvider != null){
+            if ($facProvider != null) {
                 $facProvider->id = $request->id;
                 $facProvider->ContactName = $request->contactName;
                 $facProvider->ContactNumber = $request->mobileNumber;
@@ -205,97 +209,145 @@ class UsersApiController extends Controller
                 $facProvider->ContactCountry = $request->country;
                 $facProvider->HomeURL = $request->siteId;
                 $facProvider->OrgUrl = $request->companySite;
-                if($facProvider->save()){
+                if ($facProvider->save()) {
                     return response()->json([
                         'message' => 'User details updated Successfully',
                         'user_id' => $facProvider->id,
                         'status' => 1
-                    ],200);
-                }else{
+                    ], 200);
+                } else {
                     return response()->json([
                         'message' => 'User details not Updated',
                         'user_id' => $facProvider->id,
                         'status' => 0
-                    ],200);
+                    ], 200);
                 }
-            }else{
+            } else {
                 return response()->json([
                     'message' => 'Wrong User Id',
                     'user_id' => $request->id,
                     'status' => 0
-                ],200);
+                ], 200);
             }
-           }
+        }
     }
 
-    public function getAllUser(Request $request){ 
-        $validator = Validator::make($request->all(),[
+    public function getAllUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'siteId' => ['required'],
-           ]);
+        ]);
 
-        if($validator->fails()){
-            return response()->json($validator->messages(),400);
-        }else{
-            $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =".$request->siteId);
-            if($results !=null){
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
+        } else {
+            $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =" . $request->siteId);
+            if ($results != null) {
                 return response()->json([
                     'message' => 'User Found',
                     'status' => 'success',
                     'User' => $results
-                ],200);
-            }else{
+                ], 200);
+            } else {
                 return response()->json([
                     'message' => 'User not Found',
                     'status' => 'failed'
-                ],200);
+                ], 200);
             }
         }
     }
 
-    public function getAllUserType(){
+    public function getAllUserType()
+    {
         $allRecord = UserType::all();
-        if($allRecord !=null){
+        if ($allRecord != null) {
             return response()->json([
                 'message' => 'User Type Found',
                 'status' => 'success',
                 'userType' => $allRecord
-            ],200);
-        }else{
+            ], 200);
+        } else {
             return response()->json([
                 'message' => 'User Type not Found',
                 'status' => 'failed'
-            ],200);
+            ], 200);
         }
     }
 
-    public function deleteUser(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function deleteUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'id' => 'required',
         ]);
 
-        if($validator->fails()){
-            return response()->json($validator->messages(),400);
-        }else{
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 400);
+        } else {
             $user = User::find($request->id);
-            if($user !=null){
+            if ($user != null) {
                 $user->deleted_at = Carbon::now();
-                if($user->save()){
-                 return response()->json([
-                     'message' => 'User deleted Successfuly',
-                     'status' => 'success',
-                 ],200);
-                }else{
-                 return response()->json([
-                     'message' => 'User not deleted Successfully',
-                     'status' => 'failed'
-                 ],200);
+                if ($user->save()) {
+                    return response()->json([
+                        'message' => 'User deleted Successfuly',
+                        'status' => 'success',
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'User not deleted Successfully',
+                        'status' => 'failed'
+                    ], 200);
                 }
-            }else{
+            } else {
                 return response()->json([
                     'message' => 'User not found',
                     'status' => 'failed'
-                ],200);
+                ], 200);
             }
         }
     }
+
+
+    public function password()
+    {
+        return view('pages.users.password-edit');
+    }
+    public function updatePassword(Request $request)
+    {
+        // dd($request->all(), $user->$value, $user->password);
+        $user = User::find($request->id);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'oldPassword' => [
+                'required', function ($attribute, $value, $fail) use ($user) {
+                    if (!Hash::check($value, $user->Password)) {
+                        $fail('Your password was not updated, since the provided current password does not match.');
+                    }
+                },
+            ],
+            'Password' => 'required|min:8',
+            'confirmPassword' => 'required|same:Password',
+        ]);
+        $validator->validate();
+
+        // dd($file, $request->all());
+        $user->fill(['Password' => Hash::make($request->Password)]);
+        try {
+            if ($user->save()) {
+                return response()->json([
+                    'message' => 'Your password is updated.',
+                    'status' => 'success'
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => 'Your password is not updated.',
+                'status' => 'error'
+            ], 200);
+        }
+    }
+
+    /**
+     * END::CLASS
+     */
 }

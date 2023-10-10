@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserGroupRight extends Model
 {
     use HasFactory;
-    protected $table = 'Usergrouprights';
+    protected $table = 'usergrouprights';
 
     const CREATED_AT = 'CreatedDate';
     const UPDATED_AT = null;

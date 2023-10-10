@@ -26,12 +26,17 @@ class BookApiController extends Controller
         $data['ResourceLocation'] = ResourceLocation::all()->toArray();
         if (!is_null($locationId) && $locationId != 0) {
             $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) use ($locationId) {
-                $query->where('resourceLocation', '=', $locationId);
+                $query->where('resourceLocation', '=', $locationId)->providerID();
             }])->whereHas('resources', function ($query) use ($locationId) {
-                $query->where('resourceLocation', '=', $locationId);
+                $query->where('resourceLocation', '=', $locationId)->providerID();
             })->get()->toArray();
         } else {
-            $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
+            // $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
+            $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) use ($locationId) {
+                $query->providerID();
+            }])->whereHas('resources', function ($query) use ($locationId) {
+                $query->providerID();
+            })->get()->toArray();
         }
         // $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->whereHas('resources', function(Builder $query) use ($locationId){
         //     if(! is_null($locationId) ){$query->where('resourceLocation', '=', $locationId);}
@@ -190,9 +195,9 @@ class BookApiController extends Controller
 
         if (!is_null($locationId) && $locationId != 0) {
             $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) use ($locationId) {
-                $query->where('resourceLocation', '=', $locationId);
+                $query->where('resourceLocation', '=', $locationId)->ProviderID();
             }])->whereHas('resources', function ($query) use ($locationId) {
-                $query->where('resourceLocation', '=', $locationId);
+                $query->where('resourceLocation', '=', $locationId)->ProviderID();
             })->get()->toArray();
 
             // $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ( $query) use ($locationId) {
@@ -207,10 +212,14 @@ class BookApiController extends Controller
             // })->get()->toArray();
 
         } else {
-            $data['ResourceTypes'] = ResourceType::with('resources.SubResources')->get()->toArray();
+            $data['ResourceTypes'] = ResourceType::with(['resources.SubResources', 'resources' => function ($query) {
+                $query->ProviderID();
+            }])->whereHas('resources', function ($query)  {
+                $query->ProviderID();
+            })->get()->toArray();
         }
         if ($resourceId != 0)
-            $data['Resources'] = Resource::with('SubResources', 'Bookings')->where('ID', '=', $resourceId)->get()->toArray();
+            $data['Resources'] = Resource::with('SubResources', 'Bookings')->providerID()->where('ID', '=', $resourceId)->get()->toArray();
 
 
         // $data['Bookings'] = Resource::with('Booking')->where('ID', '=', $id)->get()->toArray();

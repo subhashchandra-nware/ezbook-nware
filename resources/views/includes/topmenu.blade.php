@@ -6,8 +6,13 @@
             <!--begin::Left-->
             <div class="d-none d-lg-flex align-items-center mr-3">
                 <!--begin::Logo-->
-                <a href="{{ url('/site-settings') }}" class="mr-20">
+                <a href="{{ route('dashboard.index') }}" class="mr-20">
+                    {{-- @dd(session('siteData')) --}}
+                    @if ( session('siteData.HasLogo') )
+                    <img alt="Logo" src="{{ asset('media/logos/'.session('siteName').'.png') }}" class="max-h-35px" />
+                    @else
                     <img alt="Logo" src="{{ asset('media/logos/logo-1.png') }}" class="max-h-35px" />
+                    @endif
                 </a>
                 <!--end::Logo-->
                 <!--begin::Tab Navs(for desktop mode)-->
@@ -103,7 +108,7 @@
                             <!--end:Item-->
                             <!--begin:Item-->
                             <div class="col-6">
-                                <a href="{{ url('/site-settings') }}"
+                                <a href="{{ route('setting.index') }}"
                                     class="d-block py-10 px-5 text-center bg-hover-light border-right">
                                     <span class="svg-icon svg-icon-3x svg-icon-success">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
@@ -145,7 +150,7 @@
                                 class="text-white font-weight-bold font-size-sm d-none d-sm-inline">{{ session('loginUserName') }}</span>
                         </div>
                         <span class="symbol symbol-35">
-                            <span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30">S</span>
+                            <span class="symbol-label font-size-h5 font-weight-bold text-white bg-white-o-30">{{ strtoupper(mb_substr(session('loginUserName'), 0, 1)) }}</span>
                         </span>
                     </div>
                 </div>

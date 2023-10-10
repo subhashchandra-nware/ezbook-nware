@@ -80,6 +80,19 @@ class UserController extends Controller
      }
     }
 
+    public function password() {
+        return view('pages.users.password-edit');
+    }
+    public function updatePassword(Request $request) {
+        $data = [];
+        $apiJSON = (new UsersApiController)->updatePassword($request);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        // dd( $request->all(), $apiJSON);
+        // dd($original, $apiJSON);
+        return redirect()->route('password.reset')->with($original['status'], $original['message']);
+    }
+
     // public function deleteUser($id){
     //     dd("deleted");
     // }

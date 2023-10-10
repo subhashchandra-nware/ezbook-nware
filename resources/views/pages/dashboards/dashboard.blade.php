@@ -25,8 +25,7 @@
                             <div class="card-toolbar">
                                 <a href="#" class="btn btn-dark font-weight-bolder font-size-sm mr-2">
                                     Complete List </a>
-                                <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-2"
-                                    data-toggle="modal" data-target="#addnew">
+                                <a href="{{ route('book.index')}}" class="btn btn-primary font-weight-bolder font-size-sm mr-2">
                                     Add New </a>
 
                                 <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
@@ -38,7 +37,7 @@
                         <div class="card-body py-0">
                             <!--begin::Table-->
                             <div class="table-responsive">
-                                <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_1">
+                                <table class="table table-head-custom table-vertical-center" id="kt_datatable">
                                     <thead class="bg-light">
                                         <tr class="text-left">
                                             <th>Booked For</th>
@@ -69,9 +68,9 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        <tr>
+                                        {{-- <tr>
                                             <td colspan="4">{{ $upcomingBookings->onEachSide(1)->links() }}</td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -100,7 +99,7 @@
                         </div>
                         <!--end::Header-->
                         <!--begin::Body-->
-                        <div class="card-body pt-2 pb-0 mt-n3">
+                        <div class="card-body pt-2 pb-0 mt-n3 mb-9">
                             <div class="row m-0 mb-7">
                                 <div class="col bg-light px-6 py-8 rounded-xl mr-7">
                                     <h3 class="total-number">{{ $summaryBookings[0]->totalBooking }}</h3>
@@ -724,9 +723,23 @@
 @endsection
 
 @pushOnce('scripts')
+<script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{-- <script src="{{ asset('js/pages/features/charts/apexcharts.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
+
+            let opt = {
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    text: 'Export to Excel',
+                }],
+                lengthMenu: [ [2,5, 10, 25, 50, -1], [2,5, 10, 25, 50, "All"] ],
+        };
+            let datatable = $('#kt_datatable').DataTable(opt);
+
+
             const primary = '#6993FF';
                 const apexChart = "#chart-Number-of-Bookings";
                 var options = {
@@ -770,7 +783,7 @@
             return;
         }
 
-        var options = {
+        var barChartOptions = {
             series: [{
                 name: 'Number of Bookings',
                 data: {!! json_encode($numberBookings) !!}
@@ -789,76 +802,19 @@
                     endingShape: 'rounded'
                 },
             },
-            legend: {
-                show: false
-            },
             dataLabels: {
                 enabled: false
             },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
             xaxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false
-                },
-                labels: {
-                    style: {
-                        colors: KTApp.getSettings()['colors']['gray']['gray-500'],
-                        fontSize: '12px',
-                        fontFamily: KTApp.getSettings()['font-family']
-                    }
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: KTApp.getSettings()['colors']['gray']['gray-500'],
-                        fontSize: '12px',
-                        fontFamily: KTApp.getSettings()['font-family']
-                    }
-                }
-            },
-            fill: {
-                opacity: 1
-            },
-            states: {
-                normal: {
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                },
-                hover: {
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                },
-                active: {
-                    allowMultipleDataPointsSelection: false,
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                }
-            },
-            tooltip: {
-                style: {
-                    fontSize: '12px',
-                    fontFamily: KTApp.getSettings()['font-family']
-                },
-                y: {
-                    formatter: function (val) {
-                        return "$" + val + " thousands"
-                    }
-                }
+
+                // labels: {
+                //     style: {
+                //         colors: KTApp.getSettings()['colors']['gray']['gray-500'],
+                //         fontSize: '12px',
+                //         fontFamily: KTApp.getSettings()['font-family']
+                //     }
+                // }
             },
             colors: [KTApp.getSettings()['colors']['theme']['base']['success'], KTApp.getSettings()['colors']['gray']['gray-300']],
             grid: {
@@ -872,10 +828,11 @@
             }
         };
 
-        // var chart = new ApexCharts(element, options);
+        //         var chart = new ApexCharts(element, barChartOptions);
         // chart.render();
 
-        new ApexCharts(element, options).render();
+        new ApexCharts(element, barChartOptions).render();
+
 
         });
     </script>

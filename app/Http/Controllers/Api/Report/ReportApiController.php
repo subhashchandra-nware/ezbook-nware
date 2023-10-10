@@ -24,7 +24,7 @@ class ReportApiController extends Controller
         $data = [];
         $from = $request->all('from')['from']??date('Y') . '-01-01';
         $to = $request->all('to')['to']??date('Y-m-d');
-        $ProviderID = 1;
+        $ProviderID = session()->get('siteId');
         $type = ( $request->all('resourceTypes')['resourceTypes'] ) ? " AND resource.resourceType = " . $request->all('resourceTypes')['resourceTypes'] : "";
         $location = ( $request->all('locations')['locations'] ) ? " AND resource.resourceLocation = " . $request->all('locations')['locations'] : "";
 
@@ -120,7 +120,7 @@ class ReportApiController extends Controller
         // $to = '2023-08-30 12:30:00';
         $from = $request->all('from')['from']??date('Y') . '-01-01';
         $to = $request->all('to')['to']??date('Y-m-d');
-        $ProviderID = 1;
+        $ProviderID = session()->get('siteId');
         $sql = " SELECT NAME, factype,
                 ROUND( t.capacity, 2 ) AS capacity,
                 ROUND(( t1.time ), 2 ) AS inuse,
