@@ -20,6 +20,7 @@ class SettingApiController extends Controller
         $id = session()->get('siteId');
         $FacProvider = FacProvider::find($id);
         // $data['User'] = User::find($id)->toArray();
+        // dd(session() , $id, $FacProvider);
        $data['FacProvider'] = $FacProvider->toArray();
        $data['registrationDate'] = $FacProvider->created_at->format('d-m-Y');
 
@@ -84,7 +85,7 @@ class SettingApiController extends Controller
             // 'ContactCity' => 'required',
             // 'ContactZip' => 'required',
             // 'ContactCountry' => 'required',
-            // 'HomeURL' => 'required',
+            'HomeURL' => 'required',
             // 'OrgUrl' => 'required',
             // 'registrationDate' => 'required',
             // 'IsBusinessProfileUpdated' => 1;
@@ -100,21 +101,23 @@ class SettingApiController extends Controller
             $FacProvider->HasLogo = 1;
             session()->put('siteData.HasLogo', $FacProvider->HasLogo);
         }
-        // dd($file, $request->all());
+        $FacProvider->fill($request->all());
+        if( ! $FacProvider->IsBusinessProfileUpdated ){
             $FacProvider->IsBusinessProfileUpdated = 1;
-            $FacProvider->fill($request->all());
-            try {
-                if($FacProvider->save()){
+        }
+        // dd($FacProvider->toArray(), $request->all());
+        try {
+            if($FacProvider->save()){
                     return response()->json([
                         'message' => 'User details updated Successfully',
                         'user_id' => $FacProvider->id,
                         'status' => 'success'
                     ],200);
                 }
-            } catch (\Throwable $th) {
-                //throw $th;
+            } catch (\Exception $th) {
+                // throw $th;
                 return response()->json([
-                    'message' => 'User details not Updated',
+                    'message' => $th->getMessage(),
                     'user_id' => $FacProvider->id,
                     'status' => 'failed'
                 ],200);

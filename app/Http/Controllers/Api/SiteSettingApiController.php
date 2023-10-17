@@ -100,8 +100,10 @@ class SiteSettingApiController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->messages(), 400);
         }
-        $facProviderId = UserProviderMapping::where('id', $request->id)->value('ProviderId');
+        // $facProviderId = UserProviderMapping::where('id', $request->id)->value('ProviderId');
+        $facProviderId = $request->id;
         $updateAccountStatus = FacProvider::find($facProviderId);
+        // dd($request->id, $facProviderId, $updateAccountStatus);
         try {
             if (!$updateAccountStatus->AccountStatus) {
                 $updateAccountStatus->AccountStatus = '1';
@@ -128,11 +130,18 @@ class SiteSettingApiController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->messages(), 400);
         }
-        $accountStatus = FacProvider::where('id', $request->id)->value('AccountStatus');
+
+        $data = FacProvider::where('id', $request->id)->get(['IsVerified', 'AccountStatus', 'IsBusinessProfileUpdated'])->firstOrFail()->toArray();
+        // dd($data);
         return response()->json([
             'status' => 'success',
-            'AccountStatus' => $accountStatus
+            'data' => $data
         ], 200);
+        // $accountStatus = FacProvider::where('id', $request->id)->value('AccountStatus');
+        // return response()->json([
+        //     'status' => 'success',
+        //     'AccountStatus' => $accountStatus
+        // ], 200);
     }
 
     public function userHasMultipleSite(Request $request)

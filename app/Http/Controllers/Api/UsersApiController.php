@@ -110,6 +110,7 @@ class UsersApiController extends Controller
 
     public function editUserPost(Request $request)
     {
+        // dd( $request->all() );
         $validator = Validator::make($request->all(), [
             'userId' => 'required',
             'Name' => ['required'],

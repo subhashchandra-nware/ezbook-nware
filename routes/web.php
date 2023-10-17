@@ -4,6 +4,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSignupController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResourceController;
@@ -31,33 +32,50 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 
 
-Route::get('/', [LoginSignupController::class,'signIn'])->name('login');
+// // Route::resource('login', LoginController::class);
+Route::controller(LoginController::class)->group(function(){
+    Route::get('/', 'index')->name('login');
+    Route::get('login', 'index')->name('login');
+    Route::get('register', 'create')->name('register');
+    Route::get('logout', 'destroy')->name('logout');
+    Route::post('login', 'login')->name('login.login');
+    Route::post('register', 'store')->name('register.store');
+    Route::get('welcome', 'welcome')->name('login.welcome');
+    Route::get('select-site', 'selectSite' )->name('login.selectSite');
+    Route::get('open-site/{siteName}', 'openSite')->name('login.openSite');
+    Route::get('/verify-email', 'emailVerificationSend')->name('login.email.verify');
+});
+
+
+// Route::get('/', [LoginSignupController::class,'signIn'])->name('login');
 Route::get('/sign-in', [LoginSignupController::class,'signIn']);
 Route::post('/sign-in',[LoginSignupController::class,'signInPost']);
 Route::get('/signup',[LoginSignupController::class,'signupView']);
 Route::post('/signup',[LoginSignupController::class,'signupDetailSaved']);
 
 
-Route::get('/verify-email',[LoginSignupController::class,'emailVerificationSend']);
-Route::get('/set-password/{token}',[LoginSignupController::class,'passwordPageView']);
+// Route::get('/verify-email',[LoginSignupController::class,'emailVerificationSend'])->name('login.email.verify');
+Route::get('/set-password/{token}',[LoginSignupController::class,'passwordPageView'])->name('login.setpassword');
 Route::post('/set-password',[LoginSignupController::class,'setPasswordFirstTime']);
 Route::post('/password-already-set',[LoginSignupController::class,'passwordAlreadySet']);
 Route::get('/session-expire',[LoginSignupController::class,'sessionExpire']);
-Route::get('/logout',[LoginSignupController::class,'sessionExpire']);
+// Route::get('/logout',[LoginSignupController::class,'sessionExpire']);
 
-Route::get('/welcome',[LoginSignupController::class,'welcome']);
-Route::get('/select-site',[LoginSignupController::class,'selectSite']);
-Route::get('/open-site/{siteName}',[LoginSignupController::class,'openSite']);
-Route::get('site-settings',[SiteSettingController::class,'siteSettings']);
-Route::post('site-settings',[SiteSettingController::class,'siteSettingsPost']);
+// Route::get('/welcome',[LoginSignupController::class,'welcome'])->name('login.welcome');
+// Route::get('/select-site',[LoginSignupController::class,'selectSite']);
+// Route::get('/open-site/{siteName}',[LoginSignupController::class,'openSite']);
+// Route::get('site-settings',[SiteSettingController::class,'siteSettings']);
+// Route::post('site-settings',[SiteSettingController::class,'siteSettingsPost']);
 
+
+
+Route::middleware(['auth.chcek'])->group(function () {
 
 Route::controller(UserController::class)->group(function(){
     Route::get('user/resetpassword', 'password')->name('password.reset');
     Route::put('user/resetpassword', 'updatePassword')->name('password.update');
 });
 
-Route::middleware(['auth.chcek'])->group(function () {
 
 Route::get('/user',[UserController::class,'getAllUser']);
 Route::get('/add-user',[UserController::class,'addUser']);
@@ -82,17 +100,17 @@ Route::controller(DashboardController::class)->group(function(){
 });
 
 Route::controller(ResourceLocationController::class)->group(function(){
-    Route::get('resource-location', 'getAllResourceLocation');
-    Route::get('add-new-resource-location', 'addNewResourceLocation');
-    Route::post('add-new-resource-location', 'addNewResourceLocationPost');
-    Route::get('edit-resource-location/{id}', 'editResourceLocation');
-    Route::post('update-resource-location','updateResourceLocation');
+    Route::get('resource-location', 'getAllResourceLocation')->name('resource.location.list');
+    Route::get('add-new-resource-location', 'addNewResourceLocation')->name('resource.location.create');
+    Route::post('add-new-resource-location', 'addNewResourceLocationPost')->name('resource.location.store');
+    Route::get('edit-resource-location/{id}', 'editResourceLocation')->name('resource.location.edit');
+    Route::post('update-resource-location','updateResourceLocation')->name('resource.location.update');
 });
 
 Route::controller(ResourceTypeController::class)->group(function(){
-    Route::get('resource-type', 'resourceType');
-    Route::get('add-new-resource-type', 'addNewResourceType');
-    Route::get('edit-resource-type/{id}', 'editResourceType');
+    Route::get('resource-type', 'resourceType')->name('resource.type.list');
+    Route::get('add-new-resource-type', 'addNewResourceType')->name('resource.type.create');
+    Route::get('edit-resource-type/{id}', 'editResourceType')->name('resource.type.edit');
     //Route::post('add-new-resource-type', 'addNewResourceTypePost');
 });
 

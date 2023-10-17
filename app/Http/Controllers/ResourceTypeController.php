@@ -18,7 +18,8 @@ class ResourceTypeController extends Controller
         $finalResult = $array['original'];
         if($finalResult['status'] == 'success'){
             $data = $finalResult['data'];
-            return view('resource-type',compact('data'));
+            return view('pages.resources.resource-type-list',compact('data'));
+            // return view('resource-type',compact('data'));
         }
     }
 
@@ -32,19 +33,19 @@ class ResourceTypeController extends Controller
 
 //        dd($response->getBody()->getContents());
 
-        
+
         $result = (new ResourceTypeApiController)->getAllConfigurationTypes();
-        $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
+        $array = json_decode(json_encode($result), JSON_UNESCAPED_SLASHES);
         $finalResult = $array['original'];
         $configTypes = $finalResult['data'];
 
         $result2 = (new ResourceTypeApiController)->getAllCustomAttributesFieldType();
-        $array2 = json_decode(json_encode($result2),JSON_UNESCAPED_SLASHES);
+        $array2 = json_decode(json_encode($result2), JSON_UNESCAPED_SLASHES);
         $finalResult2 = $array2['original'];
         $fieldType = $finalResult2['data'];
 
         $result3 = (new ResourceTypeApiController)->getAllResourceTypeLimitedField();
-        $array3 = json_decode(json_encode($result3),JSON_UNESCAPED_SLASHES);
+        $array3 = json_decode(json_encode($result3), JSON_UNESCAPED_SLASHES);
         $finalResult3 = $array3['original'];
         $resourceTypeLimitedField = $finalResult3['data'];
 
@@ -77,7 +78,8 @@ class ResourceTypeController extends Controller
 
         $ProviderID = session()->get('siteId');
 
+        // return view('pages.resources.resource-type-edit',compact('configTypes','fieldType','ProviderID'));
         return view('edit-resource-type',compact('configTypes','fieldType','ProviderID'));
     }
-  
+
 }

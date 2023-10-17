@@ -23,9 +23,12 @@ class ResourceLocationController extends Controller
         $finalResult = $array['original'];
         if($finalResult['status'] == 'success'){
             $data = $finalResult['data'];
-            return view('resource-location',compact('data'));
+            // dd($data);
+            return view('pages.resources.resource-location-list',compact('data'));
+            // return view('resource-location',compact('data'));
         }else{
-            return view('resource-location');
+            return view('pages.resources.resource-location-list');
+            // return view('resource-location');
         }
 
     }

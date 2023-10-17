@@ -59,7 +59,7 @@ class ResourceController extends Controller
     public function getAllResource()
     {
         // $this->api('api');
-
+// dd(ADMIN);
         // $api = config('global.api.url');
         // $listResources = Http::post($api.'resources');
         // dd($this->api('api'));

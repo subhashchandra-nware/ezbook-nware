@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class FacProvider extends Model
 {
@@ -31,4 +32,18 @@ class FacProvider extends Model
             return FacProvider::where('id',$siteId)->first();
         }
     }
+
+    /**
+     * The Users that belong to the FacProvider
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function Users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_provider_mapping', 'ProviderId', 'UserId');
+    }
+
+    /**
+     * END::CLASS
+     */
 }

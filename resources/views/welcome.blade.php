@@ -35,7 +35,8 @@
             <h2 class="verify-head">Welcome to ezBook</h2>
             <h3 >Welcome and congrats on signing up to EZBook, where Booking is Made Easy!. Please click on the Start Now button below to setup your site and enjoy the benefits of EZBook. Welcome and congrats on signing up to EZBook, where Booking is Made Easy!. <br/>Please click on the Start Now button below to setup your site and enjoy the benefits of EZBook.  </h3>
             <h3>If you have questions, comments or concerns, don’t hesitate to reach out via email at <a href="mailto:support@ezbook.com">support@ezbook.com.</a></h3>
-            <a href="{{ url('/site-settings') }}" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Start Now</a>
+            {{-- <a href="{{ url('/site-settings') }}" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Start Now</a> --}}
+            <a href="{{ route('setting.index') }}" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Start Now</a>
           </div>
         </div>
       </div>

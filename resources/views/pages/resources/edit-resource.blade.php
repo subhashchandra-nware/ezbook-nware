@@ -359,7 +359,7 @@
             <!--begin::Actions-->
             <div class="d-flex justify-content-end border-top mt-5 pt-10">
                 <div>
-                    <x-forms.button design="1" value="Back" class="btn-exit" />
+                    <x-forms.button design="1" onclick="window.history.go(-1); return false;" value="Back" class="btn-exit" />
                     <x-forms.button design="1" type="submit" value="Save" class="btn-save" />
                 </div>
             </div>

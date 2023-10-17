@@ -37,6 +37,7 @@
             <div class="navi mt-2">
 
               <a href="{{ url('/logout')}}" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Sign Out</a>
+              <a href="{{ route('password.reset') }}" class="btn btn-sm btn-light-danger font-weight-bolder py-2 px-5">Reset Password</a>
               @php
               $totalSiteCount = session()->get('totalSiteCount');
               @endphp

@@ -14,6 +14,7 @@
         <x-forms.button class="ml-3" value="Subscription" />
     </x-layouts.goto>
 <x-layouts.form heading="Site Setting">
+
     <x-forms.form enctype="multipart/form-data" method="put" action="{{ route('setting.update', ['setting' => $id]) }}">
         <x-forms.input value="{{ old( 'id', $id??'' ) }}" name="id" type="hidden" />
         {{-- <x-forms.input value="{{ old( 'IsBusinessProfileUpdated', $IsBusinessProfileUpdated??'' ) }}" name="IsBusinessProfileUpdated" type="hidden" /> --}}
@@ -51,7 +52,7 @@
         <!--begin::Actions-->
         <div class="d-flex justify-content-end border-top mt-5 pt-10">
             <div>
-              <x-forms.button design="1" value="Cancel" name="" class="btn-exit" />
+              <x-forms.button design="1" onclick="window.history.go(-1); return false;" value="Cancel" name="" class="btn-exit" />
               <x-forms.button design="1" value="Save" name="" type="submit" class="btn-save" />
             </div>
           </div>

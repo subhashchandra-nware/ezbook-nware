@@ -51,9 +51,9 @@
                 <div class="card-header border-0 py-5">
                   <h3 class="card-title align-items-start flex-column"></h3>
                   <div class="card-toolbar">
-                    <a href="{{ url('/resource-location')}}" class="btn btn-success font-weight-bolder font-size-sm mr-3">Resource Location</a>
-                    <a href="{{ url('/resource-type') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
-                    <a href="#" class="btn btn-primary font-weight-bolder font-size-sm">Resources</a>
+                    <a href="{{ route('resource.location.list')}}" class="btn btn-success font-weight-bolder font-size-sm mr-3">Resource Location</a>
+                    <a href="{{ route('resource.type.list') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Resource Type</a>
+                    <a href="{{ route('resource.resource') }}" class="btn btn-primary font-weight-bolder font-size-sm">Resources</a>
                   </div>
                 </div>
                 <!--end::Header-->

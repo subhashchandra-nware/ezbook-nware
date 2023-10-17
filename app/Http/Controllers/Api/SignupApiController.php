@@ -28,7 +28,7 @@ class SignupApiController extends Controller
                 'message' => count($users). ' users found',
                 'status' => 0
             ];
-            
+
         }
         return response()->json($response,200);
         // p($users);
@@ -42,6 +42,11 @@ class SignupApiController extends Controller
         //
     }
 
+    /**
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     public function store(Request $request)
     {
        $validator = Validator::make($request->all(),[
@@ -51,13 +56,13 @@ class SignupApiController extends Controller
        ]);
 
        $fullName = $request->firstName." ". $request->lastName;
-    
+
        if($validator->fails()){
         return response()->json($validator->messages(),400);
        }else{
         $userExists = User::where('EmailAddress', '=', $request->emailAddress)->first();
-        if($userExists !=null){
-            if($userExists->Password !=null){
+        if($userExists != null){
+            if($userExists->Password != null){
                 $userData = [
                     'Name' => $fullName,
                     'LoginName' => '',
@@ -102,7 +107,7 @@ class SignupApiController extends Controller
             'ExpiryDate' => date("Y-m-d h:i:s"),
             'AccountStatus' => 0,
             'TimeZone' => '',
-            'IsVerified' => 0,
+            'IsVerified' => ($userExists != null) ? 1 : 0,
             'IsBusinessProfileUpdated' => 0,
             'CreatedBy' => $user->id
         ];
@@ -156,6 +161,12 @@ class SignupApiController extends Controller
         return view('verify-email',compact('id','email'));
     }
 
+    /**
+     * Summary of setFirstTimePassword
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $token
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
     public function setFirstTimePassword(Request $request,$token){
         /* Delete Token older than 2 min
         $formatted = Carbon::now()->subMintues(2)->toDateTimeString();
@@ -245,7 +256,7 @@ class SignupApiController extends Controller
             }
     }
 
-    public function checkUserhasPassword(Request $request){ 
+    public function checkUserhasPassword(Request $request){
         $validator = Validator::make($request->all(),[
             'token' => ['required',],
         ]);
@@ -266,5 +277,5 @@ class SignupApiController extends Controller
                 'status' => 'success'
             ],200);
         }
-    } 
+    }
 }

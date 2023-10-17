@@ -24,7 +24,7 @@
     <link rel="shortcut icon" href="{{ asset('media/logos/favicon.ico') }}" />
     <link href="{{ asset('css/chosen.min.css') }}" rel="stylesheet"/>
     <!-- <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/> -->
-
+    @stack('styles')
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> --}}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

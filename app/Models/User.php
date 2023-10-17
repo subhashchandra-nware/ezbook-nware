@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\UserType;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -68,6 +70,28 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Book::class, 'BookedBy', 'id');
     }
+
+    /**
+     * The FacProviders that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function FacProviders(): BelongsToMany
+    {
+        return $this->belongsToMany(FacProvider::class, 'user_provider_mapping', 'UserId', 'ProviderId');
+    }
+
+
+
+    /**
+     * Get all of the FacProviders for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    // public function FacProviders(): HasManyThrough
+    // {
+    //     return $this->hasManyThrough(FacProvider::class, UserProviderMapping::class, 'UserId', 'id', 'id', 'ProviderId');
+    // }
 
 
 

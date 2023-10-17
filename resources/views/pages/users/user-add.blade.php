@@ -52,7 +52,7 @@
                   <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
                     <div class="col-xl-12">
                       <!--begin::Form Wizard-->
-                      <form class="form" id="" method="post" action="{{ url('/edit-user')}}">
+                      <form class="form" id="" method="post" action="{{ url('/add-user')}}">
                         @csrf
                         <!--begin::Step 1-->
                         <div class="pb-5">
@@ -84,8 +84,8 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">User Name</label>
                                 <div class="col-lg-9 col-xl-9">
-                                <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="userId" hidden value="{{ $user->id }}" />
-                                  <input class="form-control form-control-lg form-control-solid" name="Name" type="text" value="{{ $user->Name }}" />
+                                <input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="siteId" hidden value="{{ session('siteId') }}" />
+                                  <input class="form-control form-control-lg form-control-solid" name="Name" type="text" value="{{ old('Name') }}" />
                                   <span class="form-text text-muted">Enter the full name of user here.</span>
                                   <span class="text-danger">@error('Name') {{ $message }} @enderror</span>
                                 </div>
@@ -93,7 +93,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Logon Name</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="LogonName" type="text" value="{{ $user->LoginName }}" />
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonName" type="text" value="{{ old('LogonName') }}"/>
                                   <span class="form-text text-muted">This Logon Name uniquely identifies users when they log on to your system.( Up to 20 Characters)</span>
                                   <span class="text-danger">@error('LogonName') {{ $message }} @enderror</span>
                                 </div>
@@ -101,7 +101,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Logon Password</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="LogonPassword" type="password" value="" />
+                                  <input class="form-control form-control-lg form-control-solid" name="LogonPassword" type="password" value="{{ old('LogonPassword') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional, 20 character limit)
@@ -113,7 +113,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">e-Mail Address</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="EmailAddress" type="text" value="{{ $user->EmailAddress }}" />
+                                  <input class="form-control form-control-lg form-control-solid" name="EmailAddress" type="text" value="{{ old('EmailAddress') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional)
@@ -125,7 +125,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Phone Number(s)</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input class="form-control form-control-lg form-control-solid" name="PhoneNumbers" type="tel" value="{{ $user->PhoneNumbers }}" />
+                                  <input class="form-control form-control-lg form-control-solid" name="PhoneNumbers" type="tel" value="{{ old('PhoneNumbers') }}" />
                                   <span class="form-text text-muted">
                                   <span style="color:red">
                                   (optional)
@@ -136,7 +136,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Supplementary Info</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <textarea class="form-control form-control-lg form-control-solid" name="Description" value="{{ $user->Description }}"></textarea>
+                                  <textarea class="form-control form-control-lg form-control-solid" name="Description"></textarea>
                                   <span class="form-text text-muted pl-5"><span style="color:red">
                                   (optional)
                                   </span> Enter any user notes here.</span>
@@ -154,7 +154,7 @@
                                 <div class="col-lg-9 col-xl-9">
                                   <select class="form-control " id="show" name="AdminLevel">
                                     @foreach($allUserType as $singleRecord)
-                                    <option value="{{ $singleRecord['id'] }}" {{ $user->AdminLevel == $singleRecord['id'] ? 'selected' : '' }}>{{ $singleRecord['userType'] }}</option>
+                                    <option value="{{ $singleRecord['id'] }}">{{ $singleRecord['userType'] }}</option>
                                     @endforeach
                                   </select>
                                   <span class="form-text text-muted">You may choose to grant the user any management rights that you have been granted, A "Administrator" has all of the rights mentioned below. Assign rights individually to " General Users"</span>
@@ -164,7 +164,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Manage Users</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input type="checkbox" name="ManageUsers" {{  ($user->ManageUsers == 1 ? ' checked' : '') }}>
+                                  <input type="checkbox" name="ManageUsers">
                                   <span class="form-text text-muted dis d-inline ml-5">
                                     This option allows the user to:
                                     <ul>
@@ -178,7 +178,7 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Manage Facilities</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input type="checkbox" name="ManageFacilities" {{  ($user->ManageFacilities == 1 ? ' checked' : '') }}>
+                                  <input type="checkbox" name="ManageFacilities">
                                   <span class="form-text text-muted dis d-inline ml-5">
                                     This option allows the user to:
                                     <ul>
@@ -192,21 +192,21 @@
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Manage Sysytem Setting</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input type="checkbox" name="ManageSysSettings" {{  ($user->ManageSysSettings == 1 ? ' checked' : '') }}>
+                                  <input type="checkbox" name="ManageSysSettings">
                                   <span class="form-text text-muted dis d-inline ml-5">	This option allows the user to update the system preference and settings. </span>
                                 </div>
                               </div>
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Cancel Bookings</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input type="checkbox" name="CancelBookings" {{  ($user->CancelBookings == 1 ? ' checked' : '') }}>
+                                  <input type="checkbox" name="CancelBookings">
                                   <span class="form-text text-muted dis d-inline ml-5">	This option allows the user to cancel booking made by others. </span>
                                 </div>
                               </div>
                               <div class="form-group row">
                                 <label class="col-xl-3 col-lg-3 col-form-label">Make all Collective Bookings</label>
                                 <div class="col-lg-9 col-xl-9">
-                                  <input type="checkbox" name="CollectiveBookings" {{  ($user->CollectiveBookings == 1 ? ' checked' : '') }}>
+                                  <input type="checkbox" name="CollectiveBookings">
                                   <span class="form-text text-muted dis d-inline ml-5">This option allows the user to book ALL the sub-resources of a COLLECTIVE resource type simultaneously.
                                   <span style="color:red">
                                   Please Note: Bookings made using this feature will automatically delete any booking made for the indiviual sub-resource at the same time.
@@ -227,25 +227,11 @@
                               <div class="form-group row justify-content-center">
                                 <div class="col-lg-5 col-md-5 col-sm-12">
                                   <label class="col-form-label text-right ">Additional Group</label>
-                                  <select class="form-control" id="kt_multipleselectsplitter_1">
-                                    <optgroup label="Category 1">
-                                      <option value="1">Choice 1</option>
-                                      <option value="2">Choice 2</option>
-                                      <option value="3">Choice 3</option>
-                                      <option value="4">Choice 4</option>
-                                    </optgroup>
-                                    <optgroup label="Category 2">
-                                      <option value="5">Choice 5</option>
-                                      <option value="6" selected="selected">Choice 6</option>
-                                      <option value="7">Choice 7</option>
-                                      <option value="8">Choice 8</option>
-                                    </optgroup>
-                                    <optgroup label="Category 3">
-                                      <option value="5">Choice 9</option>
-                                      <option value="6">Choice 10</option>
-                                      <option value="7">Choice 11</option>
-                                      <option value="8">Choice 12</option>
-                                    </optgroup>
+                                  <!-- <select class="form-control chosen-select" id="" multiple> -->
+                                  <select data-placeholder="Begin typing a name to filter..." multiple class="form-control chosen-select" name="test">
+                                  @foreach($userGroup as $group)
+                                  <option value="{{ $group->id }}">{{ $group->Name }}</option>
+                                  @endforeach
                                   </select>
                                 </div>
                               </div>
@@ -257,7 +243,7 @@
                     <!--begin::Actions-->
                     <div class="d-flex justify-content-end border-top mt-5 pt-10">
                     <div>
-                    <button type="button" onclick="window.history.go(-1); return false;" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
+                    <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
                     <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
                     </div>
                     </div>
@@ -631,6 +617,14 @@
   </div>
   <!--end::Demo Panel-->
   @include('footer')
+  <script>
+  $.noConflict();
+  $(document).ready(function(){
+  $(".chosen-select").chosen({
+   no_results_text: "Oops, nothing found!"
+  });
+});
+    </script>
 </body>
 <!--end::Body-->
 </html>

@@ -14,7 +14,8 @@
                   <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
                     <!--begin::Item-->
                     <li class="nav-item">
-                      <a href="#" class="nav-link py-4 px-6 active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Dashboard</a>
+                      <a href="#" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Dashboard</a>
+                      {{-- <a href="#" class="nav-link py-4 px-6 active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Dashboard</a> --}}
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -87,7 +88,7 @@
                         <!--end:Item-->
                         <!--begin:Item-->
                         <div class="col-6">
-                          <a href="{{ url('/site-settings') }}" class="d-block py-10 px-5 text-center bg-hover-light border-right">
+                          <a href="{{ route('setting.index') }}" class="d-block py-10 px-5 text-center bg-hover-light border-right">
                             <span class="svg-icon svg-icon-3x svg-icon-success">
                               <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
                               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

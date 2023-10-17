@@ -49,7 +49,7 @@
                     <div class="col-xl-12">
                       <!--begin::Form Wizard-->
                       <form class="form" id="addResourceTypeForm" method="post" action="">
-                       
+
                         <div class="pb-5">
                           <h3 class="font-weight-bold text-dark pb-5">Add Resource Type</h3>
                           <div class="mb-10 ">
@@ -209,7 +209,8 @@
                     <!--begin::Actions-->
                     <div class="d-flex justify-content-end border-top mt-5 pt-10">
                     <div>
-                    <button type="button" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
+
+                    <button type="button" onclick="window.history.go(-1); return false;" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
                     <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
                     </div>
                     </div>
@@ -330,13 +331,13 @@
         }
 
         customAttributeHtml(data);
-        
+
     });
 
     function modalClose(){
       $("#customAttributeName").val("");
       $("#customAttributeDescription").val("");
-      $('#customAttributeCheckBox').prop('checked', false); 
+      $('#customAttributeCheckBox').prop('checked', false);
       $('#addcustom').modal('hide');
     }
 
@@ -387,9 +388,9 @@
       $("#customAttributeName").val(keyValue.customAttributeName);
       $("#customAttributeDescription").val(keyValue.customAttributeDescription);
       if(keyValue.customAttributeCheckBox){
-        $('#customAttributeCheckBox').prop('checked', true); 
+        $('#customAttributeCheckBox').prop('checked', true);
       }else{
-        $('#customAttributeCheckBox').prop('checked', false); 
+        $('#customAttributeCheckBox').prop('checked', false);
       }
       $("#customAttributeType").val(keyValue.customAttributeType).change();
       $('#addcustom').modal('show');
