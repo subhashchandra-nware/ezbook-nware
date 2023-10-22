@@ -1,5 +1,3 @@
-
-
 @include('header')
 <body id="kt_body" class="header-fixed header-mobile-fixed header-bottom-enabled page-loading">
   <!--begin::Main-->
@@ -109,10 +107,20 @@
                           <div class="row" id="custom-attribute">
                             <div class="col-xl-12">
                               <div class="bg-light p-4 w-100 mt-5 mb-5">
-                                <h6 class="mb-0"><strong>Custom Attribute</strong> <button type="button" class="btn btn-sm btn-success ml-5 font-weight-bolder text-uppercase " data-toggle="modal" data-target="#addcustom">Add</button></h6>
+                                <h6 class="mb-0"><strong>Custom Attribute</strong> <button type="button" class="btn btn-sm btn-success ml-5 font-weight-bolder text-uppercase " data-toggle="modal" data-target="#addcustom" >Add</button></h6>
                               </div>
                               <div class="form-group row">
                                 <p class="form-text text-muted pl-5">Custom attributes allow you to specify information fields that should entered when createg a new resource of this type. Click the Add Button above to specify a new Attribute. To Change the name or description of an existing Custom Attribute, Click on its Name.</p>
+                                <!-- <div class="col-lg-3 col-xl-3">
+                                  <input class="form-control form-control-lg form-control-solid" name="" type="text" placeholder="name"  />
+                                </div>
+                                <div class="col-lg-3 col-xl-3">
+                                  <input class="form-control form-control-lg form-control-solid" name="" type="text" placeholder="type"  />
+                                </div>
+                                <div class="col-lg-4 col-xl-5">
+                                  <textarea class="form-control form-control-lg form-control-solid" name="" placeholder="description"></textarea>
+                                </div> -->
+                                <!-- <button type="button" class="btn btn-delete btn-exit font-weight-bolder text-uppercase " >Delete</button> -->
                         <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
                         <thead>
                           <tr class="text-left text-uppercase">
@@ -124,6 +132,15 @@
                           </tr>
                         </thead>
                         <tbody id="customAttributTable">
+                          <!-- <tr>
+                            <td>1</td>
+                            <td>numerice</td>
+                            <td>1</td>
+                            <td>numerice</td>
+                            <td class="pr-0">
+                              <a href="#" onclick="deleteResourceType()" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>
+                            </td>
+                          </tr> -->
                         </tbody>
                       </table>
                               </div>
@@ -132,21 +149,20 @@
                           <div class="row" id="resource-limit">
                             <div class="col-xl-12">
                               <div class="bg-light p-4 w-100 mt-5 mb-5">
-                                <h6 class="mb-0"><strong>Resource Type limit</strong> <button type="button" class="btn btn-sm btn-success ml-5 font-weight-bolder text-uppercase" data-toggle="modal" data-target="#resourceTypeLimitModal">Add</button></h6>
+                                <h6 class="mb-0"><strong>Resource Type limit</strong> <button type="button" class="btn btn-sm btn-success ml-5 font-weight-bolder text-uppercase " >Add</button></h6>
                               </div>
                               <div class="form-group row">
-                              <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
-                            <thead>
-                          <tr class="text-left text-uppercase">
-                            <th>Limit Type</th>
-                            <th>Limit</th>
-                            <th>Applies to</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody id="resourceTypeLimitTable">
-                        </tbody>
-                      </table>
+                                <p class="form-text text-muted pl-5">Resource type limit allow you to place restriction on the number of resources that can be booked, as well asd the total amount of time and days in advance that a Resource Type can be booked. Click the Add Button above to specify a new Limit. To Change the value of an existing Limit, Click on its limit on the list below.</p>
+                                <div class="col-lg-3 col-xl-3">
+                                  <input class="form-control form-control-lg form-control-solid" name="" type="text" placeholder="Limit Type"  />
+                                </div>
+                                <div class="col-lg-3 col-xl-3">
+                                  <input class="form-control form-control-lg form-control-solid" name="" type="text" placeholder="Limit Amount"  />
+                                </div>
+                                <div class="col-lg-4 col-xl-5">
+                                  <input class="form-control form-control-lg form-control-solid" name="" type="text" placeholder="Applies to"  />
+                                </div>
+                                <button type="button" class="btn btn-delete btn-exit font-weight-bolder text-uppercase " >Delete</button>
                               </div>
                             </div>
                           </div>
@@ -193,6 +209,7 @@
                     <!--begin::Actions-->
                     <div class="d-flex justify-content-end border-top mt-5 pt-10">
                     <div>
+
                     <button type="button" onclick="window.history.go(-1); return false;" class="btn btn-exit font-weight-bolder text-uppercase px-9 py-4" >Back</button>
                     <button type="submit" class="btn btn-save font-weight-bolder text-uppercase px-9 py-4">Save</button>
                     </div>
@@ -285,60 +302,11 @@
       </div>
     </div>
   </div>
-
-  <div class="modal fade" id="resourceTypeLimitModal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Resource Limits</h4>
-          <button type="button" class="close" onclick="limitModalClose();">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form class="form" id="resourceLimitForm">
-            <h5 class="mb-3">General Details</h5>
-
-            <div class="form-group">
-              <label>Limit Type</label>
-              <select class="form-control" name="LimitType" id="LimitType" onchange="handleSelectChange(event)">
-              @foreach($resourceTypeLimitedField as $val)
-              <option value= "{{ $val['id'] }}">{{ $val['Name'] }}</option>
-              @endforeach
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label id="limitValueLabel"># of Resources</label>
-              <input type="hidden" id="editResourceIndex" value="" name="editResourceIndex"/>
-              <input type="text" class="form-control form-control-lg" placeholder="" required name="Limit" id="Limit" />
-            </div>
-
-            <div class="form-group">
-              <label>Apply To</label>
-              <select class="form-control" name="GroupAppliedTo" id="GroupAppliedTo">
-              @foreach($fieldType as $field)
-              <option value= "{{ $field['ID'] }}">{{ $field['Name'] }}</option>
-              @endforeach
-              </select>
-            </div>
-
-        </div>
-        <div class="modal-footer">
-          <!-- <button type="submit" class="btn btn-success" data-dismiss="modal">Submit </button>
-          <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel </button> -->
-          <input type="submit" class="btn btn-success" value="Submit">
-          <button type="button" class="btn btn-dark" onclick="limitModalClose();">Cancel </button>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
   <!--end::Demo Panel-->
   @include('footer')
   <!--end::Page Scripts-->
   <script>
       let customAttributeData = [];
-      let resourceLimitData = [];
       $("#customAttributeForm").submit(function(event){
         event.preventDefault();
         var data = $('#customAttributeForm').serializeArray().reduce(function(obj, item) {
@@ -363,26 +331,7 @@
         }
 
         customAttributeHtml(data);
-    });
 
-    $("#resourceLimitForm").submit(function(event){
-        event.preventDefault();
-        var limitFormData = $('#resourceLimitForm').serializeArray().reduce(function(obj, item) {
-        console.log("data ="+ item.name + "=" +  item.value);
-        obj[item.name] = item.value;
-        return obj;
-        }, {});
-        console.log(limitFormData);
-
-        if(limitFormData.editResourceIndex){
-          var keyValue = resourceLimitData[limitFormData.editResourceIndex];
-          keyValue.LimitType = limitFormData.LimitType;
-          keyValue.Limit = limitFormData.Limit;
-          keyValue.GroupAppliedTo = limitFormData.GroupAppliedTo;
-        }else{
-          resourceLimitData.push(limitFormData);
-        }
-        resourceLimitHtml(limitFormData);
     });
 
     function modalClose(){
@@ -390,11 +339,6 @@
       $("#customAttributeDescription").val("");
       $('#customAttributeCheckBox').prop('checked', false);
       $('#addcustom').modal('hide');
-    }
-
-    function limitModalClose(){
-      $("#Limit").val("");
-      $('#resourceTypeLimitModal').modal('hide');
     }
 
     function deleteCustomAttribute(index){
@@ -438,52 +382,6 @@
         }
     }
 
-    function deleteResourceLimit(index){
-      let spliced = resourceLimitData.splice(index, 1);
-      //console.log("Remaining elements: " + JSON.stringify(customAttributeData));
-      resourceLimitHtml(resourceLimitData);
-    }
-
-    function resourceLimitHtml(data){
-      if(data){
-        limitModalClose();
-          var html = "";
-          // console.log(customAttributeData);
-          $.each(resourceLimitData, function(i){
-          html += '<tr>';
-         // html += '<td>'+ resourceLimitData[i].LimitType +'</td>';
-
-          if(resourceLimitData[i].LimitType == "1"){
-            html += '<td> Resource Limit </td>';
-          }else if(resourceLimitData[i].LimitType == "2"){
-            html += '<td> Time Limit </td>';
-          }
-          else if(resourceLimitData[i].LimitType == "3"){
-            html += '<td> Advance Limit </td>';
-          }
-          else if(resourceLimitData[i].LimitType == "4"){
-            html += '<td> Booking Limit </td>';
-          }
-          else if(resourceLimitData[i].LimitType == "5"){
-            html += '<td> Booking CutOff Time </td>';
-          }
-          else if(resourceLimitData[i].LimitType == "6"){
-            html += '<td> Update and Cancellation CutOff Time </td>';
-          }
-
-          html += '<td>'+ resourceLimitData[i].Limit +'</td>';
-          html += '<td>'+ resourceLimitData[i].GroupAppliedTo +'</td>';
-
-          html += '<td class="pr-0">';
-          html += '<a href="#" onclick="editLimit(' + i + ')" style="margin-right:10px;" class="btn btn-light-danger font-weight-bolder font-size-sm">Edit </a>';
-          html += '<a href="#" onclick="deleteResourceLimit(' + i + ')" class="btn btn-light-danger font-weight-bolder font-size-sm">Delete </a>';
-          html += '</td>';
-          html += '</tr>';
-          });
-          $("#resourceTypeLimitTable").html(html);
-        }
-    }
-
     function editCustomAttribute(index){
       $("#editCustomIndex").val(index);
       var keyValue = customAttributeData[index];
@@ -498,15 +396,6 @@
       $('#addcustom').modal('show');
     }
 
-    function editLimit(index){
-      $("#editResourceIndex").val(index);
-      var keyValue = resourceLimitData[index];
-      $("#LimitType").val(keyValue.LimitType);
-      $("#Limit").val(keyValue.Limit);
-      $("#GroupAppliedTo").val(keyValue.GroupAppliedTo);
-      $('#resourceTypeLimitModal').modal('show');
-    }
-
     function convertFormToJSON(form) {
       const array = $(form).serializeArray(); // Encodes the set of form elements as an array of names and values.
       const json = {};
@@ -516,35 +405,11 @@
       return json;
     }
 
-      function handleSelectChange(event) {
-        var selectElement = event.target;
-        var value = selectElement.value;
-        if(value == "1"){
-          $("#limitValueLabel").text("# of Resources");
-        }
-        else if(value == "2"){
-          $("#limitValueLabel").text("# of Hours");
-        }
-        else if(value == "3"){
-          $("#limitValueLabel").text("# of Days");
-        }
-        else if(value == "4"){
-          $("#limitValueLabel").text("# of Minutes");
-        }
-        else if(value == "5"){
-          $("#limitValueLabel").text("# of Hours");
-        }
-        else if(value == "6"){
-          $("#limitValueLabel").text("# of Minutes");
-        }
-      }
-
     $("#addResourceTypeForm").submit(function(e){
         e.preventDefault();
         let form = $(e.target);
         let sendData = convertFormToJSON(form);
         sendData.customAttributeData = customAttributeData;
-        sendData.resourceLimitData = resourceLimitData;
             $.ajax({
                 url : "{{ url('api/add-new-resource-type')}}",
                 data : sendData,

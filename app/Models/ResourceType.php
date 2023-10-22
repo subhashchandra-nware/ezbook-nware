@@ -42,7 +42,25 @@ class ResourceType extends Model
         );
     }
 
+    /**
+     * Get all of the CustomAttributesFields for the ResourceType
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function CustomAttributesFields(): HasMany
+    {
+        return $this->hasMany(CustomAttributesFields::class, 'resourcetype', 'id');
+    }
 
+    /**
+     * Get all of the ResourceTypeLimits for the ResourceType
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ResourceTypeLimits(): HasMany
+    {
+        return $this->hasMany(ResourceTypeLimit::class, 'resourcetype', 'id');
+    }
 
 
 

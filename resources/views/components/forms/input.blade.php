@@ -17,7 +17,7 @@
         @error($name)
             <div class="form-text text-danger">{{ $message }}</div>
         @enderror
-        <span class="form-text text-muted">{{ $desc }} </span>
+        <span class="form-text text-muted">{!! $desc !!} </span>
     @break
     @case('3')
         <label for="{{ $attributes->get('id') ?? 'id-' . $name }}"
@@ -27,7 +27,7 @@
         @error($name)
             <div class="form-text text-danger">{{ $message }}</div>
         @enderror
-        <span class="form-text text-muted">{{ $desc }} </span>
+        <span class="form-text text-muted">{!! $desc !!} </span>
     @break
 
     @case('2')
@@ -40,7 +40,7 @@
                 @error($name)
                     <div class="form-text text-danger">{{ $message }}</div>
                 @enderror
-                <span class="form-text text-muted">{{ $desc }} </span>
+                <span class="form-text text-muted">{!! $desc !!} </span>
             </div>
         </div>
     @break
@@ -56,7 +56,7 @@
                 @error($name)
                     <div class="form-text text-danger">{{ $message }}</div>
                 @enderror
-                <span class="form-text text-muted">{{ $desc }} </span>
+                <span class="form-text text-muted">{!! $desc !!} </span>
             </div>
         </div>
     @break

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\UserType;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -62,6 +63,36 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the UserProviderMappings associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function UserProviderMappings(): HasOne
+    {
+        return $this->hasOne(UserProviderMapping::class, 'UserId', 'id');
+    }
+
+    /**
+     * Get the UsersInGroups associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    // public function UsersInGroups(): HasOne
+    // {
+    //     return $this->hasOne(UsersInGroup::class, 'UserID', 'id');
+    // }
+
+    /**
+     * Get all of the UsersInGroups for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function UsersInGroups(): HasMany
+    {
+        return $this->hasMany(UsersInGroup::class, 'UserID', 'id');
+    }
+
+    /**
      * Get the booking associated with the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -81,7 +112,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(FacProvider::class, 'user_provider_mapping', 'UserId', 'ProviderId');
     }
 
-
+/**
+ * The UserGroups that belong to the User
+ *
+ * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+ */
+public function UserGroups(): BelongsToMany
+{
+    return $this->belongsToMany(UserGroup::class, 'usersingroups', 'UserID', 'GroupID');
+}
 
     /**
      * Get all of the FacProviders for the User

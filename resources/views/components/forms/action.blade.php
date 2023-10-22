@@ -16,6 +16,10 @@
                 <x-forms.button class="flaticon-edit ml-3" value="Edit" href="{{ isset($route) ? route($action, [$route=>$id] ) : url($action.'/'.$id) }}" />
                 @break
 
+                @case('ALERT-DELETE')
+                <x-forms.button onclick="return false;" id="delete-{{$route}}-{{$id}}" class="delete btn-danger flaticon-delete ml-3" value="Delete" href="{{ isset($route) ? route($action, [$route=>$id] ) : url($action.'/'.$id) }}" />
+                @break
+
                 @case('DELETE')
                 <x-forms.form method="delete" action="{{ isset($route) ? route($action, [$route=>$id] ) : url($action.'/'.$id) }}" >
                 <x-forms.button design="2" type="submit" value="Delete" class="btn-danger flaticon-delete font-size-sm ml-3" />

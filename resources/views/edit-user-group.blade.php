@@ -1,3 +1,11 @@
+@php
+    $users = collect($data)->get('users')->toArray();
+    $users = array_combine(array_column($users, 'id'), array_column($users, 'Name'));
+    $UserID = collect($userGroup->UsersInGroups->toArray())->pluck('UserID')->all();
+    // dd($users, $userGroup, $userGroup->UsersInGroups->toArray(), $UserID);
+@endphp
+
+
 @include('header')
 <!--end::Head-->
 <!--begin::Body-->
@@ -92,23 +100,10 @@
                                 <p class="form-text text-muted">A user can belong to one or more Iser Groups. This section below enables you to assign users to this group.</p>
                                 <p class="form-text text-muted">From the "Available" list, select the user Group(s) to which the user shuold belong. Move each selected group across to the "Member of" list using the right arrow button or by double-clicking.</p>
                               </div>
-                              <div class="form-group row justify-content-center">
-                                <div class="col-lg-5 col-md-5 col-sm-12">
-                                  <label class="col-form-label text-right ">Additional Group</label>
-                                  <select id="kt_dual_listbox_1" class="dual-listbox" multiple="multiple">
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                    <option value="6">Six</option>
-                                    <option value="7">Seven</option>
-                                    <option value="8">Eight</option>
-                                    <option value="9">Nine</option>
-                                    <option value="10">Ten</option>
-                                  </select>
-                                </div>
-                              </div>
+                              <x-forms.select class="multiple-select2" multiple="multiple" :selected="$UserID" design="1" name="UserID[]"
+                            label="Additional Group" :options="$users" />
+
+
                             </div>
                           </div>
                         </div>
@@ -183,6 +178,16 @@
   </div>
   <!--end::Scrolltop-->
   @include('footer')
+
+  <script>
+    // Your custom JavaScript...
+    $(document).ready(function() {
+
+        $(".multiple-select2").select2();
+
+        // END::DOCUMENT READY
+    });
+</script>
 </body>
 <!--end::Body-->
 </html>

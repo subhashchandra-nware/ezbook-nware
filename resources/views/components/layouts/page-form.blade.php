@@ -19,6 +19,7 @@
                                 <!--begin::Wizard Body-->
                                 <div class="row justify-content-center my-10 px-8 my-lg-15 px-lg-10">
                                     <div class="col-xl-12">
+                                        <x-layouts.message />
                                         <!--begin::Form Wizard-->
                                         <h3 class="font-weight-bold text-dark pb-5">{{ $heading }}</h3>
                                         {{ $slot }}

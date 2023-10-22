@@ -76,18 +76,20 @@ Route::controller(UserController::class)->group(function(){
     Route::put('user/resetpassword', 'updatePassword')->name('password.update');
 });
 
+Route::resource('user', UserController::class);
 
-Route::get('/user',[UserController::class,'getAllUser']);
-Route::get('/add-user',[UserController::class,'addUser']);
-Route::post('/add-user',[UserController::class,'addUserPost']);
-Route::get('/edit-user/{id}',[UserController::class,'editUser']);
-Route::post('/edit-user',[UserController::class,'editUserPost']);
+// Route::get('/user',[UserController::class,'getAllUser'])->name('user.list');
+// Route::get('/add-user',[UserController::class,'addUser'])->name('user.create');
+// Route::post('/add-user',[UserController::class,'addUserPost'])->name('user.store');
+// Route::get('/edit-user/{id}',[UserController::class,'editUser'])->name('user.edit');
+// Route::post('/edit-user',[UserController::class,'editUserPost'])->name('user.update');
 
-Route::get('/user-groups',[UserGroupController::class,'userGroup']);
-Route::get('/add-user-group',[UserGroupController::class,'addUserGroup']);
-Route::post('/add-user-group',[UserGroupController::class,'addUserGroupPost']);
-Route::get('/edit-user-group/{id}',[UserGroupController::class,'editUserGroup']);
-Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost']);
+// Route::resource('usergroup', UserGroupController::class);
+Route::get('/user-groups',[UserGroupController::class,'userGroup'])->name('usergroup.index');
+Route::get('/add-user-group',[UserGroupController::class,'addUserGroup'])->name('user.group.create');
+Route::post('/add-user-group',[UserGroupController::class,'addUserGroupPost'])->name('user.group.store');
+Route::get('/edit-user-group/{id}',[UserGroupController::class,'editUserGroup'])->name('user.group.edit');
+Route::post('/edit-user-group',[UserGroupController::class,'editUserGroupPost'])->name('user.group.update');
 
 // Route::get('/resources',[ResourceController::class,'getAllResources']);
 
@@ -107,10 +109,12 @@ Route::controller(ResourceLocationController::class)->group(function(){
     Route::post('update-resource-location','updateResourceLocation')->name('resource.location.update');
 });
 
+// Route::resource('resourceType', ResourceTypeController::class);
 Route::controller(ResourceTypeController::class)->group(function(){
     Route::get('resource-type', 'resourceType')->name('resource.type.list');
     Route::get('add-new-resource-type', 'addNewResourceType')->name('resource.type.create');
     Route::get('edit-resource-type/{id}', 'editResourceType')->name('resource.type.edit');
+    Route::post('resource-type/{ResourceType}', 'update')->name('ResourceType.update');
     //Route::post('add-new-resource-type', 'addNewResourceTypePost');
 });
 

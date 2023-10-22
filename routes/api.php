@@ -74,6 +74,7 @@ Route::controller(ResourceTypeApiController::class)->group(function(){
     Route::post('resource-type','getAllResourceType');
     Route::get('resource-configuration-type','getAllConfigurationTypes');
     Route::post('add-new-resource-type','addNewResourceType');
+    Route::post('resource-type/{ResourceType}', 'update')->name('api.ResourceType.update');
     Route::post('resource-type-limited-field','getAllResourceTypeLimitedField');
     Route::post('delete-resource-type','deleteResourceType');
 });

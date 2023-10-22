@@ -18,7 +18,7 @@
                 @error($name)
                     <div class="form-text text-danger">{{ $message }}</div>
                 @enderror
-                <span class="form-text text-muted">{{ $desc }} </span>
+                <span class="form-text text-muted">{!! $desc !!} </span>
             </div>
         </div>
     @break
@@ -34,7 +34,7 @@
                 @error($name)
                     <div class="form-text text-danger">{{ $message }}</div>
                 @enderror
-                <span class="form-text text-muted">{{ $desc }} </span>
+                <span class="form-text text-muted">{!! $desc !!} </span>
             </div>
         </div>
     @break
@@ -49,7 +49,7 @@
             <div class="form-text text-danger">{{ $message }}</div>
         @enderror
         @if ($desc != '')
-            <span class="form-text text-muted">{{ $desc }} </span>
+            <span class="form-text text-muted">{!! $desc !!} </span>
         @endif
 
 @endswitch

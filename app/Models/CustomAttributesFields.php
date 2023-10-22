@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CustomAttributesFields extends Model
 {
@@ -17,5 +18,18 @@ class CustomAttributesFields extends Model
         'Description',
         'Require',
     ];
+
+    /**
+     * Get the CustomAttributesFieldTypes that owns the CustomAttributesFields
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function CustomAttributesFieldTypes(): BelongsTo
+    {
+        return $this->belongsTo(CustomAttributesFieldType::class, 'FieldType', 'ID');
+    }
+
+
+
 
 }

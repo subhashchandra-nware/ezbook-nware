@@ -66,6 +66,17 @@ class ResourceTypeController extends Controller
     // }
 
     public function editResourceType($id){
+
+        $ProviderID = session()->get('siteId');
+
+        $myRequest = new Request();
+        $myRequest->setMethod(Request::METHOD_POST);
+        $myRequest->request->set('ProviderID', $ProviderID);
+
+        $apiJSON = (new ResourceTypeApiController)->edit($myRequest, $id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+
         $result = (new ResourceTypeApiController)->getAllConfigurationTypes();
         $array = json_decode(json_encode($result),JSON_UNESCAPED_SLASHES);
         $finalResult = $array['original'];
@@ -76,10 +87,22 @@ class ResourceTypeController extends Controller
         $finalResult2 = $array2['original'];
         $fieldType = $finalResult2['data'];
 
-        $ProviderID = session()->get('siteId');
+        $result3 = (new ResourceTypeApiController)->getAllResourceTypeLimitedField();
+        $array3 = json_decode(json_encode($result3), JSON_UNESCAPED_SLASHES);
+        $finalResult3 = $array3['original'];
+        $resourceTypeLimitedField = $finalResult3['data'];
 
+// dd($data, $resourceTypeLimitedField, $fieldType, $ProviderID, $configTypes);
         // return view('pages.resources.resource-type-edit',compact('configTypes','fieldType','ProviderID'));
-        return view('edit-resource-type',compact('configTypes','fieldType','ProviderID'));
+        return view('edit-resource-type',compact('data', 'configTypes','fieldType','ProviderID', 'resourceTypeLimitedField'));
+    }
+    public function update(Request $request, $id)
+    {
+        $apiJSON = (new ResourceTypeApiController)->update($request, $id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        // dd($data, $original, $apiJSON);
+        return redirect()->route('resource.type.list')->with($original['status'],$original['message']);
     }
 
 }

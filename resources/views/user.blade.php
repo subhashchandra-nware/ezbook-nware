@@ -1,3 +1,7 @@
+@php
+    extract($data);
+@endphp
+
 @include('header')
 <!--end::Head-->
 <!--begin::Body-->
@@ -560,7 +564,7 @@
             }
         }
       });
-    } 
+    }
    })
   }
 </script>

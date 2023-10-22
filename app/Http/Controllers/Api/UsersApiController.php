@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserType;
 use App\Models\FacProvider;
+use App\Models\UserGroup;
 use App\Models\UserProviderMapping;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -16,19 +17,235 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersApiController extends Controller
 {
+    public function index(Request $request){
+        $validator = Validator::make($request->all(), [
+            'siteId' => ['required'],
+        ]);
+
+        $data = [];
+        if ($validator->fails()) {
+            return response()->json(['status' =>'error', 'message' => $validator->messages()], 400);
+        } else {
+            $users = User::with('FacProviders','userType')
+            ->whereHas('FacProviders', function($q) use ($request){
+                $q->where('ProviderId', $request->siteId);
+            })
+            ->get();
+            // ->toSql();
+            $data['users'] = $users;
+            // dd($users);
+            // $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =" . $request->siteId);
+            if ($data != null) {
+                return response()->json([
+                    'message' => 'User Found',
+                    'status' => 'success',
+                    'data' => $data
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'User not Found',
+                    'status' => 'failed',
+                    'data' => null,
+                ], 200);
+            }
+        }
+    }
+    public function create(Request $request){
+        $validator = Validator::make($request->all(), [
+            'siteId' => ['required'],
+        ]);
+
+        $data = [];
+        if ($validator->fails()) {
+            return response()->json(['status' =>'error', 'message' => $validator->messages()], 400);
+        } else {
+            $UserGroups = UserGroup::where('ProviderID', $request->siteId)->select('id', 'Name')->get()->toArray();
+            $UserTypes = UserType::all()->toArray();
+            // ->toSql();
+            $data['UserGroups'] = $UserGroups;
+            $data['UserTypes'] = $UserTypes;
+            // dd($users);
+            // $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =" . $request->siteId);
+            if ($data != null) {
+                return response()->json([
+                    'message' => 'User group and type Found.',
+                    'status' => 'success',
+                    'data' => $data
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'User group and type not Found.',
+                    'status' => 'failed',
+                    'data' => null,
+                ], 200);
+            }
+        }
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'siteId' => 'required',
+            'Name' => ['required'],
+            'LoginName' => ['required'],
+            'Password' => ['required'],
+            'EmailAddress' => ['required'],
+            'AdminLevel' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status'=>'error', 'message' => $validator->messages()], 400);
+        } else {
+            $requestData = $request->all();
+            if ($request->has('Password')) {
+                $requestData['Password'] =  Hash::make($request->Password);
+                // dd('subhash');
+            }
+            // dd( $requestData, $request->all());
+            DB::beginTransaction();
+            try {
+                $user = User::create($requestData);
+                $userProviderMappingData = [
+                    // 'UserId' => $user->id,
+                    'ProviderId' => $request->siteId,
+                    'Active' => 1,
+                ];
+                $user->UserProviderMappings()->create($userProviderMappingData);
+                $GroupID = $this->columnDataArr($request->all('GroupID'), ['GroupID']);
+                if($request->GroupID){
+                    $user->UsersInGroups()->createMany($GroupID);
+                    // $user->UsersInGroups()->create(['GroupID' => $request->GroupID]);
+                    // $userProviderMapping = UserProviderMapping::create($userProviderMappingData);
+                }
+                DB::commit();
+                return response()->json([
+                    'message' => 'User register Successfully',
+                    'status' => 'success',
+                    'data' => ['user'=>$user],
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                // echo "<pre>";
+                // print_r($e->getMessage());
+                // echo "</pre>";
+                return response()->json([
+                    'message' => 'User not Register',
+                    'status' => 'failed',
+                    'data' => $e->getMessage(),
+                ], 500);
+            }
+        }
+
+    }
+
+    public function show(Request $request){}
+    public function edit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'siteId' => ['required'],
+            'id' => ['required'],
+        ]);
+
+        $data = [];
+        if ($validator->fails()) {
+            return response()->json(['status' =>'error', 'message' => $validator->messages()], 400);
+        } else {
+            $users = User::with('FacProviders','userType', 'UsersInGroups')
+            ->whereHas('FacProviders', function($q) use ($request){
+                $q->where('ProviderId', $request->siteId);
+            })->where('id', $request->id)
+            ->get();
+            // ->toArray();
+            // ->toSql();
+            // dd($request->all(), $users);
+
+            $UserGroups = UserGroup::where('ProviderID', $request->siteId)->select('id', 'Name')->get()->toArray();
+            $UserTypes = UserType::all()->toArray();
+            // ->toSql();
+            $data['UserGroups'] = $UserGroups;
+            $data['UserTypes'] = $UserTypes;
+            $data['users'] = $users;
+            // dd($users);
+            if ($data != null) {
+                return response()->json([
+                    'message' => 'User Found.',
+                    'status' => 'success',
+                    'data' => $data
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'User not Found.',
+                    'status' => 'failed',
+                    'data' => null,
+                ], 200);
+            }
+        }
+    }
+    public function update(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'siteId' => 'required',
+            'Name' => ['required'],
+            'LoginName' => ['required'],
+            // 'Password' => ['required'],
+            'EmailAddress' => ['required'],
+            'AdminLevel' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status'=>'error', 'message' => $validator->messages()], 400);
+        } else {
+            $requestData = $request->all();
+            if ($request->has('Password')) {
+                $requestData['Password'] =  Hash::make($request->Password);
+                // dd('subhash');
+            }
+            $GroupID = $this->columnDataArr($request->all('GroupID'), ['GroupID']);
+            // dd( $requestData, $request->all(), $GroupID);
+            $user->fill($requestData);
+            DB::beginTransaction();
+            try {
+                $user->save();
+                if($request->GroupID){
+                    // $user->UsersInGroups()->update(['GroupID' => $request->GroupID]);
+                    $user->UsersInGroups()->delete();
+                    $user->UsersInGroups()->createMany($GroupID);
+                }
+                DB::commit();
+                return response()->json([
+                    'message' => 'User Update Successfully',
+                    'status' => 'success',
+                    'data' => ['user'=>$user],
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                // echo "<pre>";
+                // print_r($e->getMessage());
+                // echo "</pre>";
+                return response()->json([
+                    'message' => 'User not Update',
+                    'status' => 'failed',
+                    'data' => $e->getMessage(),
+                ], 500);
+            }
+        }
+    }
+    public function destroy(Request $request, $id){}
+
     public function addUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'siteId' => 'required',
             'Name' => ['required'],
-            'LogonName' => ['required'],
+            'LoginName' => ['required'],
             'LogonPassword' => ['required'],
             'EmailAddress' => ['required'],
             'AdminLevel' => 'required'
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
+            return response()->json(['status'=>'error', 'message' => $validator->messages()], 400);
         } else {
+
+
             $siteId = $request->siteId;
             $ManageUsers = 0;
             $ManageFacilities = 0;
@@ -119,43 +336,44 @@ class UsersApiController extends Controller
             'AdminLevel' => 'required'
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
+            return response()->json(['status'=>'error','message'=>$validator->messages()], 400);
         } else {
-            $siteId = $request->siteId;
-            $ManageUsers = 0;
-            $ManageFacilities = 0;
-            $ManageSysSettings = 0;
-            $CollectiveBookings = 0;
-            $CancelBookings = 0;
-            $LogonPassword = $request->LogonPassword;
-            if ($request->has('ManageUsers')) {
-                $ManageUsers = 1;
-            }
-            if ($request->has('ManageFacilities')) {
-                $ManageFacilities = 1;
-            }
-            if ($request->has('ManageSysSettings')) {
-                $ManageSysSettings = 1;
-            }
-            if ($request->has('CollectiveBookings')) {
-                $CollectiveBookings = 1;
-            }
-            if ($request->has('CancelBookings')) {
-                $CancelBookings = 1;
-            }
+            // $siteId = $request->siteId;
+            // $ManageUsers = 0;
+            // $ManageFacilities = 0;
+            // $ManageSysSettings = 0;
+            // $CollectiveBookings = 0;
+            // $CancelBookings = 0;
+            // if ($request->has('ManageUsers')) {
+                //     $ManageUsers = 1;
+                // }
+                // if ($request->has('ManageFacilities')) {
+                    //     $ManageFacilities = 1;
+                    // }
+                    // if ($request->has('ManageSysSettings')) {
+            //     $ManageSysSettings = 1;
+            // }
+            // if ($request->has('CollectiveBookings')) {
+                //     $CollectiveBookings = 1;
+                // }
+                // if ($request->has('CancelBookings')) {
+                    //     $CancelBookings = 1;
+            // }
 
             $user = User::find($request->userId);
-            $user->Name = $request->Name;
-            $user->LoginName = $request->LogonName;
-            $user->EmailAddress = $request->EmailAddress;
-            $user->PhoneNumbers = $request->PhoneNumbers;
-            $user->Description = $request->Description;
-            $user->AdminLevel = $request->AdminLevel;
-            $user->ManageUsers = $ManageUsers;
-            $user->ManageFacilities = $ManageFacilities;
-            $user->ManageSysSettings = $ManageSysSettings;
-            $user->CollectiveBookings = $CollectiveBookings;
-            $user->CancelBookings = $CancelBookings;
+            $user->fill($request->all());
+            // $user->Name = $request->Name;
+            // $user->LoginName = $request->LoginName;
+            // $user->EmailAddress = $request->EmailAddress;
+            // $user->PhoneNumbers = $request->PhoneNumbers;
+            // $user->Description = $request->Description;
+            // $user->AdminLevel = $request->AdminLevel;
+            // $user->ManageUsers = $ManageUsers;
+            // $user->ManageFacilities = $ManageFacilities;
+            // $user->ManageSysSettings = $ManageSysSettings;
+            // $user->CollectiveBookings = $CollectiveBookings;
+            // $user->CancelBookings = $CancelBookings;
+            $LogonPassword = $request->LogonPassword;
             if ($LogonPassword != null) {
                 $user->Password = Hash::make($request->LogonPassword);
             }

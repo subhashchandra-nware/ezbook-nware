@@ -17,7 +17,7 @@
                 @error($name)
                     <div class="form-text text-danger">{{ $message }}</div>
                 @enderror
-                <span class="form-text text-muted">{{ $desc }} </span>
+                <span class="form-text text-muted">{!! $desc !!} </span>
             </div>
         </div>
     @break
