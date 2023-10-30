@@ -61,6 +61,7 @@ Route::post('/password-already-set',[LoginSignupController::class,'passwordAlrea
 Route::get('/session-expire',[LoginSignupController::class,'sessionExpire']);
 // Route::get('/logout',[LoginSignupController::class,'sessionExpire']);
 
+
 // Route::get('/welcome',[LoginSignupController::class,'welcome'])->name('login.welcome');
 // Route::get('/select-site',[LoginSignupController::class,'selectSite']);
 // Route::get('/open-site/{siteName}',[LoginSignupController::class,'openSite']);

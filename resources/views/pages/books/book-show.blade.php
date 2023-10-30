@@ -222,13 +222,16 @@
         <div class="col recurrence">
             <div class="form-group row">
                 <div class="form-check form-check-inline col">
-                    <x-forms.radio class="radio" name="recurrenceType" value="1" id="day-intervals" label="Day intervals" />
+                    <x-forms.radio class="radio" name="recurrenceType" value="1" id="day-intervals"
+                        label="Day intervals" />
                 </div>
                 <div class="form-check form-check-inline col">
-                    <x-forms.radio class="radio" name="recurrenceType" value="2" id="week-intervals" label="Week intervals" />
+                    <x-forms.radio class="radio" name="recurrenceType" value="2" id="week-intervals"
+                        label="Week intervals" />
                 </div>
                 <div class="form-check form-check-inline col">
-                    <x-forms.radio class="radio" name="recurrenceType" value="3" id="month-intervals" label="Month intervals" />
+                    <x-forms.radio class="radio" name="recurrenceType" value="3" id="month-intervals"
+                        label="Month intervals" />
                 </div>
             </div>
             <div class="form-group row intervals"></div>
@@ -249,14 +252,16 @@
                 <label class="col" for="id-day">Every</label>
                 <input class="col form-control" type="number" name="recurrenceInterval" id="id-day" />
                 <label class="col col-form-label">Week on</label>
-                <x-forms.select multiple class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']" name="daysOfWeek[]" />
+                <x-forms.select multiple class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']"
+                    name="daysOfWeek[]" />
             </div>
             <x-forms.input design="2" size="2" type="date" name="untilDate" label="Until" />
 
         </div>
         <div class="form-group col month-intervals">
             <div class="form-group row">
-                <div class="pt-1"><input value="1" class="radio-2" type="radio" checked name="monthIntervalsType" id="month-intervals-type-2" />
+                <div class="pt-1"><input value="1" class="radio-2" type="radio" checked
+                        name="monthIntervalsType" id="month-intervals-type-2" />
                 </div>
                 <div class="ml-0 pl-0 month-intervals-type-1 month-intervals-type row col">
                     <label class="col">Day</label>
@@ -267,12 +272,15 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="pt-1"><input value="2" class="radio-2" type="radio" name="monthIntervalsType" id="month-intervals-type-1" /></div>
+                <div class="pt-1"><input value="2" class="radio-2" type="radio" name="monthIntervalsType"
+                        id="month-intervals-type-1" /></div>
                 <div class="ml-0 pl-0 month-intervals-type-2 month-intervals-type row col">
                     <label class="col">The </label>
-                    <x-forms.select disabled class="col form-control multiple-select2" :options="['First', 'Second', 'Third', 'Fourth', 'Last']" name="MonthIntervalDateSelection" />
+                    <x-forms.select disabled class="col form-control multiple-select2" :options="['First', 'Second', 'Third', 'Fourth', 'Last']"
+                        name="MonthIntervalDateSelection" />
                     <label class="col">Day</label>
-                    <x-forms.select disabled class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']" name="daysOfWeek[]" />
+                    <x-forms.select disabled class="col form-control multiple-select2" :options="['Sunday', 'Monday', 'Tuesday', 'Wednessday', 'Thursday', 'Friday', 'Saturday']"
+                        name="daysOfWeek[]" />
                     <label class="col col-form-label">of every</label>
                     <input disabled class="col form-control" type="number" name="recurrenceInterval" />
                     <label class="col col-form-label">month(s)</label>
@@ -536,7 +544,7 @@
                 var $this = $(this);
                 var id = $this.attr("id");
                 $(".month-intervals-type input, .month-intervals-type select").prop("disabled", false);
-                $("."+id+" input, ."+id+" select").prop("disabled", true);
+                $("." + id + " input, ." + id + " select").prop("disabled", true);
             });
 
 

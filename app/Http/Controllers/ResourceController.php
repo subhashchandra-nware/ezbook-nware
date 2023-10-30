@@ -155,7 +155,7 @@ class ResourceController extends Controller
         $data['usersGroups'] = UserGroup::all(['id', 'Name'])->toArray();
 
         $data = array_merge($resource->toArray(), $data);
-        // dd($d, $data);
+        // dd( $data);
         return view('pages.resources.edit-resource', compact('data'));
     }
 

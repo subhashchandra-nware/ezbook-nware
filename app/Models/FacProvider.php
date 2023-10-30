@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FacProvider extends Model
 {
@@ -41,6 +42,16 @@ class FacProvider extends Model
     public function Users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_provider_mapping', 'ProviderId', 'UserId');
+    }
+
+    /**
+     * Get all of the Resources for the FacProvider
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Resources(): HasMany
+    {
+        return $this->hasMany(Resource::class, 'ProviderID', 'id');
     }
 
     /**

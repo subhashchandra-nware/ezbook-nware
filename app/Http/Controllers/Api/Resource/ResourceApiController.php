@@ -429,7 +429,7 @@ class ResourceApiController extends Controller
         $data['usersGroups'] = UserGroup::all(['id', 'Name'])->toArray();
 
         $data = array_merge($resource->toArray(), $data);
-        // dd($d, $data);
+        // dd($data);
         // return view('pages.resources.edit-resource', compact('data'));
         if ($data != null) {
             return response()->json([
@@ -497,7 +497,8 @@ class ResourceApiController extends Controller
 
         $SubResources = $this->columnDataArr( $request->all('SubResourcesName'), ['Name']);
         // $userrights = array_merge($BookingRightsUsers??[], $ViewingRightsUsers??[], $RequestRightsUsers??[],$ModRightsUsers??[] );
-        // dd($userrights);
+        // $newRequest = $request;
+        // dd($request->ModFeatureEnabled, $request->all(), $newRequest->all());
         DB::beginTransaction();
         try {
             $resource->usersRight()->delete();
@@ -506,6 +507,7 @@ class ResourceApiController extends Controller
             $resource->customBookingInfo()->delete();
             $resource->SubResources()->delete();
             $resource->fill($request->all());
+            $resource->ModFeatureEnabled = $request->ModFeatureEnabled ?? '0' ;
             if($resource->save()){
 
             // $userrights = array_merge($BookingRightsUsers??[],$ViewingRightsUsers??[]);

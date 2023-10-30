@@ -291,7 +291,16 @@ class BookApiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+        $book = Book::find($id);
+        $book->delete();
+        DB::commit();
+        return response()->json(['status' =>'success', 'message' => 'Booking is deleted.'], 200);
+        } catch (\Exception $exc) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message'=> $exc->getMessage()], 500);
+        }
     }
 
     public function getBooking(string $bookingID, string $SubID = '0')

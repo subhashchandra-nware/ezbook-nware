@@ -137,29 +137,46 @@ class BookController extends Controller
     /**
      * Remove the specified book from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(string $id)
     {
         // echo "<pre>ajax:";print_r($book->all()->toJson());echo "</pre>";
         // echo "<pre>";print_r($book->toArray());echo "</pre>";
-        DB::beginTransaction();
-        try {
-            $book->delete();
-            DB::commit();
-            // dd($userrights, $usergrouprights, $opretionalHours, $custombookinginfos);
+        // DB::beginTransaction();
+        $data = [];
+        $apiJSON = (new BookApiController)->destroy($id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        return $original;
+         // return redirect()->route('resource.resource')->with($msg['status'], $msg['message']);
+        // try {
+        //     $book = Book::find($id);
+        //     $book->delete();
+        //     DB::commit();
+        //     return response()->json(['status' =>'success', 'message' => 'Booking is deleted.'], 200);
+        //     } catch (\Exception $exc) {
+        //         DB::rollBack();
+        //         return response()->json(['status' => 'error', 'message'=> $exc->getMessage()], 500);
+        //     }
+        // try {
+        //     $book = Book::find($id);
+        //     $book->delete();
+        //     DB::commit();
+        //     // dd($userrights, $usergrouprights, $opretionalHours, $custombookinginfos);
 
-            return response()->json([
-                "message" => "Resource Deleted Successfully.",
-                "status" => "success",
-                "data" => $book,
-            ], 200);
-        } catch (\Exception $exc) {
-            DB::rollBack();
-            // echo "<pre>";print_r($exc->getMessage());echo "</pre>";
-            return response()->json([
-                "message" => "Resource not Create.",
-                "status" => "error",
-            ], 500);
-        }
+        //     return response()->json([
+        //         "message" => "Resource Deleted Successfully.",
+        //         "status" => "success",
+        //         "data" => $book,
+        //     ], 200);
+        // } catch (\Exception $exc) {
+        //     DB::rollBack();
+        //     // echo "<pre>";print_r($exc->getMessage());echo "</pre>";
+        //     return response()->json([
+        //         // "message" => "Resource not Deleted.",
+        //         "message" => $exc->getMessage(),
+        //         "status" => "error",
+        //     ], 500);
+        // }
     }
     public function getBooking(string $bookingID, string $SubID = '0')
     {

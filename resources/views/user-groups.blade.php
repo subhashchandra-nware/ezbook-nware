@@ -104,7 +104,7 @@
                   <div class="tab-content">
                     <!--begin::Table-->
                     <div class="table-responsive">
-                      <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                      <table id="kt_datatable" class="table table-head-custom table-head-bg table-borderless table-vertical-center">
                         <thead>
                           <tr class="text-left text-uppercase">
                             <th style="min-width: 30px">S.No.</th>
@@ -496,6 +496,7 @@
     </div>
     <!--end::Content-->
   </div>
+
   <div class="modal fade" id="upcomingbooking" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
       <!-- Modal content-->
@@ -529,6 +530,25 @@
   </div>
   <!--end::Demo Panel-->
   @include('footer')
+  <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script>
+        // Your custom JavaScript...
+        $(document).ready(function() {
+            let opt = {
+                dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    text: 'Export to Excel',
+                }],
+                lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
+
+
+        };
+            var datatable = $('#kt_datatable').DataTable(opt);
+
+            // END::DOCUMENT READY
+        });
+    </script>
   <script>
   function deleteUserGroup(id){
   Swal.fire({
@@ -550,7 +570,7 @@
             }
         }
       });
-    } 
+    }
    })
   }
 </script>

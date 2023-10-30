@@ -117,10 +117,12 @@ class User extends Authenticatable implements MustVerifyEmail
  *
  * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
  */
+
 public function UserGroups(): BelongsToMany
 {
     return $this->belongsToMany(UserGroup::class, 'usersingroups', 'UserID', 'GroupID');
 }
+
 
     /**
      * Get all of the FacProviders for the User

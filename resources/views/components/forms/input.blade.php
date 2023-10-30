@@ -12,8 +12,8 @@
 @switch($design)
     @case('4')
         <label for="{{ $attributes->get('id') ?? 'id-' . $name }}"
-            {{ $label->attributes ?? 'class="mr-5 col-form-label' . $size . '"'}} >{{  $label }}</label>
-        <input {{ $attributes->class(['border-danger' => $errors->has($name), 'is-invalid' => $errors->has($name), 'form-control'])->merge(['type' => 'text', 'name' => $name, 'value' => old($name, $value), 'id' => 'id-' . $name]) }} />
+            {!! $label->attributes ?? "class='mr-5 col-form-label{$size}'" !!} >{{  $label }}</label>
+        <input {{ $attributes->class(['border-danger' => $errors->has($name), 'is-invalid' => $errors->has($name), 'form-control form-control'.$size])->merge(['type' => 'text', 'name' => $name, 'value' => old($name, $value), 'id' => 'id-' . $name]) }} />
         @error($name)
             <div class="form-text text-danger">{{ $message }}</div>
         @enderror

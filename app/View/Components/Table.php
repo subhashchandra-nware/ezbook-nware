@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class layouts.menu-horizontal extends Component
+class Table extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class layouts.menu-horizontal extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.menu-horizontal');
+        return view('components.layouts.table');
     }
 }

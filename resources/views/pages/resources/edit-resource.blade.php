@@ -189,7 +189,7 @@
                             <h6 class="mb-0"><strong>Booking Moderate</strong>
                             </h6>
                         </div>
-                        <x-forms.checkbox checked="{{ $ModRights }}" design="1" name="ModFeatureEnabled" value="1"
+                        <x-forms.checkbox checked="{{ $ModFeatureEnabled }}" design="1" name="ModFeatureEnabled" value="1"
                             id="id-Booking-moderate" label="Moderator Feature Enabled"
                             desc="Specify, if you would like the moderator feature enabled." />
 
