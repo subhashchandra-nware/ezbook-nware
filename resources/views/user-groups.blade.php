@@ -61,7 +61,7 @@
                 <div class="card-header border-0 py-5">
                   <h3 class="card-title align-items-start flex-column">
                     <span class="card-label font-weight-bolder text-dark mb-4">User Groups</span>
-                    <form class="form-inline">
+                    {{-- <form class="form-inline">
                       <span class="mr-4">Show</span>
                       <div class="form-group">
                         <select class="form-control " id="show">
@@ -91,11 +91,11 @@
                           <option>5</option>
                         </select>
                       </div>
-                    </form>
+                    </form> --}}
                   </h3>
-                  <div class="card-toolbar">
+                  <div id="buttons" class="card-toolbar">
                     <a href="{{ url('/add-user-group') }}" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
-                    <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a>
+                    {{-- <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a> --}}
                   </div>
                 </div>
                 <!--end::Header-->
@@ -539,12 +539,14 @@
                 buttons: [{
                     extend: 'excel',
                     text: 'Export to Excel',
+                    className: 'btn btn-success font-weight-bolder font-size-sm'
                 }],
                 lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
 
 
         };
             var datatable = $('#kt_datatable').DataTable(opt);
+            datatable.buttons().container().appendTo( $('#buttons') );
 
             // END::DOCUMENT READY
         });

@@ -248,14 +248,21 @@ class LoginSignupController extends Controller
         // dd($apiJSON, $original, $data, $result, $array, $finalResult);
     }
 
+    /**
+     * Summary of selectSite
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
     public function selectSite(){
         $siteName = session()->get('allSitesName');
         return view('select-site',compact('siteName'));
     }
 
+
     public function openSite($siteName){
         $siteName = trim($siteName);
         $facProviderId = FacProvider::where('Name', $siteName)->value('id');
+        // dd($facProviderId);
         session()->put('siteName',$siteName);
         session()->put('siteId',$facProviderId);
         $accountStatus = $this->redirectSingleSite($facProviderId);

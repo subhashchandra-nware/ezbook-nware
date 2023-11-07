@@ -35,7 +35,7 @@
                                 <h3 class="card-title align-items-start flex-column">
                                     <span
                                         class="card-label font-weight-bolder text-dark mb-4">{{ $heading }}</span>
-                                    <form class="form-inline">
+                                    {{-- <form class="form-inline">
                                         <span class="mr-4">Show</span>
                                         <div class="form-group">
                                             <select class="form-control " id="show">
@@ -65,9 +65,9 @@
                                                 <option>5</option>
                                             </select>
                                         </div>
-                                    </form>
+                                    </form> --}}
                                 </h3>
-                                <div class="card-toolbar">
+                                <div {{$action->attributes}} class="card-toolbar">
 
                                     {{ $action }}
 

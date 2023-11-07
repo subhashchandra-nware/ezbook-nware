@@ -532,7 +532,6 @@ class UsersApiController extends Controller
     }
     public function updatePassword(Request $request)
     {
-        // dd($request->all(), $user->$value, $user->password);
         $user = User::find($request->id);
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -548,15 +547,18 @@ class UsersApiController extends Controller
         ]);
         $validator->validate();
 
-        // dd($file, $request->all());
-        $user->fill(['Password' => Hash::make($request->Password)]);
+        // $user = User::where('EmailAddress',  $user->EmailAddress);
+        // dd($request->all(), $user );
+        // $user->fill(['Password' => Hash::make($request->Password)]);
+        DB::beginTransaction();
         try {
-            if ($user->save()) {
+            User::where('EmailAddress',  $user->EmailAddress)->update(['Password' => Hash::make($request->Password)]);
+                // $user->save();
+                DB::commit();
                 return response()->json([
                     'message' => 'Your password is updated.',
                     'status' => 'success'
                 ], 200);
-            }
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([

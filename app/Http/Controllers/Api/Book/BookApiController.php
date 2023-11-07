@@ -303,6 +303,36 @@ class BookApiController extends Controller
         }
     }
 
+    public function accept(Request $request, string $id){
+        DB::beginTransaction();
+        try {
+            $book = Book::find($id);
+            $book->fill($request->all());
+            $book->save();
+
+            DB::commit();
+            return response()->json(['status'=> 'success','message'=> 'Booking is Accepted.'], 200);
+        }
+        catch (\Exception $exc) {
+            DB::rollBack();
+            return response()->json(['status'=> 'error','message'=> $exc->getMessage()], 500);
+        }
+    }
+    public function reject(Request $request, string $id){
+        DB::beginTransaction();
+        try {
+            $book = Book::find($id);
+            $book->fill($request->all());
+            $book->save();
+            $book->delete();
+            DB::commit();
+            return response()->json(['status'=> 'success','message'=> 'Booking is Rejected.'], 200);
+        } catch (\Exception $exc) {
+            DB::rollBack();
+            return response()->json(['status'=> 'error','message'=> $exc->getMessage()], 500);
+        }
+    }
+
     public function getBooking(string $bookingID, string $SubID = '0')
     {
         $data = [];

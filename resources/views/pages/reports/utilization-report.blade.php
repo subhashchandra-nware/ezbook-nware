@@ -10,14 +10,14 @@
         <div class="container">
             <div class="card card-custom gutter-b">
                 <div class="border-0 card-header pt-8">
-                    <h3><span>Utilization Reports</span>
-                        <x-forms.form class="form-inline">
-                            <x-forms.input value="{{ date('Y') . '-01-01' }}" design="2" type="date" name="from" label="From" />
-                            <x-forms.input value="{{ date('Y-m-d') }}" design="2" type="date" name="to" label="To" />
-                            <x-forms.button design="1" type="submit" name="build" value="Find"
-                                class="ml-10 btn-primary" />
-                        </x-forms.form>
-                    </h3>
+                    <h3 class="mb-10 w-100">Utilization Reports</h3>
+                    <x-forms.form class="form-inline">
+                        <x-forms.input value="{{ date('Y') . '-01-01' }}" design="2" type="date" name="from" label="From" />
+                        <x-forms.input value="{{ date('Y-m-d') }}" design="2" type="date" name="to" label="To" />
+                        <x-forms.button design="2" type="submit" name="build" value="Find"
+                            class="btn font-weight-bolder px-9 ml-10 text-uppercase" />
+                    </x-forms.form>
+                    <div id="buttons" class="card-toolbar"></div>
                 </div>
                 <div class="card-body">
 
@@ -77,12 +77,14 @@
                 buttons: [{
                     extend: 'excel',
                     text: 'Export to Excel',
+                    className: 'btn btn-success font-weight-bolder font-size-sm'
                 }],
                 lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
 
 
         };
             var datatable = $('#kt_datatable').DataTable(opt);
+            datatable.buttons().container().appendTo( $('#buttons') );
 
             // END::DOCUMENT READY
         });

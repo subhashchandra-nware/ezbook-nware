@@ -7,6 +7,13 @@
     {{-- <x-slot:heading>Site Setting</x-slot:heading> --}}
     @php
         extract($data);
+        $timezones = collect(Config('timezone'))->mapWithKeys(function (array $item, int $key) {
+            $tz[$item['UTCoffset']] = "{$item['location']} ({$item['UTCoffset']}) {$item['name']}";
+            return $tz;
+        })->all();
+        $timezone = null;
+        $timezones = ['0' => 'Select Timezone']+$timezones;
+        // dd($timezones);
     @endphp
  <x-layouts.message />
     <x-layouts.goto>
@@ -48,6 +55,7 @@
         <x-forms.input design="1" value="{{ old( 'ContactCountry', $ContactCountry??'' ) }}" name="ContactCountry" label="Country" />
         <x-forms.input design="1" value="{{ old( 'ContactZip', $ContactZip??'' ) }}" name="ContactZip" label="Zip" />
         <x-forms.input design="1" disabled value="{{ old( 'registrationDate', $registrationDate??'' ) }}" name="registrationDate" label="Registration Date" />
+        <x-forms.select selected="{{ $timezone }}" design="1" class="select2" name="timezone" label="Timezone" :options="$timezones" />
 
         <!--begin::Actions-->
         <div class="d-flex justify-content-end border-top mt-5 pt-10">
@@ -61,3 +69,15 @@
 </x-layouts.form>
 </x-layouts.page-default>
 @endsection
+
+@pushOnce('scripts')
+    <script>
+        // Your custom JavaScript...
+        $(document).ready(function() {
+
+            $('.select2').select2();
+
+            // END::DOCUMENT READY
+        });
+    </script>
+@endPushOnce

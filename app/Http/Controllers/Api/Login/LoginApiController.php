@@ -34,16 +34,23 @@ class LoginApiController extends Controller
     public function openSite($siteName)
     {
         $siteName = trim($siteName);
-        $data = FacProvider::where('Name', $siteName)->get(['id', 'IsVerified', 'AccountStatus', 'IsBusinessProfileUpdated'])->firstOrFail()->toArray();
+        // $data = FacProvider::where('Name', $siteName)->get(['id', 'IsVerified', 'AccountStatus', 'IsBusinessProfileUpdated'])->firstOrFail()->toArray();
+        $data = FacProvider::with('Users')->where('Name', $siteName)->get(['id', 'IsVerified', 'AccountStatus', 'IsBusinessProfileUpdated'])->firstOrFail();
         // dd($data);
         session()->put('siteName', $siteName);
-        session()->put('siteId', $data['id']);
+        session()->put('siteId', $data->id);
+        // session()->put('d', $data);
+        session()->put('userSession', $data->Users->first()->toArray());
+        session()->put('loginUserId', $data->Users->first()->id);
+        session()->put('loginUserName', $data->Users->first()->Name);
+        session()->put('loginEmailAddress', $data->Users->first()->EmailAddress);
+        // session()->put('daa', $d->Users->first()->Name);
         try {
             if ($data) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Account Status value.',
-                    'data' => $data,
+                    'data' => $data->toArray(),
                 ], 200);
             }
         } catch (\Throwable $th) {

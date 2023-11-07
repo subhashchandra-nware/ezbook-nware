@@ -4,8 +4,8 @@
 @section('content')
     @php
         extract($data);
-        $Resources = $ModeratorRequestedBookings->FacProviders->first()->Resources;
-        // dd($user, $Resources, $Resources->count(), $Resources->toArray(), $ModeratorRequestedBookings->FacProviders->first()->Resources );
+        $Resources = ($ModeratorRequestedBookings) ? $ModeratorRequestedBookings->FacProviders->first()->Resources : [];
+        // dd($data);
     @endphp
     <!--begin::Main-->
     <x-layouts.page>
@@ -21,18 +21,18 @@
                         <!--begin::Header-->
                         <div class="card-header border-0 py-5">
                             <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label font-weight-bolder text-dark">Upcoming Bookings</span>
+                                <span class="card-label font-weight-bolder text-dark">{{__("Upcoming Bookings")}}</span>
 
                             </h3>
-                            <div class="card-toolbar">
+                            <div id="buttons" class="card-toolbar">
                                 <a href="#" class="btn btn-dark font-weight-bolder font-size-sm mr-2">
                                     Complete List </a>
                                 <a href="{{ route('book.index') }}"
                                     class="btn btn-primary font-weight-bolder font-size-sm mr-2">
                                     Add New </a>
 
-                                <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
-                                    Export to excel</a>
+                                {{-- <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
+                                    Export to excel</a> --}}
                             </div>
                         </div>
                         <!--end::Header-->
@@ -99,7 +99,7 @@
                                     <x-forms.input value="{{ date('Y-m-d') }}" design="4" size="-sm" type="date"
                                         name="to" label="To" />
                                     <x-forms.button design="2" type="submit" value="Find"
-                                        class="btn-primary btn-sm" />
+                                        class="btn-primary btn-sm ml-5" />
                                 </x-forms.form>
                             </div>
                         </div>
@@ -489,7 +489,7 @@
                 <div class="card-header border-0 py-5">
                     <h3 class="card-title align-items-start flex-column">
                         <span class="card-label font-weight-bolder text-dark mb-2">Request to be moderated</span>
-                        <form class="form-inline">
+                        {{-- <form class="form-inline">
                             <span class="mr-4">Show</span>
                             <div class="form-group">
 
@@ -522,11 +522,11 @@
                                     <option>5</option>
                                 </select>
                             </div>
-                        </form>
+                        </form> --}}
                     </h3>
-                    <div class="card-toolbar">
+                    <div id="mod-buttons" class="card-toolbar">
                         <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a>
-                        <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a>
+                        {{-- <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a> --}}
                     </div>
                 </div>
                 <!--end::Header-->
@@ -551,7 +551,7 @@
                                     @php
                                         $i = 1;
                                     @endphp
-                                    @if ($Resources->count())
+                                    @if (!empty($Resources) && $Resources->count())
                                         @foreach ($Resources as $Resource)
                                             @if ($Resource->Bookings->count())
                                                 @foreach ($Resource->Bookings as $Booking)
@@ -587,12 +587,11 @@
 
                                                         <td class="pr-0 text-right d-flex float-right">
                                                             @php
-                                                                $actions = ['Accept' => 'book.destroy', 'Reject' => 'book.destroy', 'View-JS' => 'book.getbooking'];
+                                                                $actions = ['Accept-js' => 'book.accept', 'Reject' => 'book.reject', 'View-JS' => 'book.getbooking'];
                                                                 $route = 'book';
                                                                 $id = $Booking->ID;
                                                             @endphp
-                                                            <x-forms.action id="{{ $id ?? '' }}" :actions="$actions"
-                                                                route="{{ $route }}" />
+                                                            <x-forms.action id="{{ $id ?? '' }}" :actions="$actions" route="{{ $route }}" />
 
                                                             {{-- <a href="#" id="booking-update-modal" class="btn btn-light-info font-weight-bolder font-size-sm">Accept </a> --}}
                                                             {{-- <a href="#" class="btn btn-light-warning font-weight-bolder font-size-sm">Reject </a>
@@ -687,7 +686,7 @@
                 </x-forms.form>
                 <x-forms.form method="DELETE" id="ajax-delete-booking" action="">
                     <x-forms.input id="id-delete" name="ID" type="hidden" value="" />
-                    <button type="submit" class="Reject-book btn btn-default">Delete</button>
+                    <button type="submit" class="Reject-book btn btn-default">Reject</button>
                 </x-forms.form>
             </div>
         </div>
@@ -705,14 +704,13 @@
     <script>
         $(document).ready(function() {
 
-
-
             let opt = {
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [{
                     extend: 'excel',
                     text: 'Export to Excel',
+                    className: 'btn btn-success font-weight-bolder font-size-sm'
                 }],
                 lengthMenu: [
                     [2, 5, 10, 25, 50, -1],
@@ -720,11 +718,14 @@
                 ],
             };
             let datatable = $('#kt_datatable').DataTable(opt);
-            $('#kt_datatable_mod').DataTable(opt);
+            datatable.buttons().container().appendTo( $('#buttons') );
+            let datatableMod = $('#kt_datatable_mod').DataTable(opt);
+            datatableMod.buttons().container().appendTo( $('#mod-buttons') );
 
 
             const primary = '#6993FF';
             const apexChart = "#chart-Number-of-Bookings";
+            var $data = {!! json_encode($numberBookings) !!};
             var options = {
                 series: [{
                     name: "Number of Bookings",
@@ -767,7 +768,7 @@
             if (!element) {
                 return;
             }
-
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var barChartOptions = {
                 series: [{
                     name: 'Number of Bookings',
@@ -784,16 +785,14 @@
                     bar: {
                         horizontal: false,
                         columnWidth: ['30%'],
-                        endingShape: 'rounded'
+                        // endingShape: 'rounded'
                     },
                 },
                 dataLabels: {
                     enabled: false
                 },
                 xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
-                        'Dec'
-                    ],
+                    categories: months.slice(0, $data.length),
 
                     // labels: {
                     //     style: {
@@ -859,6 +858,7 @@
                     }
                 });
             });
+
             $("#ajax-update-booking").submit(function(e) {
                 e.preventDefault();
                 $('button[type=submit], input[type=submit]').prop('disabled', true);
@@ -894,24 +894,71 @@
                     denyButtonText: `Delete`,
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // let $id = $(this).attr('id').replace('Reject-book', 'View-JS-book');
-                        // $('#'+$id).trigger('click');
-                        // $('#ajax-update-booking').trigger('submit');
-
-
                         var $form = $(this).parent('form');
-                        // alert(JSON.stringify($form));
+
                         var $actionUrl = $form.attr('action');
                         var $type = $form.attr('method');
-                        var $data = $form.serialize();
-                        // var $data = {ModeratedBy: "{{$user->id}}", ModeratedByName: "{{$user->Name}}" };
+                        let $id = 0;
+                        if( $(this).is($(this).attr('id')) ){
+                            $id = $(this).attr('id').replace('Reject-book-', '');
+                        }
+                        // var $formData = $form.serialize();
+                        var $formData = $form.serializeArray().reduce(function(obj, item) {
+                            obj[item.name] = item.value;
+                            return obj;
+                        }, {});
+                        var $modData = {id: $id, ModeratedBy: "{{$user->id}}", ModeratedByName: "{{$user->Name}}" };
+                        // var $data = $formData +'&' + $.param($modData);
+                        var $data = {...$formData, ...$modData};
+
+                        // alert(JSON.stringify($data));
                         var $success = function(response) {
                             // alert("success: " + JSON.stringify(response));
+                            $("#booking-update-modal-dash").modal('hide');
                             window.location.reload(true);
+                        };
+                        var error = function(response) {
+                            // Swal.fire('error');
+                            alert("error: " + JSON.stringify(response));
                         };
                         ajaxCall($actionUrl, {
                             type: $type,
                             data: $data,
+                            error: error,
+                            success: $success
+                            // complete: $complete
+                        });
+                        // alert("complete:" + JSON.stringify($form));
+                    }
+                });
+            });
+
+            $('.Accept-js-book').on('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Do you want to Accept booking ?',
+                    showCancelButton: true,
+                    denyButtonText: `Accept`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let $this = $(this);
+                        // alert(JSON.stringify($form));
+                        var $actionUrl = $this.attr('href');
+                        var $type = 'POST';
+                        // var $data = $form.serialize();
+                        var $data = {ModeratedBy: "{{$user->id}}", ModeratedByName: "{{$user->Name}}" };
+                        var $success = function(response) {
+                            // alert("success: " + JSON.stringify(response));
+                            window.location.reload(true);
+                        };
+                        var error = function(response) {
+                            // Swal.fire('error');
+                            alert("error: " + JSON.stringify(response));
+                        };
+                        ajaxCall($actionUrl, {
+                            type: $type,
+                            data: $data,
+                            error: error,
                             success: $success
                             // complete: $complete
                         });

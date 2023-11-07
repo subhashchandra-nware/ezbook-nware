@@ -6,16 +6,16 @@ extract($data);
 @section('pageTitle', 'User List :: EzBook')
 
 @section('content')
-<x-layouts.page-list heading="User">
+<x-layouts.page-list heading="Users">
         {{-- <x-layouts.message /> --}}
         {{-- <x-slot:heading>Resources</x-slot:heading> --}}
         <x-slot:goto>
             <x-forms.button href="{{ route('usergroup.index') }}" class="ml-3" value="User Groups" />
             <x-forms.button href="{{ route('user.index') }}" class="btn-success ml-3" value="Users" />
         </x-slot:goto>
-        <x-slot:action>
-            <x-forms.button href="{{ route('user.create') }}" class="ml-3" value="Add New" />
-            <x-forms.button class="btn-success ml-3" value="Export to Excel" />
+        <x-slot:action id="buttons">
+            <x-forms.button href="{{ route('user.create') }}" class="mx-3" value="Add New" />
+            {{-- <x-forms.button class="btn-success ml-3" value="Export to Excel" /> --}}
         </x-slot:action>
          <!--begin::Table-->
          <div class="table-responsive">
@@ -59,12 +59,14 @@ extract($data);
                 buttons: [{
                     extend: 'excel',
                     text: 'Export to Excel',
+                    className: 'btn btn-success font-weight-bolder font-size-sm'
                 }],
                 lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
 
 
         };
             var datatable = $('#kt_datatable').DataTable(opt);
+            datatable.buttons().container().appendTo( $('#buttons') );
 
             // END::DOCUMENT READY
         });

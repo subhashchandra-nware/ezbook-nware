@@ -14,7 +14,7 @@
                   <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
                     <!--begin::Item-->
                     <li class="nav-item">
-                      <a href="#" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Dashboard</a>
+                        <a href="{{ route('dashboard.index') }}" class="nav-link py-4 px-6 {{ Route::is('dashboard.index') ? ' active ' : '' }}" >Dashboard</a>
                       {{-- <a href="#" class="nav-link py-4 px-6 active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Dashboard</a> --}}
                     </li>
                     <!--end::Item-->
@@ -26,8 +26,8 @@
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>
                       <div class="dropdown-menu" aria-labelledby="dropdown03">
-                        <a class="dropdown-item" href="#">Booking Report</a>
-                        <a class="dropdown-item" href="#">Utilization Report</a>
+                        <a class="dropdown-item" href="{{ route('report.booking') }}">Booking Report</a>
+                        <a class="dropdown-item" href="{{ route('report.utilization') }}">Utilization Report</a>
                       </div>
                     </li>
                     <!--end::Item-->

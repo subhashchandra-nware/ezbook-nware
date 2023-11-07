@@ -6,19 +6,25 @@
 {{-- @dd($id) --}}
 @isset($actions)
     @foreach ($actions as $key => $action)
+    @php
+        $value = strstr($key, '=') ?: strstr($key, '-', true) ?: $key;
+        $key = strstr($key, '=', true) ?: $key;
+        // $key = strtolower($key);
+    @endphp
         @switch(strtoupper($key) )
             @case('SHOW-JS')
             @case('VIEW-JS')
-            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-success flaticon-visible font-weight-bolder font-size-sm" value="{{strstr($key, '-', true)}}" href="{{ isset($route) ? route($action, $id ) : url($action.'/'.$id) }}" />
+            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-success flaticon-visible font-weight-bolder font-size-sm" value="{{trim($value, '=')}}" href="{{ isset($route) ? route($action, $id ) : url($action.'/'.$id) }}" />
             @break
 
+            @case('ACCEPT-JS')
             @case('EDIT-JS')
-            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-info flaticon-edit font-weight-bolder font-size-sm" value="{{strstr($key, '-', true)}}" href="{{ isset($route) ? route($action, [$route=>$id] ) : url($action.'/'.$id) }}" />
+            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-info flaticon-edit font-weight-bolder font-size-sm" value="{{trim($value, '=')}}" href="{{ isset($route) ? route($action, $id ) : url($action.'/'.$id) }}" />
             @break
 
             @case('DELETE-JS')
             @case('ALERT-DELETE')
-            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-warning flaticon-delete font-weight-bolder font-size-sm" value="{{strstr($key, '-', true)}}" href="{{ isset($route) ? route($action, [$route=>$id] ) : url($action.'/'.$id) }}" />
+            <x-forms.button onclick="return false;" id="{{$key}}-{{$route}}-{{$id}}" class="{{$key}}-{{$route}} btn btn-light-warning flaticon-delete font-weight-bolder font-size-sm" value="{{trim($value, '=')}}" href="{{ isset($route) ? route($action, $id ) : url($action.'/'.$id) }}" />
             @break
 
             @case('SHOW')

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Resource;
 use App\Models\User;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,8 @@ class DashboardApiController extends Controller
      */
     public function index(Request $request)
     {
+        $request->session();
+        // dd($request->session()->all());
         $data = [];
         $from = $request->all('from')['from'] ?? date('Y') . '-01-01';
         $to = $request->all('to')['to'] ?? date('Y-m-d');
@@ -81,7 +84,11 @@ class DashboardApiController extends Controller
             // $data['ModeratorRequestedBookings'] = $ModeratorRequestedBookings->FacProviders->each->Resources->each->Bookings->each->BookedFor;
 
             // $data['ModeratorRequestedBookings'] = Resource::toSql();
-        // dd($user, $user->id, $user->UserGroups->first()->id, $user->UserGroups->count(), $data, $session->get('loginUserId'), $session->all());
+            // $tz = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+            // $tzlist = new DateTimeZone( $tz[10] );
+            // dd($tzlist);
+
+        // dd($tzlist->getLocation(), $tzlist->getName(), $tzlist->getTransitions());
 
         // Number-of-Bookings
         if ($data != null) {

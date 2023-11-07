@@ -133,6 +133,7 @@ class ResourceApiController extends Controller
     public function getAllResourcesLocation(Request $request)
     {
         $data = ResourceLocation::where("ProviderID", $request->ProviderID)->get()->toArray();
+        // dd($data);
         if ($data != null) {
             return response()->json([
                 "message" => "Reource Location Successfully",
@@ -535,6 +536,7 @@ class ResourceApiController extends Controller
 
             return response()->json([
                 "message" => "Resource Update Successfully.",
+                // "message" => __("msg.U", ["item"=> 'Resource']),
                 "status" => "success",
                 "data" => $resource,
             ], 200);

@@ -145,6 +145,8 @@ Route::controller(BookController::class)->group(function(){
     Route::get('book/booking/{booking}/subbooking/{SubID?}', 'getBooking')->name('book.getbooking');
     Route::get('book/subbooking/{SubID}', 'getBookingBySubID')->name('book.getbooking.SubID');
     Route::put('book/booking/{booking}', 'update')->name('book.update');
+    Route::post('book/accept/{book}', 'accept')->name('book.accept');
+    Route::delete('book/reject/{book}', 'reject')->name('book.reject');
 });
 
 Route::controller(ReportController::class)->group(function(){

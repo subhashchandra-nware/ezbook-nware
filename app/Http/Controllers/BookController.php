@@ -178,6 +178,38 @@ class BookController extends Controller
         //     ], 500);
         // }
     }
+
+    /**
+     * Summary of accept
+     * @param \Illuminate\Http\Request $request
+     * @param string $id
+     * @return TGetDefault|TValue
+     * @author Admin <email>
+     */
+    public function accept(Request $request, string $id){
+        $data = [];
+        $apiJSON = (new BookApiController)->accept($request, $id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        return $original;
+    }
+    /**
+     * Summary of reject
+     * @param \Illuminate\Http\Request $request
+     * @param string $id
+     * @return TGetDefault|TValue
+     */
+    public function reject(Request $request, string $id){
+        $data = [];
+        $apiJSON = (new BookApiController)->reject($request, $id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        return $original;
+    }
+
+
+
+
     public function getBooking(string $bookingID, string $SubID = '0')
     {
         // dd($bookingID);
