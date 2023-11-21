@@ -18,7 +18,7 @@
  <x-layouts.message />
     <x-layouts.goto>
         <x-forms.button class="ml-3 btn-success" value="Site Settings" />
-        <x-forms.button class="ml-3" value="Subscription" />
+        <x-forms.button href="{{route('subscription.index')}}" class="ml-3" value="Subscription" />
     </x-layouts.goto>
 <x-layouts.form heading="Site Setting">
 

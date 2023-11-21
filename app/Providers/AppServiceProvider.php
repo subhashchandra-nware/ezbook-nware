@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrapFive();
         Paginator::useBootstrapFour();
+
+        Cashier::useCustomerModel(User::class);
     }
 }

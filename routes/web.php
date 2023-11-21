@@ -2,6 +2,7 @@
 
 // use App\Http\Controllers\Api\SignupApiController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\Cashier\SubscriptionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LoginController;
@@ -157,16 +158,20 @@ Route::controller(ReportController::class)->group(function(){
 });
 // Route::resource('report', ReportController::class);
 
-
-
 Route::get('/emailSend',[EmailController::class,'sendEmail']);
 
-Route::get('/clear-cache', function() {
-    Artisan::call('cache:clear');
+Route::resource('subscription', SubscriptionController::class);
+Route::controller(SubscriptionController::class)->group(function(){
+    Route::get('subscription/{string}/{price}', [SubscriptionController::class, 'charge'])->name('goToPayment');
+    Route::post('subscription/process-payment/{string}/{price}', [SubscriptionController::class, 'processPayment'])->name('processPayment');
+
 });
 
-Route::get('/config-clear', function() {
-    Artisan::call('config:clear');
-});
+
+
+
+
+Route::get('/clear-cache', function() { Artisan::call('cache:clear');});
+Route::get('/config-clear', function() { Artisan::call('config:clear'); });
 
 });

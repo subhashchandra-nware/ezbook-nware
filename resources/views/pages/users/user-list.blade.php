@@ -24,7 +24,7 @@ extract($data);
                 // $listResources = Arr::only($listResources, ['Name', 'EmailAddress'])
                 $actions = [];
                 // $actions = [ 'Delete' => 'resource.destroy',];
-                $actions = [ 'Edit' => 'user.edit', 'Alert-Delete' => 'user.destroy', ];
+                $actions = [ 'Edit' => 'user.edit', 'Delete-JS' => 'user.destroy', ];
                 $route = 'user';
             @endphp
             {{-- @dd($listResources) --}}

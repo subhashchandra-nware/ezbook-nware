@@ -14,10 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Billable;
     //public $timestamps= false;
 
     protected $dates = ['deleted_at'];
@@ -36,6 +37,72 @@ class User extends Authenticatable implements MustVerifyEmail
         'CancelBookings',
         'deleted_at'
     ];
+
+
+
+    /**
+     * Appends Coloumns as alias
+     * @var array
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    protected $appends = ['name', 'email', 'phone'];
+    /**
+     * getNameAttribute or get alias coloumn of Name
+     * @return mixed
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    public function getNameAttribute()
+    {
+        return $this->attributes['Name'];
+    }
+    /**
+     * getEmailAttribute or get alias coloumn of EmailAddress
+     * @return mixed
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    public function getEmailAttribute()
+    {
+        return $this->attributes['EmailAddress'];
+    }
+    public function getPhoneAttribute()
+    {
+        return $this->attributes['PhoneNumbers'];
+    }
+    /**
+     * setNameAttribute or set alias coloumn name
+     * @param mixed $value
+     * @return static
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+        return $this;
+    }
+    /**
+     * setEmailAddressAttribute or set alias coloumn email
+     * @param mixed $value
+     * @return static
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    public function setEmailAddressAttribute($value)
+    {
+        $this->attributes['email'] = $value;
+        return $this;
+    }
+
+    /**
+     * setPhoneNumbersAttribute or set alias coloumn phone
+     * @param mixed $value
+     * @return static
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    public function setPhoneNumbersAttribute($value)
+    {
+        $this->attributes['phone'] = $value;
+        return $this;
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

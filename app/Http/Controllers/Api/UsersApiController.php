@@ -229,7 +229,19 @@ class UsersApiController extends Controller
             }
         }
     }
-    public function destroy(Request $request, $id){}
+    public function destroy(Request $request, $id){
+        DB::beginTransaction();
+        try {
+        $user = User::find($id);
+        $user->delete();
+        DB::commit();
+        return response()->json(['status' =>'success', 'message' => 'User is deleted.'], 200);
+        } catch (\Exception $exc) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message'=> $exc->getMessage()], 500);
+        }
+
+    }
 
     public function addUser(Request $request)
     {

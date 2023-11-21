@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UsersApiController;
 use App\Models\UserType;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -90,8 +91,13 @@ class UserController extends Controller
         return redirect()->route('user.index')->with($original['status'],$original['message']);
 
     }
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $apiJSON = (new UsersApiController)->destroy( $request, $id);
+        $original = collect($apiJSON)->get('original');
+        $data = collect($original)->get('data');
+        // dd($apiJSON, $original, $data);
+        return redirect()->route('user.index')->with($original['status'],$original['message']);
     }
 
     public function addUser()
