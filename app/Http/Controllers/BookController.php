@@ -24,8 +24,6 @@ class BookController extends Controller
         $original = collect($apiJSON)->get('original');
         $data = collect($original)->get('data');
 
-
-
         // dd($apiJSON, $data);
         return view('pages.books.book-index', compact('data'));
     }
