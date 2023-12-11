@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LogEvent;
 use App\Http\Controllers\Api\Login\LoginApiController;
 use App\Models\FacProvider;
 use Illuminate\Http\Request;
@@ -18,7 +19,16 @@ class LoginController extends Controller
             return redirect()->route('setting.index');
             // return redirect('/site-settings');
         }
+        // dd("subhash");
         return view('pages.logins.login');
+    }
+    public function admin()
+    {
+        if (session()->has('userSession')) {
+            return redirect()->route('setting.index');
+            // return redirect('/site-settings');
+        }
+        return view('pages.logins.login-admin');
     }
 
     /**
@@ -164,13 +174,17 @@ class LoginController extends Controller
      */
     public function destroy()
     {
+        $log['userName'] = session()->get('loginEmailAddress');
         session()->flush();
         session()->getHandler()->destroy(session()->getId());
+        $log['result'] = 'LogOut';
+        event(new LogEvent($log));
         return redirect()->route('login');
     }
 
     public function login(Request $request)
     {
+        $log = ['userName' => $request->EmailAddress];
         $request->validate([
             'EmailAddress' => ['required', 'email'],
             'Password' => ['required'],
@@ -184,13 +198,12 @@ class LoginController extends Controller
                 session()->put($key, $value);
             }
         }
-        // if (!empty($original)) {
-        //     foreach ($original as $key => $value) {
-        //         if( ! empty($data) && count($data))
-        //         session()->put('userSession', $value);
-        //     }
-        // }
-        // dd($apiJSON, $original, $data, session()->get('userSession'), session()->get('siteId'));
+        if($original['status'] == 'success'){
+            $log['result'] = "LogIn";
+        }else{
+            $log['result'] = "LogIn Fail";
+        }
+        event(new LogEvent($log));
 
         return redirect()->route($original['redirect']['route'])->with($original['status'], $original['message']);
     }

@@ -56,7 +56,7 @@
                         <div class="row row-paddingless">
                             <!--begin:Item-->
                             <div class="col-6">
-                                <a href="{{ url('/resource') }}"
+                                <a href="{{ route('resource.resource') }}"
                                     class="d-block py-10 px-5 text-center bg-hover-light border-right border-bottom">
                                     <span class="svg-icon svg-icon-3x svg-icon-success">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Euro.svg-->
@@ -82,7 +82,7 @@
                             <!--end:Item-->
                             <!--begin:Item-->
                             <div class="col-6">
-                                <a href="{{ url('/user') }}"
+                                <a href="{{ route('user.index') }}"
                                     class="d-block py-10 px-5 text-center bg-hover-light border-bottom">
                                     <span class="svg-icon svg-icon-3x svg-icon-success">
                                         <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-attachment.svg-->

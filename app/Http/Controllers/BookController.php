@@ -195,7 +195,7 @@ class BookController extends Controller
      * Summary of reject
      * @param \Illuminate\Http\Request $request
      * @param string $id
-     * @return TGetDefault|TValue
+     * @return array
      */
     public function reject(Request $request, string $id){
         $data = [];
@@ -288,7 +288,7 @@ class BookController extends Controller
     public function getBookedResource(Book $book, string $id)
     {
 
-        dd($id, $book->toArray());
+        // dd($id, $book->toArray());
         // print_r( $request, $book);
         $data = [];
         // $data['resources'] = (new BookApiController)->getResource();
@@ -298,9 +298,9 @@ class BookController extends Controller
         $data = collect($original)->get('data');
         $data = (isset($data) && count($data) == 1) ? $data[0] : $data;
 
-        dd($data);
+        // dd($data);
 
-        dd(response()->json($data));
+        // dd(response()->json($data));
         // return "<pre>" . print_r($data) . print_r($request->all()) . print_r($resource->ID) . "</pre>" ?? "<div>Subhash</div>";
         return view('pages.books.ajax.book-ajax', compact('data'));
     }

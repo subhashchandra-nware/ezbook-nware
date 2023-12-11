@@ -18,7 +18,8 @@ class AuthCheck
         if (session()->has('userSession')) {
             return $next($request);
         }
-
+        abort(404, "Access denied.");
+        return response()->json(["Access denied."]);
         return redirect()->route('login');
     }
 }

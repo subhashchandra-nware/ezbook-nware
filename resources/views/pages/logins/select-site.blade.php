@@ -40,7 +40,8 @@
               <div class="text-muted font-weight-bold font-size-h4">Sites Linked to your email address</div>
             </div>
             @foreach ($siteNames as $site)
-            <a href="{{url('/open-site')}}/{{$site}}" class="site" style="text-transform:uppercase;"><img src="{{ asset('media/site1.png') }}"> {{ $site}}</a>
+            {{-- <a href="{{url('/open-site')}}/{{$site}}" class="site" style="text-transform:uppercase;"><img src="{{ asset('media/site1.png') }}"> {{ $site}}</a> --}}
+            <a href="{{route('login.openSite', $site )}}" class="site" style="text-transform:uppercase;"><img src="{{ asset('media/site1.png') }}"> {{ $site}}</a>
             @endforeach
             <!--end::Form-->
           </div>

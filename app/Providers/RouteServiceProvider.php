@@ -17,7 +17,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/dashboard';
+    public const ADMIN_HOME = '/admin/dashboard';
+    public const SUPER_ADMIN_HOME = '/superadmin/dashboard';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -29,6 +31,13 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
+
+            // TODO::(SUBHASH CHANDRA) in route service provider add admin route.
+
+            // Route::middleware('admin')
+            //     ->prefix('admin')
+            //     ->group(base_path('routes/admin.php'));
+
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));

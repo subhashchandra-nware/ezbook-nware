@@ -1,0 +1,57 @@
+<?php
+
+use App\Http\Controllers\Admin\BillingQueryController;
+use App\Http\Controllers\Admin\BookingActivityReportController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\SaleQueryController;
+use App\Http\Controllers\Admin\SiteDetailsController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+
+
+
+// Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+
+//     Route::get('/', [LoginController::class,'index'])->name('login');
+//     Route::get('login', [LoginController::class,'index'])->name('login');
+//     Route::get('register', [LoginController::class,'create'])->name('register');
+//     Route::get('logout', [LoginController::class,'destroy'])->name('logout');
+//     Route::post('login', [LoginController::class,'login'])->name('login.login');
+//     Route::post('register', [LoginController::class,'store'])->name('register.store');
+//     Route::get('welcome', [LoginController::class,'welcome'])->name('login.welcome');
+//     Route::get('select-site', [LoginController::class,'selectSite'])->name('login.selectSite');
+//     Route::get('open-site/{siteName}', [LoginController::class,'openSite'])->name('login.openSite');
+//     Route::get('/verify-email', [LoginController::class,'emailVerificationSend'])->name('login.email.verify');
+// });
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Auth::routes();
+Route::get('test', function () {
+    echo "subhash";
+});
+
+Route::group(['as' => 'admin.'], function () {
+    Route::get('/', [LoginController::class, 'index'])->name('login.index');
+    Route::get('login', [LoginController::class, 'index'])->name('login.index');
+    Route::post('login', [LoginController::class, 'store'])->name('login.store');
+
+    Route::middleware(['auth.check'])->group(function(){
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('billing-query', [BillingQueryController::class, 'index'])->name('billing-query.index');
+        Route::get('sale-query', [SaleQueryController::class, 'index'])->name('sale-query.index');
+        Route::get('booking-activity-report', [BookingActivityReportController::class, 'index'])->name('booking-activity-report.index');
+        Route::get('site-details', [SiteDetailsController::class, 'index'])->name('site-details.index');
+    });
+});

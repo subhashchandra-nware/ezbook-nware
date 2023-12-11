@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -35,7 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'ManageSysSettings',
         'CollectiveBookings',
         'CancelBookings',
-        'deleted_at'
+        'deleted_at',
+        // 'type',
     ];
 
 
@@ -45,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
      */
-    protected $appends = ['name', 'email', 'phone'];
+    protected $appends = ['name', 'email', 'phone', 'password', 'type'];
     /**
      * getNameAttribute or get alias coloumn of Name
      * @return mixed
@@ -67,6 +69,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getPhoneAttribute()
     {
         return $this->attributes['PhoneNumbers'];
+    }
+    public function getPasswordAttribute()
+    {
+        return $this->attributes['Password'];
     }
     /**
      * setNameAttribute or set alias coloumn name
@@ -102,6 +108,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['phone'] = $value;
         return $this;
     }
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = $value;
+        return $this;
+    }
 
 
     /**
@@ -124,6 +135,23 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    /**
+     * Undocumented function
+     * @param string $value
+     * @return Attribute
+     */
+    protected function AdminLevel(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => ['superadmin', 'admin', 'user'][$value],
+        );
+    }
+    protected function type(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value, $attributes) => ['superadmin', 'admin', 'user'][$attributes['AdminLevel']]
+        );
+    }
     public function userType(): HasOne
     {
         return $this->hasOne(UserType::class, 'id', 'AdminLevel');

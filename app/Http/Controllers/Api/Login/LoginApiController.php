@@ -120,7 +120,8 @@ class LoginApiController extends Controller
                     'Name' => $fullName,
                     'LoginName' => '',
                     'Password' => $userExists->Password ?? '',
-                    'EmailAddress' => $userExists->EmailAddress,
+                    // 'EmailAddress' => $userExists->EmailAddress,
+                    'email' => $userExists->EmailAddress,
                     'AdminLevel' => 1,
                 ];
             } else {
@@ -128,7 +129,8 @@ class LoginApiController extends Controller
                     'Name' => $fullName,
                     'LoginName' => '',
                     'Password' => '',
-                    'EmailAddress' => $request->emailAddress,
+                    'email' => $request->emailAddress,
+                    // 'EmailAddress' => $request->emailAddress,
                     'AdminLevel' => 1,
                 ];
             }
@@ -149,7 +151,7 @@ class LoginApiController extends Controller
 
             $email = $request->emailAddress;
             $token = Str::Random(60);
-
+            // echo '<pre>';print_r($userData);echo '</pre>';
             DB::beginTransaction();
             try {
                 $user = User::create($userData);
@@ -174,7 +176,7 @@ class LoginApiController extends Controller
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
-                // echo '<pre>';print_r($e->getMessage());echo '</pre>';
+                echo '<pre>';print_r($e->getMessage());echo '</pre>';
                 return response()->json([
                     'message' => 'User not Register',
                     'status' => 0,
@@ -222,6 +224,7 @@ class LoginApiController extends Controller
 
     public function login(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'EmailAddress' => ['required', 'email'],
             'Password' => ['required'],

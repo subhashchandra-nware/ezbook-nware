@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\Log;
 use App\Models\Resource;
 use App\Models\User;
 use DateTimeZone;
@@ -91,6 +92,7 @@ class DashboardApiController extends Controller
         // dd($tzlist->getLocation(), $tzlist->getName(), $tzlist->getTransitions());
 
         // Number-of-Bookings
+        $data['logs'] = Log::all()->sortByDesc("id");
         if ($data != null) {
             return response()->json([
                 "message" => "Reource Location Successfully",

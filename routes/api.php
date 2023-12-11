@@ -28,8 +28,12 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
+$as = $prefix = '';
+// $prefix = 'api';
+$as = 'api.';
+Route::group(['prefix' => $prefix, 'as'=>$as], function () {
 Route::get('/test',function(){
-    // p("working");
+    echo("working");
 });
 
 Route::post('signup-detailSaved','App\Http\Controllers\Api\SignupApiController@store');
@@ -120,3 +124,6 @@ Route::get('all-countries',[CountriesApiController::class,'getAllCountryName']);
 // Route::put('/user/{id}',function($id){
 //     return response("Update = ".$id,200);
 // });
+
+
+});
