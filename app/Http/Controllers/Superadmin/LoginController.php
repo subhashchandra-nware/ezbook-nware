@@ -55,7 +55,7 @@ class LoginController extends Controller
     {
         $user = User::where($this->username, $request->{$this->requestUseername})->get(['AdminLevel'])->first();
         // dd($request, $user, $user->count());
-        if($user->type == 'superadmin'){
+        if(isset($user->type) && $user->type == 'superadmin'){
         return [
             $this->username => $request->{$this->requestUseername},
             $this->password => $request->{$this->requestPassword},

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FacProvider;
 use App\Models\Resource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingActivityReportController extends Controller
 {
@@ -17,11 +18,13 @@ class BookingActivityReportController extends Controller
         $data = [];
         $from = $request->all('from')['from'] ?? date('Y') . '-01-01';
         $to = $request->all('to')['to'] ?? date('Y-m-d');
-        $providers = FacProvider::with(['Resources.Bookings', 'Resources' => fn($query) => $query->withoutGlobalScopes()])->whereHas('Resources', fn($query) => $query->withoutGlobalScopes() );
+        $providers = FacProvider::with(['Resources.Bookings', 'Resources' => fn($query) => $query->withoutGlobalScopes()])
+        ->whereHas('Resources', fn($query) => $query->withoutGlobalScopes() );
         $sql = $providers->toSql();
         $providers = $providers->get();
-        $data['providers'] = $providers;
+        $data['providers'] = $providers->toArray();
         // $data['sql'] = $sql;
+        dd($data, $from, $to);
         return view('pages.admin.booking-activity-report.index', compact('data'));
     }
 
