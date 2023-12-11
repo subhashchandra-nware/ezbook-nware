@@ -24,7 +24,7 @@ class BookingActivityReportController extends Controller
         $providers = $providers->get();
         $data['providers'] = $providers->toArray();
         // $data['sql'] = $sql;
-        dd($data, $from, $to);
+        // dd($data, $from, $to);
         return view('pages.admin.booking-activity-report.index', compact('data'));
     }
 
