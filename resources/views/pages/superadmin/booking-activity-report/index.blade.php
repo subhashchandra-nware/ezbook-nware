@@ -3,16 +3,16 @@
 
 @section('content')
     @php
-        // extract($data);
-        // dd($data);
-    @endphp
+        extract($data);
+        // $lastBooking =  collect($providers->toArray())->pluck('resources')->all();
+        // $lastBooking =  collect($lastBooking )->pluck('bookings');
+        @endphp
+
     <!--begin::Main-->
-    <x-layouts.superadmin.page>
+    <x-layouts.admin.page>
         <!--begin::Container-->
         <div class="container">
             <!--begin::Dashboard-->
-
-
 
             <div class="card card-custom gutter-b">
                 <!--begin::Header-->
@@ -22,18 +22,18 @@
 
                     </h3>
 
-                    {{-- <div class="card-toolbar">
+                    <div class="card-toolbar">
                         <x-forms.form class="form-inline mb-5">
                             <x-forms.input value="{{ date('Y') . '-01-01' }}" design="4" size="-sm" type="date"
                                 name="from" label="From" />
                             <x-forms.input value="{{ date('Y-m-d') }}" design="4" size="-sm" type="date"
                                 name="to" label="To" />
-                            <x-forms.input value="1" design="0" size="-sm" type="radio" name="unprocessed"
+                            {{-- <x-forms.input value="1" design="0" size="-sm" type="radio" name="unprocessed"
                                 label="Unprocessed" />
-                            <x-input-label for="id-unprocessed">Unprocessed</x-input-label>
+                            <x-input-label for="id-unprocessed">Unprocessed</x-input-label> --}}
                             <x-forms.button design="2" type="submit" value="Find" class="btn-primary btn-sm ml-5" />
                         </x-forms.form>
-                    </div> --}}
+                    </div>
                     <div id="buttons" class="card-toolbar">
                         {{-- <a href="#" class="btn btn-primary font-weight-bolder font-size-sm mr-3">Add New</a> --}}
                         {{-- <a href="#" class="btn btn-success font-weight-bolder font-size-sm">Export to Excel</a> --}}
@@ -59,17 +59,34 @@
                                 <tbody>
                                     @php
                                         $i = 1;
-
                                     @endphp
 
-                                    @if (!empty($logs) && $logs->count())
-                                        @foreach ($logs as $log)
+                                    @if (!empty($providers) && $providers->count())
+                                        @foreach ($providers as $provider)
+                                        @php
+                                        $bookingCount = 0;
+                                        @endphp
                                             <tr>
-                                                <th>Sr.No.</th>
-                                                <th>Provider Name</th>
-                                                <th>Account Status</th>
-                                                <th># Bookings</th>
-                                                <th>Last Booking Date (Days Ago)</th>
+                                                <th>{{ $i++ }}</th>
+                                                <th>{{ $provider->Name }}</th>
+                                                <th>{{ ($provider->AccountStatus) ? 'Active' : 'Inactive' }}</th>
+                                                <th>
+                                                    @foreach ($provider->Resources as $Resources)
+                                                    @php
+                                                        $bookingCount += $Resources->Bookings->count();
+                                                        @endphp
+                                                    @endforeach
+                                                    {{ $bookingCount }}
+                                                </th>
+                                                <th>
+                                                    @php
+                                                    $lastBooking = collect($provider->Resources->toArray())->pluck('bookings')->first();
+                                                    $lastBookingDate = collect(collect($lastBooking)->first() )->get('FromTime');
+                                                    $daysAgo = \Carbon\Carbon::parse($lastBookingDate)->diffForHumans();
+                                                    @endphp
+                                                    {{ $lastBookingDate }}
+                                                    ({{ $daysAgo }})
+                                                </th>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -86,13 +103,10 @@
             <!--end::Dashboard-->
         </div>
         <!--end::Container-->
-    </x-layouts.superadmin.page>
+    </x-layouts.admin.page>
         <!--end::Main-->
-
-
-
-
     @endsection
+
 
     @pushOnce('scripts')
         <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>

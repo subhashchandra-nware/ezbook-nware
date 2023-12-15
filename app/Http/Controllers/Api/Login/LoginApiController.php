@@ -118,24 +118,27 @@ class LoginApiController extends Controller
             if ($userExists != null) {
                 $userData = [
                     'Name' => $fullName,
+                    // 'name' => $fullName,
                     'LoginName' => '',
                     'Password' => $userExists->Password ?? '',
-                    // 'EmailAddress' => $userExists->EmailAddress,
-                    'email' => $userExists->EmailAddress,
+                    'EmailAddress' => $userExists->EmailAddress,
+                    // 'email' => $userExists->EmailAddress,
                     'AdminLevel' => 1,
                 ];
             } else {
                 $userData = [
                     'Name' => $fullName,
+                    // 'name' => $fullName,
                     'LoginName' => '',
                     'Password' => '',
-                    'email' => $request->emailAddress,
-                    // 'EmailAddress' => $request->emailAddress,
+                    'EmailAddress' => $request->emailAddress,
+                    // 'email' => $request->emailAddress,
                     'AdminLevel' => 1,
                 ];
             }
             $facprovidersData = [
                 'Name' => trim($request->Name),
+                // 'name' => trim($request->Name),
                 'LoginName' => '',
                 'ContactName' => $fullName,
                 'ContactEmail' => $request->emailAddress,
@@ -152,6 +155,7 @@ class LoginApiController extends Controller
             $email = $request->emailAddress;
             $token = Str::Random(60);
             // echo '<pre>';print_r($userData);echo '</pre>';
+
             DB::beginTransaction();
             try {
                 $user = User::create($userData);
@@ -160,11 +164,11 @@ class LoginApiController extends Controller
                 if($userExists == null){
                     PasswordReset::create(['email' => $email, 'token' => $token,]);
                 }
-                DB::commit();
                 Mail::Send('pages.logins.mail',['token' => $token,'fullName' => $fullName],function(Message $message)use($email){
                     $message->subject('Verify your site');
                     $message->to($email);
-                   });
+                });
+                DB::commit();
                 return response()->json([
                     'message' => 'User register Successfully',
                     'status' => 'success',
@@ -173,14 +177,16 @@ class LoginApiController extends Controller
                     'emailAddress' => $user->EmailAddress,
                     'user' => $user,
                     'data' => $user,
+                    'mail-data' => ['token' => $token, 'email' => $email, 'fullName' => $fullName],
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack();
-                echo '<pre>';print_r($e->getMessage());echo '</pre>';
+                // echo '<pre>';print_r($e->getMessage());echo '</pre>';
                 return response()->json([
                     'message' => 'User not Register',
                     'status' => 0,
                     'data' => $e->getMessage(),
+                    'error' => $e,
                 ], 500);
             }
             // dd($request->all(), $userExists, $user);

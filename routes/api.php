@@ -28,10 +28,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-$as = $prefix = '';
-// $prefix = 'api';
-$as = 'api.';
-Route::group(['prefix' => $prefix, 'as'=>$as], function () {
+
 Route::get('/test',function(){
     echo("working");
 });
@@ -126,4 +123,4 @@ Route::get('all-countries',[CountriesApiController::class,'getAllCountryName']);
 // });
 
 
-});
+

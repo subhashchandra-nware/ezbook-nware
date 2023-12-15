@@ -80,7 +80,7 @@ class LoginController extends Controller
         // if ($user->AdminLevel == 'superadmin') {
         //     return redirect()->route('superadmin.dashboard');
         // } else
-        if ($user->AdminLevel == 'admin') {
+        if ($user->type == 'admin') {
             // return redirect()->route('admin.dashboard');
             return redirect()->intended($this->redirectTo);
         }

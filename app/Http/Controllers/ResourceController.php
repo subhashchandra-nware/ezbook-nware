@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\UserGroupRight;
 use App\Models\UserRight;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 class ResourceController extends Controller
@@ -126,7 +127,12 @@ class ResourceController extends Controller
     public function editResource(Resource $resource)
     {
         $data = [];
-
+        // $a = User::all()
+        // // ->only(['id'])
+        // // ->toArray()
+        // ;
+        // $s = $a->pick('id', 'Name');
+        // dd($a->pick('id', 'Name')->toArray(), $s->toArray(), collect($a)->pick('id', 'Name'));
         $PermissionType = ['1'=>'BookingRights', '2'=>'ViewingRights', '3'=>'RequestRights', '4'=>'ModRights', ];
 
         $AllRightsUsers = UserRight::where('userrights.Resource', '=', $resource->ID)->get()->toArray() ?? [];
@@ -151,7 +157,8 @@ class ResourceController extends Controller
 
         $data['resourceTypes'] = ResourceType::all(['id', 'Name', 'configurationType'])->toArray();
         $data['resourceLocations'] = ResourceLocation::all(['id', 'Name'])->toArray(); // [['id'=>'1', 'Name'=>'demo']];
-        $data['users'] = User::all(['id', 'Name'])->toArray();
+        // $data['users'] = User::all(['id', 'Name'])->toArray();
+        $data['users'] = User::all()->pick('id', 'Name')->toArray();
         $data['usersGroups'] = UserGroup::all(['id', 'Name'])->toArray();
 
         $data = array_merge($resource->toArray(), $data);

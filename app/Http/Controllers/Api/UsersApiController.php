@@ -33,7 +33,7 @@ class UsersApiController extends Controller
             ->get();
             // ->toSql();
             $data['users'] = $users;
-            // dd($users);
+            // dd($users->toArray());
             // $results = DB::select("SELECT users.id as id,Name,EmailAddress,PhoneNumbers,AdminLevel,userType FROM `user_provider_mapping` INNER JOIN users on users.id = user_provider_mapping.UserId INNER JOIN usertype on usertype.id = users.AdminLevel where deleted_at IS NULL and user_provider_mapping.ProviderId =" . $request->siteId);
             if ($data != null) {
                 return response()->json([

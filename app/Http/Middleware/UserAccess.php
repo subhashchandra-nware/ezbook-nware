@@ -18,7 +18,7 @@ class UserAccess
     public function handle(Request $request, Closure $next, $userType): Response
     {
         // dd(auth()->user(), auth()->user()->AdminLevel, $userType);
-        if (auth()->user() && auth()->user()->AdminLevel == $userType) {
+        if (auth()->user() && auth()->user()->type == $userType) {
             return $next($request);
         }
         // error(404);

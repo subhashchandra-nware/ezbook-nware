@@ -4,11 +4,10 @@
 @section('content')
     @php
         extract($data);
-        // $Resources = ($ModeratorRequestedBookings) ? $ModeratorRequestedBookings->FacProviders->first()->Resources : [];
         // dd($data);
     @endphp
     <!--begin::Main-->
-    <x-layouts.superadmin.page>
+    <x-layouts.admin.page>
         <!--begin::Container-->
         <div class="container">
             <!--begin::Dashboard-->
@@ -21,7 +20,7 @@
                         <!--begin::Header-->
                         <div class="card-header border-0 pt-5">
                             <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label font-weight-bolder text-dark">Booking Summary</span>
+                                <span class="card-label font-weight-bolder text-dark">Site details</span>
 
                             </h3>
 
@@ -31,16 +30,16 @@
                         <div class="card-body pt-2 pb-0 mt-n3 mb-9">
                             <div class="row m-0 mb-7">
                                 <div class="col bg-light px-6 py-8 rounded-xl mr-7">
-                                    <h3 class="total-number">{{ $summaryBookings[0]->totalBooking }}</h3>
+                                    <h3 class="total-number">{{ $sites }}</h3>
                                     <a href="#" class="text-total font-weight-bold font-size-h6">Total Sites</a>
                                 </div>
                                 <div class="col bg-light px-6 py-8 rounded-xl mr-7">
-                                    <h3 class="total-number">{{ $summaryBookings[0]->completedBooking }}</h3>
+                                    <h3 class="total-number">{{ $Active }}</h3>
                                     <a href="#" class="text-total font-weight-bold font-size-h6">Active Sites</a>
                                 </div>
 
                                 <div class="col bg-light px-6 py-8 rounded-xl">
-                                    <h3 class="total-number">{{ $summaryBookings[0]->upcomingBooking }}</h3>
+                                    <h3 class="total-number">{{ $Inactive }}</h3>
                                     <a href="#" class="text-total font-weight-bold font-size-h6">Inactive Sites</a>
                                 </div>
 
@@ -114,14 +113,13 @@
             <!--end::Dashboard-->
         </div>
         <!--end::Container-->
-    </x-layouts.superadmin.page>
+    </x-layouts.admin.page>
     <!--end::Main-->
 
 
 
 
 @endsection
-
 @pushOnce('scripts')
     <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>
     {{-- <script src="{{ asset('js/pages/features/charts/apexcharts.js') }}"></script> --}}

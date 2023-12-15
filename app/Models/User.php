@@ -41,80 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
 
-
-    /**
-     * Appends Coloumns as alias
-     * @var array
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    protected $appends = ['name', 'email', 'phone', 'password', 'type'];
-    /**
-     * getNameAttribute or get alias coloumn of Name
-     * @return mixed
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    public function getNameAttribute()
-    {
-        return $this->attributes['Name'];
-    }
-    /**
-     * getEmailAttribute or get alias coloumn of EmailAddress
-     * @return mixed
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    public function getEmailAttribute()
-    {
-        return $this->attributes['EmailAddress'];
-    }
-    public function getPhoneAttribute()
-    {
-        return $this->attributes['PhoneNumbers'];
-    }
-    public function getPasswordAttribute()
-    {
-        return $this->attributes['Password'];
-    }
-    /**
-     * setNameAttribute or set alias coloumn name
-     * @param mixed $value
-     * @return static
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $value;
-        return $this;
-    }
-    /**
-     * setEmailAddressAttribute or set alias coloumn email
-     * @param mixed $value
-     * @return static
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    public function setEmailAddressAttribute($value)
-    {
-        $this->attributes['email'] = $value;
-        return $this;
-    }
-
-    /**
-     * setPhoneNumbersAttribute or set alias coloumn phone
-     * @param mixed $value
-     * @return static
-     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
-     */
-    public function setPhoneNumbersAttribute($value)
-    {
-        $this->attributes['phone'] = $value;
-        return $this;
-    }
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = $value;
-        return $this;
-    }
-
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -126,6 +52,13 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array
+     */
+    // protected $visible = ['Name', 'EmailAddress'];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -135,23 +68,110 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+
+    /**
+     * Appends Coloumns as alias
+     * @var array
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    protected $appends = [
+        // 'name',
+        'email',
+        // 'phone',
+        // 'password',
+        'type'
+    ];
+    /**
+     * getNameAttribute or get alias coloumn of Name
+     * @return mixed
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    // public function getNameAttribute()
+    // {
+    //     return $this->attributes['Name'];
+    // }
+
+    /**
+     * setNameAttribute or set alias coloumn name
+     * @param mixed $value
+     * @return static
+     * @author Subhash Chandra <Subhash.Chandra@nwaresoft.com>
+     */
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['name'] = $value;
+    //     return $this;
+    // }
+
+    // public function getEmailAttribute()
+    // {
+    //     return $this->attributes['EmailAddress'];
+    // }
+    // public function setEmailAddressAttribute($value)
+    // {
+    //     $this->attributes['email'] = $value;
+    //     return $this;
+    // }
+
+    // public function getPhoneAttribute()
+    // {
+    //     // return $this->PhoneNumbers;
+    //     return $this->attributes['PhoneNumbers'];
+    // }
+    // public function setPhoneNumbersAttribute($value)
+    // {
+    //     $this->attributes['phone'] = $value;
+    //     return $this;
+    // }
+
+
+    // public function getPasswordAttribute()
+    // {
+    //     // return $this->Password;
+    //     return $this->attributes['Password'];
+    // }
+
+    // public function setPasswordAttribute($value)
+    // {
+    //     $this->attributes['password'] = $value;
+    //     return $this;
+    // }
+
+
     /**
      * Undocumented function
      * @param string $value
      * @return Attribute
      */
-    protected function AdminLevel(): Attribute
-    {
-        return new Attribute(
-            get: fn ($value) => ['superadmin', 'admin', 'user'][$value],
-        );
-    }
+    // protected function AdminLevel(): Attribute
+    // {
+    //     return new Attribute(
+    //         get: fn ($value) => ['superadmin', 'admin', 'user'][$value],
+    //     );
+    // }
     protected function type(): Attribute
     {
         return new Attribute(
+            // get: fn ($value, $attributes) => ['superadmin', 'admin', 'user'][$this->AdminLevel??0],
             get: fn ($value, $attributes) => ['superadmin', 'admin', 'user'][$attributes['AdminLevel']]
         );
     }
+
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            // get: fn ($value, $attributes) => print_r($attributes),
+            get: fn ($value, $attributes) => $attributes['EmailAddress'],
+            set: fn ($value) => ['EmailAddress' => $value],
+        );
+    }
+
+
+
+
+
+
+
     public function userType(): HasOne
     {
         return $this->hasOne(UserType::class, 'id', 'AdminLevel');

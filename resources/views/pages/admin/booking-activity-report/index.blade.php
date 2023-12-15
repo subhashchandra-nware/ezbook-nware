@@ -4,8 +4,13 @@
 @section('content')
     @php
         extract($data);
-        // dd($data);
-    @endphp
+        // $lastBooking =  collect($providers->toArray())->pluck('resources')->all();
+        // $lastBooking =  collect($lastBooking )->pluck('bookings');
+        @endphp
+
+
+
+
     <!--begin::Main-->
     <x-layouts.admin.page>
         <!--begin::Container-->
@@ -71,16 +76,22 @@
                                                 <th>{{ $provider->Name }}</th>
                                                 <th>{{ ($provider->AccountStatus) ? 'Active' : 'Inactive' }}</th>
                                                 <th>
-                                                    {{-- {{ $provider->Resources->count()}} --}}
                                                     @foreach ($provider->Resources as $Resources)
-                                                    {{-- {{ $Resources->Bookings->count()}} --}}
                                                     @php
                                                         $bookingCount += $Resources->Bookings->count();
-                                                    @endphp
+                                                        @endphp
                                                     @endforeach
                                                     {{ $bookingCount }}
                                                 </th>
-                                                <th>Last Booking Date (Days Ago)</th>
+                                                <th>
+                                                    @php
+                                                    $lastBooking = collect($provider->Resources->toArray())->pluck('bookings')->first();
+                                                    $lastBookingDate = collect(collect($lastBooking)->first() )->get('FromTime');
+                                                    $daysAgo = \Carbon\Carbon::parse($lastBookingDate)->diffForHumans();
+                                                    @endphp
+                                                    {{ $lastBookingDate }}
+                                                    ({{ $daysAgo }})
+                                                </th>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -100,6 +111,9 @@
     </x-layouts.admin.page>
         <!--end::Main-->
     @endsection
+
+
+
 
     @pushOnce('scripts')
         <script src="{{ asset('plugins/custom/datatables/datatables.bundle.js') }}"></script>

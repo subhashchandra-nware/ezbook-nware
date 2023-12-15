@@ -32,10 +32,10 @@
 
             <!--begin::Form-->
                 <x-forms.form action="{{ route('admin.login')}}">
-                    <x-forms.input design="4" name="email" label="Your Email">
+                    <x-forms.input design="4" name="email" label="Your Email" aria-autocomplete="off" required autocomplete="new-email">
                         <x-slot:label class="font-size-h6 font-weight-bolder text-dark">Your Email</x-slot:label>
                     </x-forms.input>
-                    <x-forms.input design="4" name="password" label="Your Password" type="password">
+                    <x-forms.input design="4" name="password" label="Your Password" type="password" aria-autocomplete="off" required>
                         <x-slot:label class="font-size-h6 font-weight-bolder text-dark">Your Password</x-slot:label>
                     </x-forms.input>
 

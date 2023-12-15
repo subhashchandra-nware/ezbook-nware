@@ -36,7 +36,7 @@ extract($data);
                        <th>{{$user->Name}}</th>
                        <th>{{$user->EmailAddress}}</th>
                        <th>{{$user->PhoneNumbers}}</th>
-                       <th>{{$user->userType->userType}}</th>
+                       <th>{{$user->userType->userType }}</th>
                        <th><div class="d-flex float-right"><x-forms.action id="{{ $user->id }}" :actions="$actions" route="{{$route}}" /></div></th>
                     </tr>
                     @endforeach

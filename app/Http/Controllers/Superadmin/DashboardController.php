@@ -18,25 +18,19 @@ class DashboardController extends Controller
     {
         // dd(User::all()->toArray(), session(), auth(), auth()->user());
         $data = [];
-        $from = date('Y') . '-01-01';
-        $to = date('Y-m-d');
-        // $ProviderID = 1;
-        $summaryBookingsSQL = "COUNT(ID) AS totalBooking,
-        SUM( if(DATE_FORMAT(FromTime,'%Y%m%d') >= DATE_FORMAT(CURRENT_DATE,'%Y%m%d'), 1, 0 ) ) AS upcomingBooking,
-        SUM( if(DATE_FORMAT(FromTime,'%Y%m%d') < DATE_FORMAT(CURRENT_DATE,'%Y%m%d'), 1, 0 ) ) AS completedBooking";
+        $data['sites'] = User::with('FacProviders')->whereHas('FacProviders')->count();
 
-        $numberBookingsSQL = "COUNT(ID) AS bookings, DATE_FORMAT(FromTime,'%m') AS months";
+        $data['Active'] = User::with(['FacProviders' => function($query){
+            $query->where('Active', 1);
+        },])->whereHas('FacProviders', function($query){
+            $query->where('Active', 1);
+        })->count();
 
-
-        $data['summaryBookings'] = Book::select(DB::raw($summaryBookingsSQL))
-            ->whereHas('resources')
-            ->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')"), '>=', date('Ymd', strtotime($from)))
-            ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')"), '<=', date('Ymd', strtotime($to)))
-            ->get();
-        $numberBookings = Book::select(DB::raw($numberBookingsSQL))
-            ->whereHas('resources')
-            ->groupBy('months')->orderBy('months', 'ASC')->get()->toArray();
-        $data['numberBookings'] = array_column($numberBookings, 'bookings');
+        $data['Inactive'] = User::with(['FacProviders' => function($query){
+            $query->where('Active', 0);
+        },])->whereHas('FacProviders', function($query){
+            $query->where('Active', 0);
+        })->count();
 
         $data['logs'] = Log::all()->sortByDesc("id");
         return view('pages.superadmin.dashboards.index' , compact('data'));

@@ -31,6 +31,8 @@ use App\Http\Controllers\Superadmin\SiteDetailsController as SuperadminSiteDetai
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 // use Illuminate\Support\Facades\Session;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -68,6 +70,7 @@ Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.'], function () {
         Route::post('billing-query', [SuperadminBillingQueryController::class, 'index'])->name('billing-query.index.post');
         Route::get('sale-query', [SuperadminSaleQueryController::class, 'index'])->name('sale-query.index');
         Route::get('booking-activity-report', [SuperadminBookingActivityReportController::class, 'index'])->name('booking-activity-report.index');
+        Route::post('booking-activity-report', [SuperadminBookingActivityReportController::class, 'index'])->name('booking-activity-report.index.post');
         Route::get('site-details', [SuperadminSiteDetailsController::class, 'index'])->name('site-details.index');
     });
 });
@@ -88,6 +91,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('billing-query', [BillingQueryController::class, 'index'])->name('billing-query.index.post');
         Route::get('sale-query', [SaleQueryController::class, 'index'])->name('sale-query.index');
         Route::get('booking-activity-report', [BookingActivityReportController::class, 'index'])->name('booking-activity-report.index');
+        Route::post('booking-activity-report', [BookingActivityReportController::class, 'index'])->name('booking-activity-report.index.post');
         Route::get('site-details', [SiteDetailsController::class, 'index'])->name('site-details.index');
     });
 });
@@ -123,6 +127,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('select-site', [LoginController::class, 'selectSite'])->name('login.selectSite');
     Route::get('open-site/{siteName}', [LoginController::class, 'openSite'])->name('login.openSite');
     Route::get('/verify-email', [LoginController::class, 'emailVerificationSend'])->name('login.email.verify');
+    Route::post('/resend-mail', function(Illuminate\Http\Request $request){
+
+        Mail::Send('pages.logins.mail',['token' => $request->token,'fullName' => $request->fullName],function(Message $message)use($request){
+            $message->subject('Verify your site');
+            $message->to($request->email);
+        });
+        // return json_encode($request->all());
+        return __('success');
+    })->name('login.email.resend');
+
 
 
 
@@ -270,4 +284,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Artisan::call('config:clear');
         });
     });
+
+
+
 

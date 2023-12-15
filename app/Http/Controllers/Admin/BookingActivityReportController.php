@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\FacProvider;
 use App\Models\Resource;
+use App\Models\Scopes\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,11 +19,45 @@ class BookingActivityReportController extends Controller
         $data = [];
         $from = $request->all('from')['from'] ?? date('Y') . '-01-01';
         $to = $request->all('to')['to'] ?? date('Y-m-d');
-        $providers = FacProvider::with(['Resources.Bookings', 'Resources' => fn($query) => $query->withoutGlobalScopes()])
-        ->whereHas('Resources', fn($query) => $query->withoutGlobalScopes() );
+        $providers = FacProvider::with([
+            // 'Resources.Bookings',
+            'Resources' => function($query) use ($from, $to){
+                return $query->withoutGlobalScopes()
+                ->with(['Bookings' => function($query) use ($from, $to){
+                    return $query->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')"), '>=', date('Ymd', strtotime($from)))
+                    ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')"), '<=', date('Ymd', strtotime($to)))
+                    ->orderBy('FromTime', 'DESC');
+                },])
+                ->whereHas('Bookings', function($query) use ($from, $to){
+                    return $query->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')"), '>=', date('Ymd', strtotime($from)))
+                    ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')"), '<=', date('Ymd', strtotime($to)))
+                    ->orderBy('FromTime', 'DESC');
+                });
+            },
+        ])
+        ->whereHas('Resources', function($query) use ($from, $to){
+            return $query->withoutGlobalScopes()->with(['Bookings' => function($query) use ($from, $to){
+                return $query->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')"), '>=', date('Ymd', strtotime($from)))
+                ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')"), '<=', date('Ymd', strtotime($to)))
+                ->orderBy('FromTime', 'DESC');
+            },])
+            ->whereHas('Bookings', function($query) use ($from, $to){
+                return $query->where(DB::raw("DATE_FORMAT(FromTime,'%Y%m%d')"), '>=', date('Ymd', strtotime($from)))
+                ->where(DB::raw("DATE_FORMAT(ToTime,'%Y%m%d')"), '<=', date('Ymd', strtotime($to)))
+                ->orderBy('FromTime', 'DESC');
+            });
+        });
+
+        // $providers = FacProvider::with(['Resources.Bookings',
+        // 'Resources' => fn($query) => $query->withoutGlobalScopes()
+        // ])
+        // ->whereHas('Resources', fn($query) => $query->withoutGlobalScopes() )
+        // ;
+
+
         $sql = $providers->toSql();
         $providers = $providers->get();
-        $data['providers'] = $providers->toArray();
+        $data['providers'] = $providers;
         // $data['sql'] = $sql;
         // dd($data, $from, $to);
         return view('pages.admin.booking-activity-report.index', compact('data'));

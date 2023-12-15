@@ -72,6 +72,8 @@ class Resource extends Model
     {
         return $this->hasMany(Book::class, 'FacID', 'ID');
     }
+
+
     // public function Booking(): HasOne
     // {
     //     return $this->hasOne(Book::class, 'FacID', 'ID');
@@ -105,11 +107,17 @@ class Resource extends Model
         // return $query->where('ProviderID', '=', $ProviderID ?? session()->get('siteId'));
     }
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
         return static::addGlobalScope(new Provider);
     }
+
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     return static::addGlobalScope(new Provider);
+    // }
 
 
 

@@ -98,11 +98,11 @@ class LoginController extends Controller
             $apiJSON = (new LoginApiController)->emailVerificationSend($request);
             $original = collect($apiJSON)->get('original');
             $data = collect($original)->get('data');
+            $mailData = collect($original)->get('mail-data');
             $token = $original['token'];
 
-
             // dd(session(), session()->get('userSession'), $original);
-            return view('pages.logins.verify-email', compact('user', 'token'));
+            return view('pages.logins.verify-email', compact('user', 'token', 'mailData', 'data'));
             // return view('verify-email',['user' => $user]);
         }else{
             return redirect()->route('login');
@@ -140,7 +140,7 @@ class LoginController extends Controller
             // return redirect('/verify-email');
         } else {
             // return back()->withInput();
-            return back();
+            return back()->with($original['status'], $original['message']);
         }
         // return redirect()->route('register')->with($msg['status'], $msg['message']);
     }
