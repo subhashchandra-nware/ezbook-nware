@@ -29,7 +29,7 @@ class LogEvent
 
         $country = Countries::where('code', $location->countryCode)->first();
         // dd($location, $location->countryCode, $country);
-        $default = ['userName' => 'unknown', 'ip' => request()->ip(), 'result' => 'unknown', 'country' => $country->name];
+        $default = ['userName' => 'unknown', 'ip' => request()->ip(), 'result' => 'unknown', 'country' => $country->name??$location->countryName];
         $log = array_merge($default, $log);
         $this->log = $log;
     }
