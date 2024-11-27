@@ -19,6 +19,7 @@ class LogEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $log;
+
     /**
      * Create a new event instance.
      */
