@@ -174,11 +174,14 @@ class LoginController extends Controller
      */
     public function destroy()
     {
+        // dd(session());
+        $loginUserId = session()->get('loginUserId');
         $log['userName'] = session()->get('loginEmailAddress');
         session()->flush();
         session()->getHandler()->destroy(session()->getId());
         $log['result'] = 'LogOut';
         event(new LogEvent($log));
+        $apiJSON = (new LoginApiController)->destroy($loginUserId);
         return redirect()->route('login');
     }
 

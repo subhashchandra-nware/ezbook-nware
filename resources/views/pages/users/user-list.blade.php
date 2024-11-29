@@ -11,16 +11,18 @@ extract($data);
         {{-- <x-slot:heading>Resources</x-slot:heading> --}}
         <x-slot:goto>
             <x-forms.button href="{{ route('usergroup.index') }}" class="ml-3" value="User Groups" />
-            <x-forms.button href="{{ route('user.index') }}" class="btn-success ml-3" value="Users" />
+            <x-forms.button href="{{ route('user.index') }}" class="ml-3 btn-success" value="Users" />
         </x-slot:goto>
         <x-slot:action id="buttons">
+                <x-forms.button href="{{ url('/add-users') }}" class="mx-3" value="Bulk Upload" />
+
             <x-forms.button href="{{ route('user.create') }}" class="mx-3" value="Add New" />
-            {{-- <x-forms.button class="btn-success ml-3" value="Export to Excel" /> --}}
+            {{-- <x-forms.button class="ml-3 btn-success" value="Export to Excel" /> --}}
         </x-slot:action>
          <!--begin::Table-->
          <div class="table-responsive">
             @php
-                $headers = ['sn' => 'S.No.', 'Name' => 'Name', 'EmailAddress' => 'Email Address', 'PhoneNumbers' => 'Phone Numbers', 'AdminLevel' => 'AdminLevel', 'id' => 'Action'];
+                $headers = ['sn' => 'S.No.', 'Name' => 'Name', 'EmailAddress' => 'Email Address', 'PhoneNumbers' => 'Phone Numbers', 'AdminLevel' => 'Access', 'LastLogin' => 'Last Login', 'id' => 'Action'];
                 // $listResources = Arr::only($listResources, ['Name', 'EmailAddress'])
                 $actions = [];
                 // $actions = [ 'Delete' => 'resource.destroy',];
@@ -37,7 +39,8 @@ extract($data);
                        <th>{{$user->EmailAddress}}</th>
                        <th>{{$user->PhoneNumbers}}</th>
                        <th>{{$user->userType->userType }}</th>
-                       <th><div class="d-flex float-right"><x-forms.action id="{{ $user->id }}" :actions="$actions" route="{{$route}}" /></div></th>
+                       <th>{{ ($user->LastLogin == '0000-00-00 00:00:00') ? '' : $user->LastLogin }}</th>
+                       <th><div class="float-right d-flex"><x-forms.action id="{{ $user->id }}" :actions="$actions" route="{{$route}}" /></div></th>
                     </tr>
                     @endforeach
             @endif
@@ -59,9 +62,12 @@ extract($data);
                 buttons: [{
                     extend: 'excel',
                     text: 'Export to Excel',
-                    className: 'btn btn-success font-weight-bolder font-size-sm'
+                    className: 'btn btn-success font-weight-bolder font-size-sm',
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5]
+                    }
                 }],
-                lengthMenu: [ [5, 10, 25, 50, -1], [5, 10, 25, 50, "All"] ],
+                lengthMenu: [ [50, -1], [ 50, "All"] ],
 
 
         };

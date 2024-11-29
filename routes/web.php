@@ -21,6 +21,7 @@ use App\Http\Controllers\ResourceLocationController;
 use App\Http\Controllers\ResourceTypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SiteSettingController;
+use App\Http\Controllers\SocialiteMicrosoft;
 use App\Http\Controllers\Superadmin\BillingQueryController as SuperadminBillingQueryController;
 use App\Http\Controllers\Superadmin\BookingActivityReportController as SuperadminBookingActivityReportController;
 use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
@@ -110,7 +111,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 
 
-
+Route::get('socialite_microsoft', [SocialiteMicrosoft::class, 'index'])->name('socialite_microsoft');
 
 
 

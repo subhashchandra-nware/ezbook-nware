@@ -223,6 +223,11 @@ class LoginApiController extends Controller
      */
     public function destroy(string $id)
     {
+        // dd($id);
+        $id = $id ?? session()->get('loginUserId');
+        // $user = User::where('id', '=',  $id)->first();
+        // $user->LastLogin = date('Y-m-d H:i:s');
+        // $user->save();
         session()->flush();
         session()->getHandler()->destroy(session()->getId());
         redirect()->route('login');
@@ -260,6 +265,8 @@ class LoginApiController extends Controller
                 }
                 $res = Hash::check($request->Password, $user->Password);
                 if ($res) {
+                    $user->LastLogin = date('Y-m-d H:i:s');
+                    $user->save();
                     $FacProviders = collect($usersWithFacProviders->toArray())->pluck('fac_providers.0');
                     $siteNames = collect($FacProviders)->pluck('Name')->all();
                     // dd( $FacProviders->all(), $FacProviders->count(), $usersWithFacProviders->toArray(), $usersWithFacProviders->count(), $siteNames);

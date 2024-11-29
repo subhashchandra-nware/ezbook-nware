@@ -10,8 +10,11 @@
         "laravel/cashier": "^14.13",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/socialite": "*",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
+        "socialiteproviders/microsoft": "^4.5",
+        "socialiteproviders/microsoft-azure": "^5.2",
         "stevebauman/location": "^7.0"
     },
     "require-dev": {

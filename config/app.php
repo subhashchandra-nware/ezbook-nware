@@ -162,6 +162,8 @@ return [
          */
         Stevebauman\Location\LocationServiceProvider::class,
 
+        \SocialiteProviders\Manager\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -186,6 +188,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Location' => Stevebauman\Location\Facades\Location::class,
+
+        'Socialite' => Illuminate\Socialite\Facades\Socialite::class,
     ])->toArray(),
 
 ];
