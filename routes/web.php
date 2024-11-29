@@ -35,6 +35,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 // use Illuminate\Support\Facades\Session;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -109,7 +110,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 
 
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('azure')->redirect();
+});
 
+Route::get('/auth/callback', function () {
+    $Socialite = Socialite::driver('azure')->stateless();
+    $user = $Socialite->user();
+ dd($Socialite,$user);
+    // $user->token
+});
+Route::get('/auth/logout', function () {
+
+    $azureLogoutUrl = Socialite::driver('azure')->getLogoutUrl('https://test.ezbook.com');
+    return redirect($azureLogoutUrl);
+    // $user->token
+});
 
 Route::get('socialite_microsoft', [SocialiteMicrosoft::class, 'index'])->name('socialite_microsoft');
 
